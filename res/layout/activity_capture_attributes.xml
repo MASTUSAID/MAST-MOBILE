@@ -1,0 +1,257 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar" />
+
+    <LinearLayout
+        android:id="@+id/fixedAttribs"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="15"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/projectname_lbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:text="@string/projectname"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSizeL" />
+
+        <TextView
+            android:id="@+id/spatialunit_lbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:text="@string/spatialunit_lbl"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSizeL" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <TextView
+            android:id="@+id/spatialunit_personType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:text="@string/spatialunit_personType_lbl"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSize" />
+
+        <Spinner
+            android:id="@+id/spinner_person_type"
+            style="@style/Widget.AppCompat.Spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:entries="@array/personTypeArray" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <ListView
+            android:id="@+id/list_view"
+            style="@style/ListStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+        </ListView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/buttonBarAttributes"
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/color_primary"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:weightSum="5" >
+
+        <RelativeLayout
+            style="@android:style/Widget.ActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/btn_propertyInfo"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:contentDescription="@string/attribButtons"
+                android:gravity="center"
+                android:padding="10dp"
+                android:src="@drawable/add_property" />
+
+            <!-- <TextView
+                android:id="@+id/propertyCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/btn_propertyInfo"
+                android:layout_alignRight="@id/btn_propertyInfo"
+                android:layout_alignTop="@id/btn_propertyInfo"
+                android:background="@drawable/count_style"
+                android:text="@string/attribCount"
+                android:textColor="@color/color_accent"
+                android:textStyle="bold" /> -->
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@android:style/Widget.ActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/btn_personlist"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:contentDescription="@string/attribButtons"
+                android:gravity="center"
+                android:padding="10dp"
+                android:src="@drawable/add_person" />
+
+            <TextView
+                android:id="@+id/personCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/btn_personlist"
+                android:layout_alignRight="@id/btn_personlist"
+                android:layout_alignTop="@id/btn_personlist"
+                android:background="@drawable/count_style"
+                android:text="@string/attribCount"
+                android:textColor="@color/color_accent"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@android:style/Widget.ActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/btn_tenureInfo"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:contentDescription="@string/attribButtons"
+                android:gravity="center"
+                android:padding="10dp"
+                android:src="@drawable/add_tenure" />
+
+            <TextView
+                android:id="@+id/tenureCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/btn_tenureInfo"
+                android:layout_alignRight="@id/btn_tenureInfo"
+                android:layout_alignTop="@id/btn_tenureInfo"
+                android:background="@drawable/count_style"
+                android:text="@string/attribCount"
+                android:textColor="@color/color_accent"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@android:style/Widget.ActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/btn_addMultimedia"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:contentDescription="@string/attribButtons"
+                android:gravity="center"
+                android:padding="10dp"
+                android:src="@drawable/add_multimedia" />
+
+            <TextView
+                android:id="@+id/multimediaCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/btn_addMultimedia"
+                android:layout_alignRight="@id/btn_addMultimedia"
+                android:layout_alignTop="@id/btn_addMultimedia"
+                android:background="@drawable/count_style"
+                android:text="@string/attribCount"
+                android:textColor="@color/color_accent"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@android:style/Widget.ActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/btn_addcustom"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:contentDescription="@string/attribButtons"
+                android:gravity="center"
+                android:padding="10dp"
+                android:src="@drawable/custom_attribute" />
+
+            <!--
+                 <TextView
+                android:id="@+id/customCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/btn_addcustom"
+                android:layout_alignRight="@id/btn_addcustom"
+                android:layout_alignTop="@id/btn_addcustom"
+                android:background="@drawable/count_style"
+                android:text="@string/attribCount"
+                android:textColor="@color/color_accent"
+                android:textStyle="bold" /> -->
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

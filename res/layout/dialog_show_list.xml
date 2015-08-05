@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <ListView
+        android:id="@+id/commonlistview"
+        style="@style/ListStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:choiceMode="singleChoice" >
+    </ListView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC" />
+
+    <Button
+        android:id="@+id/btn_ok"
+        android:layout_width="104dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/btn_ok"
+        android:textColor="@color/black" 
+        android:textStyle="bold"
+        android:background="@drawable/dialog_button_style"/>
+
+</LinearLayout>
