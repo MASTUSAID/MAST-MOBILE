@@ -22,8 +22,8 @@ import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.rmsi.android.mast.activity.LandingPageActivity;
 import com.rmsi.android.mast.activity.R;
+import com.rmsi.android.mast.activity.LandingPageActivity;
 import com.rmsi.android.mast.db.DBController;
 import com.rmsi.android.mast.domain.User;
 import com.rmsi.android.mast.util.CommonFunctions;
@@ -31,40 +31,293 @@ import com.rmsi.android.mast.util.MultipartUtility;
 
 public class UploadService extends IntentService {
 
-	public static final int STATUS_RUNNING = 0;
-	public static final int STATUS_FINISHED = 3;
-	public static final int STATUS_ERROR = 4;
-	public static final int STATUS_NO_DATA = 5;
-	private int notificationID = 100;
+    public static final int STATUS_RUNNING = 0;
+    public static final int STATUS_FINISHED = 3;
+    public static final int STATUS_ERROR = 4;
+    public static final int STATUS_NO_DATA = 5;
+    private int notificationID = 100;
 	private int numMessages = 0;
 	private NotificationManager mNotificationManager;
 	CommonFunctions cf = CommonFunctions.getInstance();
-	private static final String TAG = "UploadService";
+    private static final String TAG = "UploadService";
 	private String SERVER_IP = CommonFunctions.SERVER_IP;
 	int mediaId;
-	boolean nodata = false;
-	static int timeout = 10000; // 10 seconds
+	boolean nodata= false;
+    static int timeout = 10000; // 10 seconds 
+	
+    public UploadService() {
+        super(UploadService.class.getName());
+    }
 
-	public UploadService() {
-		super(UploadService.class.getName());
+    @Override
+    protected void onHandleIntent(Intent intent) 
+    {
+    	String uploadSuccessmsg=getResources().getString(R.string.FieldDataUploadedSuccessfully);
+    	String uploadFailureMsg=getResources().getString(R.string.ErrorInUploadingFieldData);
+    	String multimediaSuccessmsg=getResources().getString(R.string.MultimediaUploadedSuccessfully);
+    	String multimediaFailuremsg=getResources().getString(R.string.ErrorInUploadingMultimedia);
+        String successMsgDisplay[] = {uploadSuccessmsg,multimediaSuccessmsg};
+        String failureMsgDisplay[] = {uploadFailureMsg,multimediaFailuremsg};
+        StringBuffer notificationMsg = new StringBuffer();
+        
+		//Initializing context in common functions in case of a crash
+		try{CommonFunctions.getInstance().Initialize(getApplicationContext());}catch(Exception e){}
+
+    	String Uploading=getResources().getString(R.string.Uploading);
+    	String ConnectingtoWebService=getResources().getString(R.string.ConnectingtoWebService);
+    	String NoDataPendingforUpload=getResources().getString(R.string.NoDataPendingforUpload);
+    	String NoDataFoundToUpload=getResources().getString(R.string.NoDataFoundToUpload);
+    	String UploadFinished=getResources().getString(R.string.UploadFinished);
+    	String DataUploadedSuccessfully=getResources().getString(R.string.DataUploadedSuccessfully);
+    	String Error=getResources().getString(R.string.Error);
+    	String UnableToUpload=getResources().getString(R.string.UnableToUpload);
+    	String ErrorInUploadingData=getResources().getString(R.string.ErrorInUploadingData);
+    	String UploadingError=getResources().getString(R.string.UploadingError);
+    	int roleid = CommonFunctions.getRoleID();
+
+    	Log.d(TAG, "Upload Service Started!");
+    	final ResultReceiver receiver = intent.getParcelableExtra("receiver");
+    	displayNotification("MAST",Uploading,ConnectingtoWebService);
+
+    	try {
+    		if(roleid == 1)
+    		{
+    			boolean results = uploadDatausingPost();
+    			
+    			if(results){
+        			notificationMsg.append(successMsgDisplay[0]);
+        		}else{
+        			notificationMsg.append(failureMsgDisplay[0]);
+        		}
+    			
+    			if(results)
+    			{	
+    				results = startMultimediaUpload();
+            		
+    				notificationMsg.append("\n");
+    				if(results && nodata)
+    				{
+    					updateNotification("MAST",NoDataPendingforUpload,NoDataFoundToUpload);
+    					if(receiver!=null)receiver.send(STATUS_NO_DATA, Bundle.EMPTY);
+    				}
+    				else if(results){
+            			notificationMsg.append(successMsgDisplay[1]);
+            			updateNotification("MAST", notificationMsg.toString(), UploadFinished);
+           			 	receiver.send(STATUS_FINISHED, Bundle.EMPTY);
+            		}else{
+            			notificationMsg.append(failureMsgDisplay[1]);
+            			updateNotification("MAST",notificationMsg.toString(), Error);
+           			 	receiver.send(STATUS_ERROR, Bundle.EMPTY);
+            		}
+    			}
+    			else {
+    				updateNotification("MAST",UnableToUpload,Error);	
+    				if(receiver!=null)receiver.send(STATUS_ERROR, Bundle.EMPTY);
+    			}
+    			fetchRejectedFeatures();
+    		}
+    		else
+    		{
+    			boolean results = uploadverifiedData();
+    			if(results && nodata)
+    			{
+    				updateNotification("MAST",NoDataPendingforUpload,NoDataFoundToUpload);
+    				if(receiver!=null)receiver.send(STATUS_NO_DATA, Bundle.EMPTY);
+    			}
+    			else if (results)
+    			{
+    				updateNotification("MAST",DataUploadedSuccessfully,UploadFinished);
+    				if(receiver!=null)receiver.send(STATUS_FINISHED, Bundle.EMPTY);
+    			}
+    			else{                	
+    				updateNotification("MAST", UnableToUpload,Error);	
+    				if(receiver!=null)receiver.send(STATUS_ERROR, Bundle.EMPTY);
+    			}
+    		}
+    	}catch (IOException e) {
+    		String unableToConnect=getResources().getString(R.string.UnableToConnectToTheServer);
+    		String timeOut=getResources().getString(R.string.ConnectionTimeout);
+            updateNotification("MAST", unableToConnect,timeOut);
+            if(receiver!=null)receiver.send(STATUS_ERROR, Bundle.EMPTY);
+    		e.printStackTrace();cf.syncLog("", e);
+        }catch (Exception e){
+    		updateNotification("MAST",ErrorInUploadingData, UploadingError);
+    		if(receiver!=null)receiver.send(STATUS_ERROR, Bundle.EMPTY);
+    		e.printStackTrace();cf.syncLog("", e);
+    	}
+    	Log.d(TAG, "Service Stopping!");
+    }
+
+	private boolean uploadDatausingPost() throws IOException 
+	{
+		String json_string = null;
+		String requestUrl = "http://"+SERVER_IP+"/mast/sync/mobile/attributes/sync/"; 
+
+		InputStream is = null;
+		String syncData = new DBController(getApplicationContext()).getProjectDataForUpload();
+		if(!TextUtils.isEmpty(syncData))
+		{
+			HttpURLConnection conn = (HttpURLConnection) new URL(requestUrl).openConnection();
+			conn.setReadTimeout(100000 /* milliseconds */);
+			conn.setConnectTimeout(timeout /* milliseconds */);
+			conn.setRequestMethod("POST");
+			conn.setDoInput(true);
+			conn.setDoOutput(true);
+			// Starts the query
+			conn.connect();
+
+			//Setting parameters 
+			OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+			String urlParameters = "syncData="+syncData;
+			writer.write(urlParameters);
+			writer.flush();
+
+			try{
+				int response = conn.getResponseCode();
+
+				if(response>1)
+				{
+					is = conn.getInputStream();
+					// Convert the InputStream into a string
+					json_string = CommonFunctions.getStringFromInputStream(is);
+
+					if(!TextUtils.isEmpty(json_string) && !json_string.contains("Exception"))
+					{
+						boolean dbupdate=new DBController(getApplicationContext()).updateServerFeatureId(json_string);
+						if(dbupdate){
+							return true;
+						}else{
+							return false;
+						}
+					}
+					else{
+						cf.addErrorMessage("UploadService", json_string);return false;
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();cf.syncLog("", e);
+				return false;
+			}
+			finally{
+				if (is != null) {is.close();}
+			}
+		}
+		else
+			nodata = true;
+
+		return true;
 	}
 
-	protected void cancelNotification() {
-		Log.i("Cancel", "notification");
-		mNotificationManager.cancel(notificationID);
-	}
 
-	protected void displayNotification(String title, String content,
-			String ticker) {
+    private boolean uploadMultimedia(String filepath, String attribData,int mediaId)
+    {    	
+    	nodata = false;
+    	String requestUrl = "http://"+SERVER_IP+"/mast/sync/mobile/document/upload/";
+    	try {   					
+    		MultipartUtility multipart = new MultipartUtility(requestUrl, "UTF-8");
+
+    		multipart.addFormField("fileattribs", attribData);
+
+    		multipart.addFilePart("file", new File(filepath));
+
+    		String json_string = multipart.finish();
+
+    		if(!TextUtils.isEmpty(json_string) && !json_string.contains("Exception") && !json_string.contains("error"))
+    		{
+    			boolean synced=new DBController(getApplicationContext()).updateMediaSyncedStatus(json_string,CommonFunctions.MEDIA_SYNC_COMPLETED);
+    			if(synced)
+    				return true;
+    			else
+    				return false;
+    		}else{
+    			cf.addErrorMessage("UploadService", json_string);return false;
+    		}
+
+    	} catch (Exception e) {
+    		e.printStackTrace();cf.syncLog("", e);
+    		return false;
+    	} finally {
+    	}	
+    }
+    
+    private boolean startMultimediaUpload()
+    {
+    	boolean mediaAvailable = false;
+    	do
+    	{
+    		try {
+    			JSONArray syncDataObj = new DBController(getApplicationContext()).getMultimediaforUpload();
+    			if(syncDataObj.length()>0)
+    			{
+    				mediaAvailable = true;
+    				String filepath = syncDataObj.getJSONArray(0).getString(3);
+    				String attribData = syncDataObj.toString();
+    				mediaId=syncDataObj.getJSONArray(0).getInt(2);
+    				boolean uploadResult = uploadMultimedia(filepath,attribData,mediaId);
+
+    				if(!uploadResult)
+    					new DBController(getApplicationContext()).updateMediaSyncedStatus(mediaId+"",CommonFunctions.MEDIA_SYNC_ERROR);
+    			}else{
+    				if(mediaAvailable)
+    					new DBController(getApplicationContext()).resetMediaStatus();
+    				mediaAvailable = false;
+    			}
+    		}
+    		catch (Exception e) {
+    			mediaAvailable = false;
+    			e.printStackTrace(); cf.syncLog("", e);return false; 
+    		}
+
+    	}		
+    	while(mediaAvailable);	
+    	return true;    	
+    }
+    
+    private void fetchRejectedFeatures()
+    {
+    	InputStream is = null;
+		try {
+    		User user = new DBController(getApplicationContext()).getLoggedUser();
+    		if (user!=null && user.getUserId()!=null) {
+    			String requestUrl = "http://"+SERVER_IP+"/mast/sync/mobile/sync/RejectedSpatialUnit/"+user.getUserId(); 
+
+    			URL url = new URL(requestUrl);
+    			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+    			conn.setReadTimeout(100000 /* milliseconds */);
+    			conn.setConnectTimeout(timeout /* milliseconds */);
+    			conn.setRequestMethod("POST");
+    			conn.setDoInput(true);
+    			// Starts the query
+    			conn.connect();
+    			int response = conn.getResponseCode();
+
+    			if(response>1)
+    			{
+    				is  =  conn.getInputStream();
+    				// Convert the InputStream into a string
+    				String json_string = CommonFunctions.getStringFromInputStream(is);
+
+    				if(!TextUtils.isEmpty(json_string) && !json_string.contains("Exception"))
+        			{
+        				new DBController(getApplicationContext()).setRejectedStatus(json_string);
+        			}
+    			}	
+    		}
+    	} catch (Exception e) {
+    		cf.syncLog("", e);e.printStackTrace();
+    	}finally{try{ if(is != null)is.close();}catch(Exception e){}}
+    }
+    
+    protected void displayNotification(String title,String content,String ticker) 
+	{
 		Log.i("Start", "notification");
 
 		/* Invoking the default notification service */
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-				this);
+		NotificationCompat.Builder  mBuilder = 
+				new NotificationCompat.Builder(this);	
 
 		mBuilder.setContentTitle(title);
-		mBuilder.setStyle(new NotificationCompat.BigTextStyle()
-				.bigText(content));
+		mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(content));
 		mBuilder.setContentText(content);
 		mBuilder.setTicker(ticker);
 		mBuilder.setSmallIcon(R.drawable.ic_launcher);
@@ -83,227 +336,33 @@ public class UploadService extends IntentService {
 
 		/* Adds the Intent that starts the Activity to the top of the stack */
 		stackBuilder.addNextIntent(resultIntent);
-		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
-				PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent resultPendingIntent =
+				stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
 
 		mBuilder.setContentIntent(resultPendingIntent);
 
-		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		mNotificationManager =
+				(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
 		/* notificationID allows you to update the notification later on. */
 		mNotificationManager.notify(notificationID, mBuilder.build());
 	}
 
-	private void fetchRejectedFeatures() {
-		InputStream is = null;
-		try {
-			User user = new DBController(getApplicationContext())
-					.getLoggedUser();
-			if (user != null && user.getUserId() != null) {
-				String requestUrl = "http://" + SERVER_IP
-						+ "/mast/studio/mobile/sync/RejectedSpatialUnit/"
-						+ user.getUserId();
-
-				URL url = new URL(requestUrl);
-				HttpURLConnection conn = (HttpURLConnection) url
-						.openConnection();
-				conn.setReadTimeout(100000 /* milliseconds */);
-				conn.setConnectTimeout(timeout /* milliseconds */);
-				conn.setRequestMethod("POST");
-				conn.setDoInput(true);
-				// Starts the query
-				conn.connect();
-				int response = conn.getResponseCode();
-
-				if (response > 1) {
-					is = conn.getInputStream();
-					// Convert the InputStream into a string
-					String json_string = CommonFunctions
-							.getStringFromInputStream(is);
-
-					if (!TextUtils.isEmpty(json_string)
-							&& !json_string.contains("Exception")) {
-						new DBController(getApplicationContext())
-								.setRejectedStatus(json_string);
-					}
-				}
-			}
-		} catch (Exception e) {
-			cf.syncLog("", e);
-			e.printStackTrace();
-		} finally {
-			try {
-				if (is != null)
-					is.close();
-			} catch (Exception e) {
-			}
-		}
+	protected void cancelNotification() {
+		Log.i("Cancel", "notification");
+		mNotificationManager.cancel(notificationID);
 	}
 
-	@Override
-	protected void onHandleIntent(Intent intent) {
-		String uploadSuccessmsg = getResources().getString(
-				R.string.FieldDataUploadedSuccessfully);
-		String uploadFailureMsg = getResources().getString(
-				R.string.ErrorInUploadingFieldData);
-		String multimediaSuccessmsg = getResources().getString(
-				R.string.MultimediaUploadedSuccessfully);
-		String multimediaFailuremsg = getResources().getString(
-				R.string.ErrorInUploadingMultimedia);
-		String successMsgDisplay[] = { uploadSuccessmsg, multimediaSuccessmsg };
-		String failureMsgDisplay[] = { uploadFailureMsg, multimediaFailuremsg };
-		StringBuffer notificationMsg = new StringBuffer();
-
-		// Initializing context in common functions in case of a crash
-		try {
-			CommonFunctions.getInstance().Initialize(getApplicationContext());
-		} catch (Exception e) {
-		}
-
-		String Uploading = getResources().getString(R.string.Uploading);
-		String ConnectingtoWebService = getResources().getString(
-				R.string.ConnectingtoWebService);
-		String NoDataPendingforUpload = getResources().getString(
-				R.string.NoDataPendingforUpload);
-		String NoDataFoundToUpload = getResources().getString(
-				R.string.NoDataFoundToUpload);
-		String UploadFinished = getResources().getString(
-				R.string.UploadFinished);
-		String DataUploadedSuccessfully = getResources().getString(
-				R.string.DataUploadedSuccessfully);
-		String Error = getResources().getString(R.string.Error);
-		String UnableToUpload = getResources().getString(
-				R.string.UnableToUpload);
-		String ErrorInUploadingData = getResources().getString(
-				R.string.ErrorInUploadingData);
-		String UploadingError = getResources().getString(
-				R.string.UploadingError);
-		int roleid = CommonFunctions.getRoleID();
-
-		Log.d(TAG, "Upload Service Started!");
-		final ResultReceiver receiver = intent.getParcelableExtra("receiver");
-		displayNotification("MAST", Uploading, ConnectingtoWebService);
-
-		try {
-			if (roleid == 1) {
-				boolean results = uploadDatausingPost();
-
-				if (results) {
-					notificationMsg.append(successMsgDisplay[0]);
-				} else {
-					notificationMsg.append(failureMsgDisplay[0]);
-				}
-
-				if (results) {
-					results = startMultimediaUpload();
-
-					notificationMsg.append("\n");
-					if (results && nodata) {
-						updateNotification("MAST", NoDataPendingforUpload,
-								NoDataFoundToUpload);
-						if (receiver != null)
-							receiver.send(STATUS_NO_DATA, Bundle.EMPTY);
-					} else if (results) {
-						notificationMsg.append(successMsgDisplay[1]);
-						updateNotification("MAST", notificationMsg.toString(),
-								UploadFinished);
-						receiver.send(STATUS_FINISHED, Bundle.EMPTY);
-					} else {
-						notificationMsg.append(failureMsgDisplay[1]);
-						updateNotification("MAST", notificationMsg.toString(),
-								Error);
-						receiver.send(STATUS_ERROR, Bundle.EMPTY);
-					}
-				} else {
-					updateNotification("MAST", UnableToUpload, Error);
-					if (receiver != null)
-						receiver.send(STATUS_ERROR, Bundle.EMPTY);
-				}
-				fetchRejectedFeatures();
-			} else {
-				boolean results = uploadverifiedData();
-				if (results && nodata) {
-					updateNotification("MAST", NoDataPendingforUpload,
-							NoDataFoundToUpload);
-					if (receiver != null)
-						receiver.send(STATUS_NO_DATA, Bundle.EMPTY);
-				} else if (results) {
-					updateNotification("MAST", DataUploadedSuccessfully,
-							UploadFinished);
-					if (receiver != null)
-						receiver.send(STATUS_FINISHED, Bundle.EMPTY);
-				} else {
-					updateNotification("MAST", UnableToUpload, Error);
-					if (receiver != null)
-						receiver.send(STATUS_ERROR, Bundle.EMPTY);
-				}
-			}
-		} catch (IOException e) {
-			String unableToConnect = getResources().getString(
-					R.string.UnableToConnectToTheServer);
-			String timeOut = getResources().getString(
-					R.string.ConnectionTimeout);
-			updateNotification("MAST", unableToConnect, timeOut);
-			if (receiver != null)
-				receiver.send(STATUS_ERROR, Bundle.EMPTY);
-			e.printStackTrace();
-			cf.syncLog("", e);
-		} catch (Exception e) {
-			updateNotification("MAST", ErrorInUploadingData, UploadingError);
-			if (receiver != null)
-				receiver.send(STATUS_ERROR, Bundle.EMPTY);
-			e.printStackTrace();
-			cf.syncLog("", e);
-		}
-		Log.d(TAG, "Service Stopping!");
-	}
-
-	private boolean startMultimediaUpload() {
-		boolean mediaAvailable = false;
-		do {
-			try {
-				JSONArray syncDataObj = new DBController(
-						getApplicationContext()).getMultimediaforUpload();
-				if (syncDataObj.length() > 0) {
-					mediaAvailable = true;
-					String filepath = syncDataObj.getJSONArray(0).getString(3);
-					String attribData = syncDataObj.toString();
-					mediaId = syncDataObj.getJSONArray(0).getInt(2);
-					boolean uploadResult = uploadMultimedia(filepath,
-							attribData, mediaId);
-
-					if (!uploadResult)
-						new DBController(getApplicationContext())
-								.updateMediaSyncedStatus(mediaId + "",
-										CommonFunctions.MEDIA_SYNC_ERROR);
-				} else {
-					if (mediaAvailable)
-						new DBController(getApplicationContext())
-								.resetMediaStatus();
-					mediaAvailable = false;
-				}
-			} catch (Exception e) {
-				mediaAvailable = false;
-				e.printStackTrace();
-				cf.syncLog("", e);
-				return false;
-			}
-
-		} while (mediaAvailable);
-		return true;
-	}
-
-	protected void updateNotification(String title, String content,
-			String ticker) {
+	protected void updateNotification(String title,String content,String ticker) 
+	{
 		Log.i("Update", "notification");
 
 		/* Invoking the default notification service */
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-				this);
+		NotificationCompat.Builder  mBuilder = 
+				new NotificationCompat.Builder(this);	
 
 		mBuilder.setContentTitle(title);
-		mBuilder.setStyle(new NotificationCompat.BigTextStyle()
-				.bigText(content));
+		mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(content));
 		mBuilder.setContentText(content);
 		mBuilder.setTicker(ticker);
 		mBuilder.setSmallIcon(R.drawable.ic_launcher);
@@ -320,180 +379,72 @@ public class UploadService extends IntentService {
 
 		/* Adds the Intent that starts the Activity to the top of the stack */
 		stackBuilder.addNextIntent(resultIntent);
-		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
-				PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent resultPendingIntent =	stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
 
 		mBuilder.setContentIntent(resultPendingIntent);
 
-		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		mNotificationManager =
+				(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		mBuilder.setProgress(0, 0, false);
 		/* Update the existing notification using same notification ID */
 		mNotificationManager.notify(notificationID, mBuilder.build());
 	}
-
-	private boolean uploadDatausingPost() throws IOException {
-		String json_string = null;
-		String requestUrl = "http://" + SERVER_IP
-				+ "/mast/studio/mobile/attributes/sync/";
-
-		InputStream is = null;
-		String syncData = new DBController(getApplicationContext())
-				.getProjectDataForUpload();
-		if (!TextUtils.isEmpty(syncData)) {
-			HttpURLConnection conn = (HttpURLConnection) new URL(requestUrl)
-					.openConnection();
-			conn.setReadTimeout(100000 /* milliseconds */);
-			conn.setConnectTimeout(timeout /* milliseconds */);
-			conn.setRequestMethod("POST");
-			conn.setDoInput(true);
-			conn.setDoOutput(true);
-			// Starts the query
-			conn.connect();
-
-			// Setting parameters
-			OutputStreamWriter writer = new OutputStreamWriter(
-					conn.getOutputStream());
-			String urlParameters = "syncData=" + syncData;
-			writer.write(urlParameters);
-			writer.flush();
-
+	
+    private boolean uploadverifiedData() 
+    {
+    	String json_string = null;
+    	String requestUrl = "http://"+SERVER_IP+"/mast/sync/mobile/sync/adjudicatedData/";
+    	String syncData = new DBController(getApplicationContext()).getVerifiedFeaturesForUpload();
+    	if(!TextUtils.isEmpty(syncData))
+    	{
+    		InputStream is = null;
 			try {
-				int response = conn.getResponseCode();
+    			
+    			HttpURLConnection conn = (HttpURLConnection) new URL(requestUrl).openConnection();
+    			conn.setReadTimeout(100000 /* milliseconds */);
+    			conn.setConnectTimeout(timeout /* milliseconds */);
+    			conn.setRequestMethod("POST");
+    			conn.setDoInput(true);
+    			conn.setDoOutput(true);
+    			// Starts the query
+    			conn.connect();
 
-				if (response > 1) {
-					is = conn.getInputStream();
-					// Convert the InputStream into a string
-					json_string = CommonFunctions.getStringFromInputStream(is);
+    			//Setting parameters 
+	    		 OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+	    		 String urlParameters = "adjudicatedData="+syncData;
+	    		 writer.write(urlParameters);
+	    		 writer.flush();
 
-					if (!TextUtils.isEmpty(json_string)
-							&& !json_string.contains("Exception")) {
-						boolean dbupdate = new DBController(
-								getApplicationContext())
-								.updateServerFeatureId(json_string);
-						if (dbupdate) {
-							return true;
-						} else {
-							return false;
-						}
-					} else {
-						cf.addErrorMessage("UploadService", json_string);
-						return false;
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				cf.syncLog("", e);
-				return false;
-			} finally {
-				if (is != null) {
-					is.close();
-				}
-			}
-		} else
-			nodata = true;
+    			int response = conn.getResponseCode();
+    			if(response>1)
+    			{
+    				is = conn.getInputStream();
+    				// Convert the InputStream into a string
+    				json_string = CommonFunctions.getStringFromInputStream(is);
 
-		return true;
-	}
-
-	private boolean uploadMultimedia(String filepath, String attribData,
-			int mediaId) {
-		nodata = false;
-		String requestUrl = "http://" + SERVER_IP
-				+ "/mast/studio/mobile/document/upload/";
-		try {
-			MultipartUtility multipart = new MultipartUtility(requestUrl,
-					"UTF-8");
-
-			multipart.addFormField("fileattribs", attribData);
-
-			multipart.addFilePart("file", new File(filepath));
-
-			String json_string = multipart.finish();
-
-			if (!TextUtils.isEmpty(json_string)
-					&& !json_string.contains("Exception")
-					&& !json_string.contains("error")) {
-				boolean synced = new DBController(getApplicationContext())
-						.updateMediaSyncedStatus(json_string,
-								CommonFunctions.MEDIA_SYNC_COMPLETED);
-				if (synced)
-					return true;
-				else
-					return false;
-			} else {
-				cf.addErrorMessage("UploadService", json_string);
-				return false;
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			cf.syncLog("", e);
-			return false;
-		} finally {
-		}
-	}
-
-	private boolean uploadverifiedData() {
-		String json_string = null;
-		String requestUrl = "http://" + SERVER_IP
-				+ "/mast/studio/mobile/sync/adjudicatedData/";
-		String syncData = new DBController(getApplicationContext())
-				.getVerifiedFeaturesForUpload();
-		if (!TextUtils.isEmpty(syncData)) {
-			InputStream is = null;
-			try {
-
-				HttpURLConnection conn = (HttpURLConnection) new URL(requestUrl)
-						.openConnection();
-				conn.setReadTimeout(100000 /* milliseconds */);
-				conn.setConnectTimeout(timeout /* milliseconds */);
-				conn.setRequestMethod("POST");
-				conn.setDoInput(true);
-				conn.setDoOutput(true);
-				// Starts the query
-				conn.connect();
-
-				// Setting parameters
-				OutputStreamWriter writer = new OutputStreamWriter(
-						conn.getOutputStream());
-				String urlParameters = "adjudicatedData=" + syncData;
-				writer.write(urlParameters);
-				writer.flush();
-
-				int response = conn.getResponseCode();
-				if (response > 1) {
-					is = conn.getInputStream();
-					// Convert the InputStream into a string
-					json_string = CommonFunctions.getStringFromInputStream(is);
-
-					if (!TextUtils.isEmpty(json_string)
-							&& !json_string.contains("Exception")) {
-						boolean dbupdate = new DBController(
-								getApplicationContext())
-								.updateSyncedVerifiedStatus(json_string);
-						if (dbupdate) {
-							return true;
-						} else {
-							return false;
-						}
-					} else {
-						cf.addErrorMessage("UploadService", json_string);
-						return false;
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				cf.syncLog("", e);
-				return false;
-			} finally {
-				try {
-					if (is != null)
-						is.close();
-				} catch (Exception e) {
-				}
-			}
-		} else
-			nodata = true;
-		return true;
-	}
+    				if(!TextUtils.isEmpty(json_string) && !json_string.contains("Exception"))
+        			{
+        				boolean dbupdate=new DBController(getApplicationContext()).updateSyncedVerifiedStatus(json_string);
+        				if(dbupdate){
+        					return true;
+        				}else{
+        					return false;
+        				}
+        			}
+        			else{
+        				cf.addErrorMessage("UploadService", json_string);return false;
+        			}
+    			}
+    		} catch (Exception e) {
+    			e.printStackTrace();cf.syncLog("", e);
+    			return false;
+    		}
+    		finally{
+    			try{ if(is != null)is.close();}catch(Exception e){}	
+    		}
+    	}
+    	else
+    		nodata = true;
+    	return true;
+    }
 }

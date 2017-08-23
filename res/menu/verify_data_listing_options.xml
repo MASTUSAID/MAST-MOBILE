@@ -13,11 +13,11 @@
         android:orderInCategory="100"
         android:title="@string/view_attributes"
         app:showAsAction="never"/>
-      <item
+    <!--   <item
         android:id="@+id/add_witness"
         android:orderInCategory="100"
         android:title="@string/add_witness"
-        app:showAsAction="never"/>
+        app:showAsAction="never"/> -->
        <item
         android:id="@+id/mark_as_verified"
         android:orderInCategory="100"

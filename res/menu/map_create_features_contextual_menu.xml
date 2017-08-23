@@ -14,7 +14,7 @@
         android:title="@string/undo"/>
     <item
         android:id="@+id/clear_features"
-        android:icon="@drawable/delete"
+        android:icon="@drawable/abc"
         app:showAsAction="always"
         android:title="@string/clear_feature"/>
     <item

@@ -71,7 +71,7 @@
                 android:contentDescription="@string/mapOptions"
                 android:gravity="center"
                 android:padding="10dp"
-                android:src="@drawable/delete" />
+                android:src="@drawable/abc" />
 
             <ImageView
                 android:id="@+id/measure"

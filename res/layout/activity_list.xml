@@ -12,10 +12,10 @@
         android:id="@+id/list_container"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="15"
+        android:layout_weight="10"
         android:orientation="vertical" >
-          
-          <TextView
+
+        <TextView
             android:id="@+id/spatialunit_lbl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,29 +24,82 @@
             android:text="@string/spatialunit_lbl"
             android:textColor="@color/black"
             android:textSize="@dimen/textSizeL" />
-           
-          <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#CCCCCC" />
-          
-        <ListView
-        android:id="@android:id/list"
-        style="@style/ListStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp" />
+        
+        <TextView
+            android:id="@+id/tenureType_lbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:text="@string/tenureType"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSizeL" />
 
-    <TextView
-        android:id="@android:id/empty"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="@string/emptyListText"
-        android:textColor="@color/black"
-        android:textSize="20sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <TextView
+            android:id="@+id/Person"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:background="@color/color_theme_light"
+            android:text="@string/person"
+            android:paddingLeft="10sp"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+      
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <ListView
+            android:id="@android:id/list"
+            style="@style/ListStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="4.9"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp" />
+
+       
+
+        <View
+             android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <TextView
+            android:id="@+id/txtView_nextOfKin"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:background="@color/color_theme_light"
+            android:paddingLeft="10sp"
+            android:text="@string/person_of_interest"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <ListView
+            android:id="@+id/list_of_kin"
+            style="@style/ListStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="4.9"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp" />
+        
+        
     </LinearLayout>
 
     <LinearLayout
@@ -56,7 +109,7 @@
         android:layout_gravity="bottom"
         android:background="@color/color_primary"
         android:orientation="horizontal"
-        android:weightSum="2" >
+        android:weightSum="3" >
 
         <Button
             android:id="@+id/btn_addNewPerson"
@@ -71,8 +124,8 @@
             android:text="@string/addNew"
             android:textColor="@color/white" />
 
-        <!-- <Button
-            android:id="@+id/btn_personDltList"
+        <Button
+            android:id="@+id/btn_addNextKin"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,8 +134,8 @@
             android:contentDescription="@string/mapOptions"
             android:gravity="center"
             android:padding="2dp"
-            android:text="@string/delete"
-            android:textColor="@color/white" /> -->
+            android:text="@string/addPOI"
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/btn_backPersonList"
@@ -94,7 +147,7 @@
             android:contentDescription="@string/mapOptions"
             android:gravity="center"
             android:padding="2dp"
-            android:text="@string/back"
+            android:text="@string/save"
             android:textColor="@color/white" />
     </LinearLayout>
 

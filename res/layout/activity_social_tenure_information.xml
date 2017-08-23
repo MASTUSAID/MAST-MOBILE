@@ -15,68 +15,38 @@
         android:layout_weight="15"
         android:orientation="vertical" >
 
-        <TextView
-             android:id="@+id/select_tenure_lbl"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginLeft="5dp"
-             android:layout_marginTop="5dp"
-             android:text="@string/select_tenure_lbl"
-             android:textColor="@color/black"
-             android:textSize="@dimen/textSize" />
-
-        <RadioGroup
-            android:id="@+id/radio_selectTenure"
-           android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_marginTop="5dp"
-            android:padding="5dp" >
-
-           <RadioButton
-                android:id="@+id/radio_multiple"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/radio_multiple"
-                  android:checked="true"/>
-            
-            <RadioButton
-                android:id="@+id/radio_single"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/radio_single" />
-
-            
-
-        </RadioGroup>
+          <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC" />
 
           <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#CCCCCC" />
-        
-        <TextView
-             android:id="@+id/select_person_lbl"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginLeft="5dp"
-             android:layout_marginTop="5dp"
-             android:text="@string/select_person_lbl"
-             android:textColor="@color/black"
-             android:textSize="@dimen/textSize" />
-        
+          
+           <TextView
+            android:id="@+id/spatialunit_resident_lbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:text="@string/resident"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSize" />
+
         <Spinner
-            android:id="@+id/spinner_person_type"
+            android:id="@+id/spinner_resident"
             style="@style/Widget.AppCompat.Spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_marginTop="5dp"
-            android:padding="5dp" />
-          <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#CCCCCC" />
+           
+            android:entries="@array/residentArray" />
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
         
         <ListView
             android:id="@+id/list_view"

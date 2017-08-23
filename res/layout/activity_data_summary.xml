@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="10dp" >
 
     <include
         android:id="@+id/toolbar"
@@ -11,7 +12,7 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="7" >
+        android:layout_weight="9" >
 
         <TableRow
             android:id="@+id/tableRow1"
@@ -22,16 +23,18 @@
                 android:id="@+id/TextView01"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:padding="20dip"
-                android:text="@string/data_summary_label1"
-                android:textColor="#000000" />
+                android:padding="5dip"
+                android:text="@string/data_summary_label1_1"
+                android:textColor="#000000" 
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/TextView_tenureRelation"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="20dip"
-                android:textColor="#000000" />
+                android:padding="10dip"
+                android:textColor="#000000" 
+                android:textStyle="bold"/>
         </TableRow>
 
         <TableRow
@@ -43,15 +46,16 @@
                 android:id="@+id/TextView03"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:padding="20dip"
+                android:padding="5dip"
                 android:text="@string/data_summary_label2"
-                android:textColor="#000000" />
+                android:textColor="#000000" 
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/TextView_propertyStatus"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="20dip"
+                android:padding="10dip"
                 android:textColor="#009112"
                 android:textStyle="bold" />
         </TableRow>
@@ -64,63 +68,145 @@
             <TextView
                 android:id="@+id/TextView05"
                 android:layout_weight="1"
-                android:gravity="left"
-                android:padding="20dip"
+                android:gravity="start"
+                android:padding="5dip"
                 android:text="@string/data_summary_label3"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/TextView_countNaturalPerson"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="20dip"
+                android:padding="10dip"
+                android:textStyle="bold" />
+        </TableRow>
+        
+               <TableRow
+                   android:id="@+id/tableRow4"
+                   android:layout_width="fill_parent"
+                   android:layout_height="wrap_content"
+                  >
+
+            <TextView
+                android:id="@+id/TextView15"
+                android:layout_weight="1"
+                android:gravity="left"   
+                 android:padding="1dip"             
+                 android:paddingLeft="10dip"
+                 android:layout_marginLeft="15dp"
+                android:text="@string/data_summary_label1_owner"
+                android:textColor="#000000"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/TextView_owner_count"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dip"
+                android:textColor="#000000"
                 android:textStyle="bold" />
         </TableRow>
 
        <TableRow
-            android:id="@+id/tableRow4"
+            android:id="@+id/tableRow5"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content" 
+           >
 
             <TextView
                 android:id="@+id/TextView07"
                 android:layout_weight="1"
-                android:gravity="left"
-                android:padding="20dip"
-                android:text="@string/data_summary_label4"
+                android:gravity="left" 
+                 android:padding="1dip"     
+                 android:paddingLeft="10dip"
+                  android:layout_marginLeft="15dp"
+                 android:textSize="12sp"
+                android:text="@string/data_summary_label4_admin"
                 android:textColor="#000000" />
 
             <TextView
-                android:id="@+id/TextView_nonNatural"
+                android:id="@+id/TextView_admin_count"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="20dip"
+                android:padding="10dip"
                 android:textStyle="bold" />
         </TableRow>
         
         <TableRow
-            android:id="@+id/tableRow5"
+            android:id="@+id/tableRow6"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+           >
 
             <TextView
                 android:id="@+id/TextView09"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:padding="20dip"
-                android:text="@string/data_summary_label5"
+                android:padding="1dip"     
+                 android:paddingLeft="10dip"
+                 android:textSize="12sp"
+                  android:layout_marginLeft="15dp"
+                android:text="@string/data_summary_label5_Guardian"
                 android:textColor="#000000" />
 
             <TextView
-                android:id="@+id/TextView_countSocialTenure"
+                android:id="@+id/TextView_countGuardian"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="20dip"
+                android:padding="10dip"
                 android:textStyle="bold" />
         </TableRow>
         
+        <TableRow
+            android:id="@+id/tableRow7"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/TextView14"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:padding="5dip"
+                android:layout_width="wrap_content"
+                android:text="@string/data_summary_label5_POI"
+                android:textColor="#000000" 
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/TextView_countPOI"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dip"
+                android:textStyle="bold" />
+        </TableRow>
+        
+        <TableRow
+            android:id="@+id/tableRow8"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" 
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/TextView17"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:padding="5dip"
+                android:text="@string/data_summary_label4"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/TextView_countNonNatural"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dip"
+                android:textStyle="bold" />
+        </TableRow>
+       
+   
          <TableRow
-            android:id="@+id/tableRow6"
+            android:id="@+id/tableRow10"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
 
@@ -128,20 +214,21 @@
                 android:id="@+id/TextView11"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:padding="20dip"
+                android:padding="5dip"
                 android:text="@string/data_summary_label6"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/TextView_countMultimedia"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="20dip"
+                android:padding="10dip"
                 android:textStyle="bold" />
         </TableRow>
         
           <TableRow
-            android:id="@+id/tableRow7"
+            android:id="@+id/tableRow11"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
 
@@ -149,15 +236,16 @@
                 android:id="@+id/TextView13"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:padding="20dip"
+                android:padding="5dip"
                 android:text="@string/data_summary_label7"
-                android:textColor="#000000" />
+                android:textColor="#000000" 
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/TextView_custom"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="20dip"
+                android:padding="10dip"
                 android:textStyle="bold" />
         </TableRow>
     </TableLayout>

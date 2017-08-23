@@ -32,7 +32,7 @@
         android:layout_gravity="bottom"
         android:background="@color/color_primary"
         android:orientation="horizontal"
-        android:weightSum="3" >
+        android:weightSum="2" >
 
         <Button
             android:id="@+id/btn_save"
@@ -44,22 +44,10 @@
             android:contentDescription="@string/mapOptions"
             android:gravity="center"
             android:padding="2dp"
-            android:text="@string/save"
+            android:text="@string/AddPerson"
             android:textColor="@color/white" />
 
-        <Button
-            android:id="@+id/btn_addPerson"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:layout_weight="1"
-            android:contentDescription="@string/mapOptions"
-            android:gravity="center"
-            android:padding="2dp"
-            android:text="@string/Addcontact"
-            android:textColor="@color/white" />
-
+        
         <Button
             android:id="@+id/btn_back"
             style="?android:attr/buttonBarButtonStyle"
@@ -70,7 +58,7 @@
             android:contentDescription="@string/mapOptions"
             android:gravity="center"
             android:padding="2dp"
-            android:text="@string/back"
+            android:text="@string/save"
             android:textColor="@color/white" />
     </LinearLayout>
 

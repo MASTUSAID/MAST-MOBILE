@@ -13,206 +13,216 @@ import com.google.android.gms.maps.model.TileProvider;
 
 public class OfflineTileProvider implements TileProvider, Closeable {
 
-	// ------------------------------------------------------------------------
-	// Instance Variables
-	// ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    // Instance Variables
+    // ------------------------------------------------------------------------
 
-	private int mMinimumZoom = Integer.MIN_VALUE;
+    private int mMinimumZoom = Integer.MIN_VALUE;
 
-	private int mMaximumZoom = Integer.MAX_VALUE;
+    private int mMaximumZoom = Integer.MAX_VALUE;
 
-	private LatLngBounds mBounds;
+    private LatLngBounds mBounds;
 
-	private SQLiteDatabase mDatabase;
+    private SQLiteDatabase mDatabase;
+    
+    private String pathToFile;
+    
+    String test = "SELECT * FROM grid_data";
 
-	private String pathToFile;
+    // ------------------------------------------------------------------------
+    // Constructors
+    // ------------------------------------------------------------------------
 
-	String test = "SELECT * FROM grid_data";
+    public OfflineTileProvider(File file) {
+        this(file.getAbsolutePath());
+    }
 
-	// ------------------------------------------------------------------------
-	// Constructors
-	// ------------------------------------------------------------------------
+    public OfflineTileProvider(String pathToFile) 
+    {	
+    	this.pathToFile = pathToFile;
+        int flags = SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS;
+        this.mDatabase = SQLiteDatabase.openDatabase(pathToFile, null, flags);
+        this.calculateZoomConstraints();
+        this.calculateBounds();
+    }
 
-	public OfflineTileProvider(File file) {
-		this(file.getAbsolutePath());
-	}
+    // ------------------------------------------------------------------------
+    // TileProvider Interface
+    // ------------------------------------------------------------------------
 
-	public OfflineTileProvider(String pathToFile) {
-		this.pathToFile = pathToFile;
-		int flags = SQLiteDatabase.OPEN_READONLY
-				| SQLiteDatabase.NO_LOCALIZED_COLLATORS;
-		this.mDatabase = SQLiteDatabase.openDatabase(pathToFile, null, flags);
-		this.calculateZoomConstraints();
-		this.calculateBounds();
-	}
+    @Override
+    public Tile getTile(int x, int y, int z) {
+        Tile tile = NO_TILE;
+        if (this.isZoomLevelAvailable(z) && this.isDatabaseAvailable()) {
+            String[] projection = {
+                "tile_data"
+            };
+            //System.out.println("Fecthing Tile for Zoom Level:"+ z);
+            int row = ((int) (Math.pow(2, z) - y) - 1);
+            String predicate = "tile_row = ? AND tile_column = ? AND zoom_level = ?";
+            String[] values = {
+                    String.valueOf(row), String.valueOf(x), String.valueOf(z)
+            };
+            Cursor c = this.mDatabase.query("tiles", projection, predicate, values, null, null, null);
+            if (c != null) {
+                c.moveToFirst();
+                if (!c.isAfterLast()) {
+                    tile = new Tile(256, 256, c.getBlob(0));
+                }
+                c.close();
+            }
+            
+        }
+        return tile;
+    }
 
-	// ------------------------------------------------------------------------
-	// TileProvider Interface
-	// ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    // Closeable Interface
+    // ------------------------------------------------------------------------
 
-	private void calculateBounds() {
-		if (this.isDatabaseAvailable()) {
-			String[] projection = new String[] { "value" };
+    /**
+     * Closes the provider, cleaning up any background resources.
+     * 
+     * <p>
+     * You must call {@link #close()} when you are finished using an instance of
+     * this provider. Failing to do so may leak resources, such as the backing
+     * SQLiteDatabase.
+     * </p>
+     */
+    @Override
+    public void close() {
+        if (this.mDatabase != null) {
+            this.mDatabase.close();
+            this.mDatabase = null;
+        }
+    }
 
-			String[] subArgs = new String[] { "bounds" };
+    // ------------------------------------------------------------------------
+    // Public Methods
+    // ------------------------------------------------------------------------
 
-			Cursor c = this.mDatabase.query("metadata", projection, "name = ?",
-					subArgs, null, null, null);
+    /**
+     * The minimum zoom level supported by this provider.
+     * 
+     * @return the minimum zoom level supported or {@link Integer.MIN_VALUE} if
+     *         it could not be determined.
+     */
+    public int getMinimumZoom() {
+        return this.mMinimumZoom;
+    }
 
-			c.moveToFirst();
-			if (!c.isAfterLast()) {
-				String[] parts = c.getString(0).split(",\\s*");
+    /**
+     * The maximum zoom level supported by this provider.
+     * 
+     * @return the maximum zoom level supported or {@link Integer.MAX_VALUE} if
+     *         it could not be determined.
+     */
+    public int getMaximumZoom() {
+        return this.mMaximumZoom;
+    }
 
-				double w = Double.parseDouble(parts[0]);
-				double s = Double.parseDouble(parts[1]);
-				double e = Double.parseDouble(parts[2]);
-				double n = Double.parseDouble(parts[3]);
+    /**
+     * The geographic bounds available from this provider.
+     * 
+     * @return the geographic bounds available or {@link null} if it could not
+     *         be determined.
+     */
+    public LatLngBounds getBounds() {
+        return this.mBounds;
+    }
 
-				LatLng ne = new LatLng(n, e);
-				LatLng sw = new LatLng(s, w);
+    /**
+     * Determines if the requested zoom level is supported by this provider.
+     * 
+     * @param zoom The requested zoom level.
+     * @return {@code true} if the requested zoom level is supported by this
+     *         provider.
+     */
+    public boolean isZoomLevelAvailable(int zoom) {
+        return (zoom >= this.mMinimumZoom) && (zoom <= this.mMaximumZoom);
+    }
 
-				this.mBounds = new LatLngBounds(sw, ne);
-			}
-			c.close();
-		}
-	}
+    // ------------------------------------------------------------------------
+    // Private Methods
+    // ------------------------------------------------------------------------
 
-	// ------------------------------------------------------------------------
-	// Closeable Interface
-	// ------------------------------------------------------------------------
+    private void calculateZoomConstraints() {
+        if (this.isDatabaseAvailable()) {
+            String[] projection = new String[] {
+                "value"
+            };
 
-	private void calculateZoomConstraints() {
-		if (this.isDatabaseAvailable()) {
-			String[] projection = new String[] { "value" };
+            String[] minArgs = new String[] {
+                "minzoom"
+            };
 
-			String[] minArgs = new String[] { "minzoom" };
+            String[] maxArgs = new String[] {
+                "maxzoom"
+            };
 
-			String[] maxArgs = new String[] { "maxzoom" };
+            Cursor c;
 
-			Cursor c;
+            c = this.mDatabase.query("metadata", projection, "name = ?", minArgs, null, null, null);
 
-			c = this.mDatabase.query("metadata", projection, "name = ?",
-					minArgs, null, null, null);
+            c.moveToFirst();
+            if (!c.isAfterLast()) {
+                this.mMinimumZoom = c.getInt(0);
+            }
+            c.close();
 
-			c.moveToFirst();
-			if (!c.isAfterLast()) {
-				this.mMinimumZoom = c.getInt(0);
-			}
-			c.close();
+            c = this.mDatabase.query("metadata", projection, "name = ?", maxArgs, null, null, null);
 
-			c = this.mDatabase.query("metadata", projection, "name = ?",
-					maxArgs, null, null, null);
+            c.moveToFirst();
+            if (!c.isAfterLast()) {
+                this.mMaximumZoom = c.getInt(0);
+            }
+            c.close();
+        }
+    }
 
-			c.moveToFirst();
-			if (!c.isAfterLast()) {
-				this.mMaximumZoom = c.getInt(0);
-			}
-			c.close();
-		}
-	}
+    private void calculateBounds() {
+        if (this.isDatabaseAvailable()) {
+            String[] projection = new String[] {
+                "value"
+            };
 
-	// ------------------------------------------------------------------------
-	// Public Methods
-	// ------------------------------------------------------------------------
+            String[] subArgs = new String[] {
+                "bounds"
+            };
 
-	/**
-	 * Closes the provider, cleaning up any background resources.
-	 * 
-	 * <p>
-	 * You must call {@link #close()} when you are finished using an instance of
-	 * this provider. Failing to do so may leak resources, such as the backing
-	 * SQLiteDatabase.
-	 * </p>
-	 */
-	@Override
-	public void close() {
-		if (this.mDatabase != null) {
-			this.mDatabase.close();
-			this.mDatabase = null;
-		}
-	}
+            Cursor c = this.mDatabase.query("metadata", projection, "name = ?", subArgs, null, null, null);
 
-	/**
-	 * The geographic bounds available from this provider.
-	 * 
-	 * @return the geographic bounds available or {@link null} if it could not
-	 *         be determined.
-	 */
-	public LatLngBounds getBounds() {
-		return this.mBounds;
-	}
+            c.moveToFirst();
+            if (!c.isAfterLast()) {
+                String[] parts = c.getString(0).split(",\\s*");
 
-	/**
-	 * The maximum zoom level supported by this provider.
-	 * 
-	 * @return the maximum zoom level supported or {@link Integer.MAX_VALUE} if
-	 *         it could not be determined.
-	 */
-	public int getMaximumZoom() {
-		return this.mMaximumZoom;
-	}
+                double w = Double.parseDouble(parts[0]);
+                double s = Double.parseDouble(parts[1]);
+                double e = Double.parseDouble(parts[2]);
+                double n = Double.parseDouble(parts[3]);
 
-	/**
-	 * The minimum zoom level supported by this provider.
-	 * 
-	 * @return the minimum zoom level supported or {@link Integer.MIN_VALUE} if
-	 *         it could not be determined.
-	 */
-	public int getMinimumZoom() {
-		return this.mMinimumZoom;
-	}
+                LatLng ne = new LatLng(n, e);
+                LatLng sw = new LatLng(s, w);
 
-	// ------------------------------------------------------------------------
-	// Private Methods
-	// ------------------------------------------------------------------------
+                this.mBounds = new LatLngBounds(sw, ne);
+            }
+            c.close();
+        }
+    }
 
-	@Override
-	public Tile getTile(int x, int y, int z) {
-		Tile tile = NO_TILE;
-		if (this.isZoomLevelAvailable(z) && this.isDatabaseAvailable()) {
-			String[] projection = { "tile_data" };
-			// System.out.println("Fecthing Tile for Zoom Level:"+ z);
-			int row = ((int) (Math.pow(2, z) - y) - 1);
-			String predicate = "tile_row = ? AND tile_column = ? AND zoom_level = ?";
-			String[] values = { String.valueOf(row), String.valueOf(x),
-					String.valueOf(z) };
-			Cursor c = this.mDatabase.query("tiles", projection, predicate,
-					values, null, null, null);
-			if (c != null) {
-				c.moveToFirst();
-				if (!c.isAfterLast()) {
-					tile = new Tile(256, 256, c.getBlob(0));
-				}
-				c.close();
-			}
-
-		}
-		return tile;
-	}
-
-	private boolean isDatabaseAvailable() {
-		if ((this.mDatabase != null) && (this.mDatabase.isOpen())) {
-			return (this.mDatabase != null) && (this.mDatabase.isOpen());
-		} else {
-			int flags = SQLiteDatabase.OPEN_READONLY
-					| SQLiteDatabase.NO_LOCALIZED_COLLATORS;
-			this.mDatabase = SQLiteDatabase.openDatabase(pathToFile, null,
-					flags);
-
-			return (this.mDatabase != null) && (this.mDatabase.isOpen());
-		}
-	}
-
-	/**
-	 * Determines if the requested zoom level is supported by this provider.
-	 * 
-	 * @param zoom
-	 *            The requested zoom level.
-	 * @return {@code true} if the requested zoom level is supported by this
-	 *         provider.
-	 */
-	public boolean isZoomLevelAvailable(int zoom) {
-		return (zoom >= this.mMinimumZoom) && (zoom <= this.mMaximumZoom);
-	}
+    private boolean isDatabaseAvailable() 
+    {    	
+        if((this.mDatabase != null) && (this.mDatabase.isOpen()))
+        {
+        	return (this.mDatabase != null) && (this.mDatabase.isOpen());
+        }
+        else
+        {
+        	int flags = SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS;
+            this.mDatabase = SQLiteDatabase.openDatabase(pathToFile, null, flags);
+            
+            return (this.mDatabase != null) && (this.mDatabase.isOpen());
+        }
+    }
 
 }

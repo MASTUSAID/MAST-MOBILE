@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_ver">v 1.1.5</string>
-    <string name="app_ver2">1.1.5</string>
+    <string name="app_ver2">2.0.0</string>
     <string name="app_name">MAST</string>
     <string name="action_settings">Settings</string>
     <string name="appname">Mobile Application to Secure Tenure</string>
@@ -104,6 +104,7 @@
     <string name="person_photo">Photo</string>
     <string name="cancel">Cancel</string>
     <string name="firstName">First Name</string>
+    <string name="middleName">Middle Name</string>
     <string name="lastName">Last Name</string>
     <string name="Gender">Gender</string>
     <string name="mobile">Mobile No.</string>
@@ -216,8 +217,15 @@
     <string name="bookmark_enter_name">Please enter bookmark name..!!</string>
 
     <string-array name="personTypeArray">
+        <item>Select an Option</item>
         <item>Natural</item>
         <item>Non-Natural</item>
+    </string-array>
+    
+    <string-array name="residentArray">
+       <item>Select an Option</item>
+        <item>Yes</item>
+        <item>No</item>
     </string-array>
 
     <string name="spatialunit_personType_lbl">Select Person Type</string>
@@ -241,6 +249,7 @@
     <string name="error_saving_media">Error in saving media</string>
 
     <string-array name="booleanControlValues">
+         <item>Select an option</item>
         <item>Yes</item>
         <item>No</item>
     </string-array>
@@ -301,10 +310,15 @@
     <string name="unable_logout">Unable to logout</string>
     <string name="sync_pending_records">Please Sync all Pending Records before logging off</string>
     <string name="data_summary_label1">Tenure Relation :</string>
+    <string name="data_summary_label1_1">Tenure Type :</string>
+    <string name="data_summary_label1_owner">Owner :</string>
     <string name="data_summary_label2">Property :</string>
     <string name="data_summary_label3">Natural person(s) :</string>
     <string name="data_summary_label4">Non-Natural person :</string>
+    <string name="data_summary_label4_admin">Administrator :</string>
     <string name="data_summary_label5">Social tenure :</string>
+    <string name="data_summary_label5_Guardian">Guardian :</string>
+    <string name="data_summary_label5_POI">Person of Interest :</string>
     <string name="data_summary_label6">Multimedia :</string>
     <string name="data_summary_label7">Custom :</string>
     <string name="unable_to_save_data">Unable to save data</string>
@@ -335,11 +349,10 @@
     <string name="view_on_map">View on map</string>
     <string name="logoutWarningMsg">Your all data will be deleted.Do you want to logout?</string>    
     <string name="selectOptionDialogTitle">Select option to capture</string>
-    <string name="continueTologout">Logout</string>
-    <string name="add_photo_of_all_persons">Please add photo for all persons</string>
+    <string name="continueTologout">Logout</string>    
     
    <!-- added String on 29/07/15- -->
-   
+<string name="add_photo_of_all_persons">Please add photo for all persons</string>   
  <string name="FieldDataUploadedSuccessfully">Field data uploaded successfully</string>
  <string name="MultimediaUploadedSuccessfully">Multimedia uploaded successfully</string>
 <string name="ErrorInUploadingFieldData">Error in uploading field data</string>
@@ -354,13 +367,104 @@
 <string name="unableToDownloadAttributeData">unable to download attribute data</string>
 <string name="DownloadFinished">"Download Finished..</string>
 <string name="DownloadError">Download Error..</string>
-<string name="spatialunit_hemlet_lbl">Select Helmet</string>
-<string-array name="helmetArray">
-        <item>Helmet 1</item>
-        <item>Helmet 2</item>
-        <item>Helmet 3</item>
-        <item>Helmet 4</item>
-    </string-array>
-<string name="select_witness1">Select Witness 1</string>
-<string name="select_witness2">Select Witness 2</string>
+<string name="spatialunit_hemlet_lbl">Select Hamlet</string>
+<string name="select_witness1">Select Adjudicator 1</string>
+<string name="select_witness2">Select Adjudicator 2</string>
+<string name="nextKin">Add Person of Interest</string>
+<string name="tittle_addDeceased">Add Deceased Person</string>
+<string name="addPOI">Add POI</string>
+<string name="addDeceased">Add DP</string>
+<string name="nextOfKin">Enter Person of Interest</string>
+<string name="fill_tenure">Please fill tenure details first</string>
+<string name="villageName_lbl">Village Name</string>
+<string name="AddedSuccessfully">Added Successfully</string>
+<string name="UnableToSave">Unable to save</string>
+<string name="OwnerIsMinor">Owner is Minor.Please add Guardian</string>
+<string name="selectOwnerOrAdminFirst">Owner or Administrator does not exist for this feature.Please Save Owner or Administrator details first for this feature</string>
+<string name="mandatoryPOI">You have to add Person of interest in case of Administrator</string>
+<string name="selectAdminOrOwner">You have to select either Administrator or Owner first</string>
+<string name="poi_deleted">Person of interest deleted</string>
+<string name="delete_poi">Do you want to delete Person of interest?</string>
+<string name="poi_isMandatory">Person sub-type is "Administrator" so It is mandatory to add "Person of Ineterest" for this feature</string>
+<string name="guardian_cant_be_minor">Guardian should be above 18. Guardian can not be minor</string>
+<string-array name="person_sub_type">
+    <item >Owner</item>
+    <item>Administrator</item>
+    <item>Guardian</item>
+</string-array>
+<string name="select_person_subtype">Select Person Sub-type</string>
+<string name="edit">Edit</string>
+<string name="btn_proceed">Proceed</string>
+<string name="enter_details">Please enter Details</string>
+ <string name="tenureType">Tenure Type</string>
+ 
+<!-- added String on 03/Nov/15- -->
+<string name="minorNotAllowed">Minor not allowed.Age should not be less than 18.</string>
+<string name="ownerShouldBeMinor">Owner should be minor in case of "Guardian(Minor)" tenure type</string>
+<string name="guardianShudBeAdult">Guardian should be Adult.</string>
+<string name="infoSingleOccupantStr">You must add only one "Owner" and can add one or more "Person(s) of Interest"</string>
+<string name="infoMultipleJointStr">You must add two Owners and can add one or more "Person(s) of Interest"</string>
+<string name="infoMultipleTeneancyStr">You must add two or more Owners and can add one or more "Person(s) of Interest"</string>
+<string name="infoTenancyInProbateStr">You can add one or more "Owner(s)" and up to two "Administrators", you must indicated the name of the "Deceased Person", and can add one or more "Person(s) of Interest"</string>
+<string name="infoGuardianMinorStr">You must add one or more "Minor(s)" and up to two "Guardian"</string>
+<string name="warning_multipleJoint">In case of "Multiple Occupancy(Joint Tenancy)" you have to add two "Owners"</string>
+<string name="warning_multipleTenancy">In case of "\"Multiple Occupancy(Tenancy in Common)\"" you have to add two or more than two "Owners"</string>
+<string name="warning_tenancyProbate">In case of "\"Tenancy in probate(Administartor)\"" you have to add one "\"Deceased Person\""</string>
+<string name="warning_pleaseAddGuardianMinor">Please add Guardian for this Minor</string>
+<string name="warning_addPersonPhoto">Please add Person\'s Photo</string>
+<string name="can_not_add_poi">You can not add "\"Person of Interest\"" if Tenure type is "\"Guardian(Minor)\""</string>
+<string name="add_owner_first">Please add Owner first</string>
+<string name="can_not_add_adminGuardian_in_SingleOccuapncy">You can not add "\"Administrator\"" or "\"Guardian\"" in case of "\"Single Occupancy\""</string>
+<string name="can_not_add_more_than_one_owner_in_SingleOccuapncy">You can not add more than one Owner in case of "\"Single Occupancy\""</string>
+<string name="can_not_add_adminGuardian_in_multipleOccuapncy_joint">You can not add "Administrator" or "Guardian" in case of "Multiple Occupancy(Joint Tenancy)"</string>
+<string name="can_not_add_more_than_two_owners_in_multipleOccuapncy_joint">You can not add more than 2 Owners in case of "Multiple Occupancy(Joint Tenancy)"</string>
+<string name="can_not_add_adminGuardian_in_multipleOccuapncy_common">You can not add "Administrator" or "Guardian" in case of "Multiple Occupancy(Tenancy in common)"</string>
+<string name="guardian_can_not_more_than_two">Guardian can not be more than two in case of "\"Guardian(Minor)\""</string>
+<string name="guardian_can_not_more_than_owners">Guardian can not be more than Owners </string>
+<string name="can_not_add_admin_in_cas_of_guardian_minor">You can not add Administrator in case of "\"Guardian(Minor)\""</string>
+<string name="can_not_add_moreThanOne_dp_tenancy_inProbate">You can not add more than one "Deceased Person"</string>
+<string name="Please_add_Administrator_first_or_Owner_first">Please add "Administrator"or "Owner" first</string>
+<string name="you_can_not_add_Guardian_in_tenancy_in_Probate">You can not add Guardian if tenure type is "\"Tenancy in Probate(Administrator)\""</string>
+<string name="Administrator_can_not_be_more_than_two_in_tenancy_in_Probate">Administrator can not be more than two</string>
+<string name="Please_delete_Owner_first">Please delete "\"Owner\"" first</string>
+<string name="Please_select_Hamlet">Please select Hamlet</string>
+<string name="Please_select_Witness_1">Please select Witness 1</string>
+<string name="Please_select_Witness_2">Please select Witness 2</string>
+<string name="Witness_1_and_Witness_2_can_not_be_same">Witness 1 and Witness 2 can not be same</string>
+<string name="deleted">Deleted</string>
+<string name="do_u_want_to_continue">Do you want to continue ?</string>
+<string name="You_have_selected">You have selected : </string>
+<string name="yes">Yes</string>
+<string name="no">No</string>
+<string name="unable_to_add_person_tye">Unable to save peron type</string>
+<string name="do_u_want_to_add_media">Do you want to Add Media Files?</string>
+<string name="no_media_exist">No Media Exist for this Spatial feature</string>
+<string name="person">Person(s)</string>
+<string name="person_of_interest">Person(s) of Interest</string>
+<string name="deceased_person">Deceased Person</string>
+<string name="resident">Resident</string>
+ <string name="select_person_type">Please select Person Type</string>
+<string name="you_did_not_enter_custum_attributes">You did not enter custum attributes</string>
+<string name="want_to_add_custum_attributes">Do you want to add custom attributes?</string>
+<string name="delete_poi_first">Please delete "\"Person of Interest\"" first</string>
+<string name="delete_deceased_first">Please delete "\"Deceased Person\"" first</string>
+<string name="satellite_map">Satellite Map</string>
+<string name="capture_features">Capture features</string>
+<string name="edit_Person">Edit Person</string>
+<string name="administrator_can_not_be_more_tha_Owner">Administrator can not be more than Owner</string>
+<string name="please_fill_tenure_details">Please fill "Tenure" details.</string>
+<string name="please_fill_owner_details">Please fill "Owner" details.</string>
+<string name="select_other_option">Please select other option</string> 
+<string name="view_person">View Person</string> 
+<string name="please_add_atleast_one_admin">Please Add atleast one Administrator</string>
+<string name="accept">Accept</string>
+
+
+<!-- <string name="view_person">View Person</string>
+
+
+
+
+<string name="delete_deceased_first">Tafdahali Futa "jina la marehemu" kwanza</string> -->
+
 </resources>

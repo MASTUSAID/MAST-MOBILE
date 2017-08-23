@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import com.rmsi.android.mast.activity.R;
 import com.rmsi.android.mast.db.DBController;
+import com.rmsi.android.mast.domain.Attribute;
 import com.rmsi.android.mast.domain.User;
 
 public class CommonFunctions 
@@ -47,7 +48,7 @@ public class CommonFunctions
 	public static final String  parentFolderName = "MAST";
 	public static final String  dataFolderName = "spatialdata";
 	public static final String  dbFolderName = "database";
-	public static final String  mediaFolderName = "multimedia";
+	public static final String  mediaFolderName = "multimedia";      //add "." as prefix to the hide 
 	String appLogFileName = Environment.getExternalStorageDirectory() + "/MAST/MASTApp_LOG.txt";
 	String syncLogFileName = Environment.getExternalStorageDirectory() + "/MAST/MASTSync_LOG.txt";
 	List<LatLng> points;
@@ -56,18 +57,20 @@ public class CommonFunctions
 	//TODO SERVER IP ADDRESS WHERE THE CAPTURED DATA WILL SYNC 
 	public static String SERVER_IP = "";
 
+
 	public static String GEOM_POINT	= "Point";
 	public static String GEOM_LINE  	= "Line";
 	public static String GEOM_POLYGON  = "Polygon";
-
 	public static int ROLE_TRUSTED_INTERMEDIARY=1;
 	public static int ROLE_ADJUDICATOR = 2;
 	private static final int ESTIMATED_TOAST_HEIGHT_DIPS = 48;
 
-	//TODO Put co-ordinates where the map will zoom to on first view 
-	public static double latitude = 0;
-	public static double longitude = 0;
-
+	
+	
+	// Your Latlong 	
+	public static double latitude = -7.8595;
+	public static double longitude = 35.77981;
+		
 	public static int MEDIA_SYNC_PENDING = 0;
 	public static int MEDIA_SYNC_COMPLETED = 1;
 	public static int MEDIA_SYNC_ERROR = 2;
@@ -388,11 +391,16 @@ public class CommonFunctions
 
 	public void showMessage(Context cntxt,String header,String message)
 	{
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(cntxt);
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(cntxt,AlertDialog.THEME_HOLO_LIGHT);
 		alertDialogBuilder.setMessage(message);
 		alertDialogBuilder.setTitle(header);
-
-		alertDialogBuilder.setNegativeButton("OK",new DialogInterface.OnClickListener() {
+		String lang=getLocale();
+		String ok="Ok";
+		if(lang.equalsIgnoreCase("sw"))
+		{
+			ok="Sawa";
+		}		
+		alertDialogBuilder.setNegativeButton(ok,new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog,int id) {
 				dialog.cancel();
 			}
@@ -618,6 +626,36 @@ public class CommonFunctions
 				}
 			}
 			return sb.toString();
+		}
+		
+		public static String getResidentValue(long featureId)
+		{	
+			DBController sqllite = new DBController(mContext);
+			String residentValue=sqllite.getResidentValue(featureId);
+			return residentValue;
+			
+		}
+		
+		public static boolean personExist(long featureId)
+		{	
+			DBController sqllite = new DBController(mContext);
+			List<Attribute> tmpList2 = sqllite.getPersonList(featureId);
+			if(tmpList2.size()>0)			
+				return true;
+			else
+				return false;
+			
+		}
+		
+		public static boolean isNonNatural(long featureId)
+		{	
+			DBController sqllite = new DBController(mContext);
+			boolean isnonNatural = sqllite.IsNonNaturalPerson(featureId);
+			if(isnonNatural)			
+				return true;
+			else
+				return false;
+			
 		}
 		
 }

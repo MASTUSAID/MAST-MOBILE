@@ -22,6 +22,7 @@ import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rmsi.android.mast.activity.R;
 import com.rmsi.android.mast.activity.R.string;
 import com.rmsi.android.mast.adapter.MediaListingAdapterTemp;
 import com.rmsi.android.mast.db.DBController;
@@ -31,64 +32,31 @@ import com.rmsi.android.mast.util.CommonFunctions;
 
 /**
  * 
- * @author prashant.nigam
- * 
+ * @author Amreen.s
+ *
  */
-public class SocialTenureListActivity extends ActionBarActivity {
+public class SocialTenureListActivity extends ActionBarActivity 
+{
 
-	Button addnewSocialTenure, back;
+	Button addnewSocialTenure,back;
 	Context context;
 	ListView listView;
 	List<Attribute> attribute = new ArrayList<Attribute>();
-	MediaListingAdapterTemp adapter;
+	MediaListingAdapterTemp adapter ;
 	Long featureId;
 	List<Option> optionlist;
 	CommonFunctions cf = CommonFunctions.getInstance();
-	int roleId = 0;
+	int roleId=0;
 	String serverFeatureId;
 	boolean openAdd = false;
-
-	private void deleteEntry(final int groupId) {
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-				context);
-		alertDialogBuilder.setMessage(R.string.deleteEntryMsg);
-		alertDialogBuilder.setPositiveButton(R.string.btn_ok,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						DBController sqllite = new DBController(context);
-						String keyword = "tenure";
-						boolean result = sqllite.deleteRecord(groupId, keyword);
-						if (result) {
-							refereshList();
-						} else {
-							String msg = getResources().getString(
-									R.string.unable_delete);
-							Toast.makeText(context, msg, Toast.LENGTH_SHORT)
-									.show();
-						}
-					}
-				});
-		alertDialogBuilder.setNegativeButton(R.string.btn_cancel,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				});
-		AlertDialog alertDialog = alertDialogBuilder.create();
-		alertDialog.show();
-	}
-
+	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) 
+	{
 		super.onCreate(savedInstanceState);
-
-		// Initializing context in common functions in case of a crash
-		try {
-			CommonFunctions.getInstance().Initialize(getApplicationContext());
-		} catch (Exception e) {
-		}
+		
+		//Initializing context in common functions in case of a crash
+		try{CommonFunctions.getInstance().Initialize(getApplicationContext());}catch(Exception e){}
 		cf.loadLocale(getApplicationContext());
 
 		setContentView(R.layout.activity_list);
@@ -98,131 +66,121 @@ public class SocialTenureListActivity extends ActionBarActivity {
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		toolbar.setTitle(R.string.SocialTenureInfo);
-		if (toolbar != null)
+		if(toolbar!=null)
 			setSupportActionBar(toolbar);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		context = this;
+		context=this;
 
 		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			featureId = extras.getLong("featureid");
-			serverFeatureId = extras.getString("serverFeaterID");
+		if (extras != null) 
+		{
+			featureId = extras.getLong("featureid");	
+			serverFeatureId=extras.getString("serverFeaterID");
 		}
 
-		if (!TextUtils.isEmpty(serverFeatureId) && serverFeatureId != null) {
-			spatialunitValue.setText("USIN" + "   :  "
-					+ serverFeatureId.toString());
-		} else {
-			spatialunitValue.setText(spatialunitValue.getText() + "   :  "
-					+ featureId.toString());
+		if(!TextUtils.isEmpty(serverFeatureId) && serverFeatureId !=null)
+		{	
+			spatialunitValue.setText("USIN"+"   :  "+serverFeatureId.toString());
+		}
+		else
+		{
+			spatialunitValue.setText(spatialunitValue.getText()+"   :  "+featureId.toString());
 		}
 
-		addnewSocialTenure = (Button) findViewById(R.id.btn_addNewPerson);
-		back = (Button) findViewById(R.id.btn_backPersonList);
-		listView = (ListView) findViewById(android.R.id.list);
-		TextView emptyText = (TextView) findViewById(android.R.id.empty);
+
+		addnewSocialTenure=(Button)findViewById(R.id.btn_addNewPerson);
+		back=(Button)findViewById(R.id.btn_backPersonList);
+		listView = (ListView)findViewById(android.R.id.list);
+		TextView emptyText = (TextView)findViewById(android.R.id.empty);
 		listView.setEmptyView(emptyText);
 
-		adapter = new MediaListingAdapterTemp(context, this, attribute,
-				"socialTenurelist");
+		adapter = new MediaListingAdapterTemp(context,this,attribute,"socialTenurelist");
 		listView.setAdapter(adapter);
 
-		addnewSocialTenure.setOnClickListener(new OnClickListener() {
+		addnewSocialTenure.setOnClickListener(new OnClickListener() 
+		{			
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v) 
+			{
 				DBController sqllite = new DBController(context);
-				optionlist = sqllite.getPersonForTenure(featureId);
+				
+                     //@@@@@@@@@@@@@@@@@@@@@	Removed check for person		
 
-				if (optionlist.size() == 0) {
+				/*
+				 * 
+				 * optionlist=sqllite.getPersonForTenure(featureId);
+				 * if(optionlist.size()==0)
+				{
 
-					String warning_msg = getResources().getString(
-							string.add_atlest_one_person);
-					String warning = getResources().getString(string.warning);
+					String warning_msg=getResources().getString(string.add_atlest_one_person);
+					String warning=getResources().getString(string.warning);
 
-					cf.showMessage(context, warning, warning_msg);
+					cf.showMessage(context,warning, warning_msg);
 
-				} else {
+				}	else{
 
-					Intent myIntent = new Intent(context,
-							AddSocialTenureActivity.class);
+					Intent myIntent = new Intent(context, AddSocialTenureActivity.class);
 					myIntent.putExtra("groupid", 0);
 					myIntent.putExtra("featureid", featureId);
 					startActivity(myIntent);
-				}
+				}*/	
+				
+				Intent myIntent = new Intent(context, AddSocialTenureActivity.class);
+				myIntent.putExtra("groupid", 0);
+				myIntent.putExtra("featureid", featureId);
+				startActivity(myIntent);
 			}
-		});
-
-		if (roleId == 2) // Hardcoded Id for Role (1=Trusted Intermediary,
-							// 2=Adjudicator)
+		});	
+		
+		if(roleId==2)  // Hardcoded Id for Role (1=Trusted Intermediary, 2=Adjudicator)
 		{
 			addnewSocialTenure.setEnabled(false);
-		} else if (roleId == 1) {
+		}
+		else if(roleId==1)
+		{
 			openAdd = true;
 		}
 
-		back.setOnClickListener(new OnClickListener() {
+		back.setOnClickListener(new OnClickListener() 
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v) 
+			{
 				finish();
 			}
 		});
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == android.R.id.home) {
-			finish();
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	protected void onResume() {
-		refereshList();
-
-		super.onResume();
-	}
-
-	private void refereshList() {
-		attribute.clear();
-		DBController sqllite = new DBController(context);
-		attribute.addAll(sqllite.getTenureList(featureId, cf.getLocale()));
-		sqllite.close();
-		adapter.notifyDataSetChanged();
-
-		if (openAdd && attribute.size() == 0) {
-			openAdd = false;
-			addnewSocialTenure.callOnClick();
-		}
-	}
-
-	public void showPopup(View v, Object object) {
+	public void showPopup(View v, Object object) 
+	{
 		PopupMenu popup = new PopupMenu(context, v);
 		MenuInflater inflater = popup.getMenuInflater();
-		if (roleId == 1) // Hardcoded Id for Adjudicator
+		if(roleId==1)  // Hardcoded Id for Adjudicator
 		{
 			inflater.inflate(R.menu.attribute_listing_options, popup.getMenu());
 
-		} else {
-			inflater.inflate(R.menu.attribute_listing_options_to_view_details,
-					popup.getMenu());
+		}
+		else
+		{
+			inflater.inflate(R.menu.attribute_listing_options_to_view_details, popup.getMenu());
 		}
 
-		int position = (Integer) object;
+		int position  = (Integer) object;
 		final int groupId = attribute.get(position).getGroupId();
 		final int personId = attribute.get(position).getPersonId();
 
-		popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+		popup.setOnMenuItemClickListener(new OnMenuItemClickListener() 
+		{			
 			@Override
-			public boolean onMenuItemClick(MenuItem item) {
-				switch (item.getItemId()) {
+			public boolean onMenuItemClick(MenuItem item) 
+			{
+				switch (item.getItemId()) 
+				{
 				case R.id.edit_attributes:
-					// Open attributes form to edit --------------
-					Intent myIntent = new Intent(context,
-							AddSocialTenureActivity.class);
+					//Open attributes form to edit --------------
+					Intent myIntent  =  new Intent(context, AddSocialTenureActivity.class);
 					myIntent.putExtra("groupid", groupId);
 					myIntent.putExtra("featureid", featureId);
 					myIntent.putExtra("personid", personId);
@@ -232,9 +190,8 @@ public class SocialTenureListActivity extends ActionBarActivity {
 					deleteEntry(groupId);
 					return true;
 				case R.id.view_attributes:
-					// Open attributes form to view --------------
-					Intent intent = new Intent(context,
-							AddSocialTenureActivity.class);
+					//Open attributes form to view --------------
+					Intent intent  =  new Intent(context, AddSocialTenureActivity.class);
 					intent.putExtra("groupid", groupId);
 					intent.putExtra("featureid", featureId);
 					intent.putExtra("personid", personId);
@@ -248,4 +205,70 @@ public class SocialTenureListActivity extends ActionBarActivity {
 		});
 		popup.show();
 	}
+	private void deleteEntry(final int groupId)
+	{
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+		alertDialogBuilder.setMessage(R.string.deleteEntryMsg);
+		alertDialogBuilder.setPositiveButton(R.string.btn_ok, 
+				new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) 
+			{
+				DBController sqllite = new DBController(context);
+				String keyword="tenure";
+				boolean result = sqllite.deleteRecord(groupId,keyword);
+				if(result){
+					refereshList();
+				}else{
+					String msg=getResources().getString(R.string.unable_delete);
+					Toast.makeText(context,msg, Toast.LENGTH_SHORT).show();
+				}				
+			}
+		});		
+		alertDialogBuilder.setNegativeButton(R.string.btn_cancel, 
+				new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) 
+			{
+				dialog.dismiss();
+			}
+		});		
+		AlertDialog alertDialog = alertDialogBuilder.create();	
+		alertDialog.show();	
+	}
+
+
+	private void refereshList()
+	{
+		attribute.clear();
+		DBController sqllite = new DBController(context);
+		attribute.addAll(sqllite.getTenureList(featureId,cf.getLocale()));
+		sqllite.close();
+		adapter.notifyDataSetChanged();
+		
+		if(openAdd && attribute.size()==0)
+		{
+			openAdd = false;
+			addnewSocialTenure.callOnClick();
+		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) 
+	{
+		int id = item.getItemId();
+		if(id == android.R.id.home)
+		{
+			finish();
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onResume() 
+	{	  
+		refereshList();
+
+		super.onResume();
+	}	
 }

@@ -2,13 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+   >
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/layout_toolbar" />
 
-    <LinearLayout
+  <LinearLayout
         android:id="@+id/fixedAttribs"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
@@ -34,6 +35,16 @@
             android:text="@string/spatialunit_lbl"
             android:textColor="@color/black"
             android:textSize="@dimen/textSizeL" />
+        
+         <TextView
+            android:id="@+id/villageName_lbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:text="@string/villageName_lbl"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSizeL" />
 
         <View
             android:layout_width="match_parent"
@@ -55,22 +66,93 @@
             style="@style/Widget.AppCompat.Spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+           
             android:entries="@array/personTypeArray" />
-
+        
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#CCCCCC" />
 
-        <ListView
+        <TextView
+            android:id="@+id/spatialunit_hemlet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:text="@string/spatialunit_hemlet_lbl"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSize" />
+
+        <Spinner
+            android:id="@+id/spinner_hemlet"
+            style="@style/Widget.AppCompat.Spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+          
+            />
+        
+         <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <TextView
+            android:id="@+id/spatialunit_witness1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:text="@string/select_witness1"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSize" />
+
+        <Spinner
+            android:id="@+id/spinner_witness1"
+            style="@style/Widget.AppCompat.Spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           
+            />
+        
+         <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <TextView
+            android:id="@+id/spatialunit_witness2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:text="@string/select_witness2"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSize" />
+
+        <Spinner
+            android:id="@+id/spinner_witness2"
+            style="@style/Widget.AppCompat.Spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        
+            />
+        
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+   
+       <ListView
             android:id="@+id/list_view"
             style="@style/ListStyle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+          >
         </ListView>
-    </LinearLayout>
-
+ </LinearLayout>
+    
     <LinearLayout
         android:id="@+id/buttonBarAttributes"
         style="?android:attr/buttonBarStyle"
@@ -80,7 +162,8 @@
         android:background="@color/color_primary"
         android:baselineAligned="false"
         android:orientation="horizontal"
-        android:weightSum="5" >
+        android:weightSum="5" 
+       >
 
         <RelativeLayout
             style="@android:style/Widget.ActionButton"
@@ -103,19 +186,42 @@
                 android:padding="10dp"
                 android:src="@drawable/add_property" />
 
-            <!-- <TextView
-                android:id="@+id/propertyCount"
+           </RelativeLayout>
+
+        <RelativeLayout
+            style="@android:style/Widget.ActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/btn_tenureInfo"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@id/btn_propertyInfo"
-                android:layout_alignRight="@id/btn_propertyInfo"
-                android:layout_alignTop="@id/btn_propertyInfo"
+                android:layout_margin="0dp"
+                android:contentDescription="@string/attribButtons"
+                android:gravity="center"
+                android:padding="10dp"
+                android:src="@drawable/add_tenure" />
+<!-- 
+            <TextView
+                android:id="@+id/tenureCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/btn_tenureInfo"
+                android:layout_alignRight="@id/btn_tenureInfo"
+                android:layout_alignTop="@id/btn_tenureInfo"
                 android:background="@drawable/count_style"
                 android:text="@string/attribCount"
                 android:textColor="@color/color_accent"
                 android:textStyle="bold" /> -->
         </RelativeLayout>
-
+        
         <RelativeLayout
             style="@android:style/Widget.ActionButton"
             android:layout_width="wrap_content"
@@ -150,41 +256,7 @@
                 android:textStyle="bold" />
         </RelativeLayout>
 
-        <RelativeLayout
-            style="@android:style/Widget.ActionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:clickable="false"
-            android:gravity="center"
-            android:orientation="vertical" >
-
-            <ImageView
-                android:id="@+id/btn_tenureInfo"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="0dp"
-                android:contentDescription="@string/attribButtons"
-                android:gravity="center"
-                android:padding="10dp"
-                android:src="@drawable/add_tenure" />
-
-            <TextView
-                android:id="@+id/tenureCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@id/btn_tenureInfo"
-                android:layout_alignRight="@id/btn_tenureInfo"
-                android:layout_alignTop="@id/btn_tenureInfo"
-                android:background="@drawable/count_style"
-                android:text="@string/attribCount"
-                android:textColor="@color/color_accent"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
-        <RelativeLayout
+            <RelativeLayout
             style="@android:style/Widget.ActionButton"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"

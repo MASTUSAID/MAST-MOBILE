@@ -83,7 +83,7 @@
             android:textColor="@color/white" /> -->
 
         <Button
-            android:id="@+id/btn_back"
+            android:id="@+id/btn_save"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
             android:contentDescription="@string/mapOptions"
             android:gravity="center"
             android:padding="2dp"
-            android:text="@string/back"
+            android:text="@string/save"
             android:textColor="@color/white" />
     </LinearLayout>
 
