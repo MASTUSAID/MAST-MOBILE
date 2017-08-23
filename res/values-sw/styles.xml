@@ -1,0 +1,39 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Landing Page Button Styles -->
+    <style name="MenuButtonStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:drawablePadding">15dp</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:gravity">fill</item>
+        <item name="android:minHeight">70dp</item>
+        <item name="android:minWidth">225dp</item>
+        <!-- <item name="android:background">@color/toolbar_color</item> -->
+    </style>
+
+    <style name="ListStyle">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:background">#FFFFFF</item>
+        <item name="android:dividerHeight">1dp</item>
+        <item name="android:divider">#CCCCCC</item>
+        <item name="android:cacheColorHint">#FFFFFF</item>
+        <item name="android:listSelector">#00000000</item>
+    </style>
+
+    <style name="DialogTheme" parent="@android:style/Theme.Dialog">
+        <item name="android:windowTitleStyle">@style/DialogWindowTitle</item>
+    </style>
+
+    <style name="DialogWindowTitle">
+        <item name="android:background">@color/color_primary</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/textSizeL</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:scrollHorizontally">true</item>
+    </style>
+
+</resources>

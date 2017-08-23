@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.ex.pn.cloudburst.TestActivity" >
+
+    <item
+        android:id="@+id/view"
+        android:orderInCategory="100"
+        android:title="@string/view_media"
+        app:showAsAction="never"/>
+     <item
+        android:id="@+id/edit_attributes"
+        android:orderInCategory="100"
+        android:title="@string/edit_attributes"
+        app:showAsAction="never"/>
+      <item
+        android:id="@+id/delete_entry"
+        android:orderInCategory="100"
+        android:title="@string/delete_entry"
+        app:showAsAction="never"/>
+
+</menu>
