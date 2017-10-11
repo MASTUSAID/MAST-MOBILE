@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.android.support\mediarouter-v7\23.0.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="d358b3dd49a7c67844622dcbc9cf4339e13952ce">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-b2c260e84d7a275a415d68860fb91b2aab27cd3e.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.firebase\firebase-auth-module\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="e791f7f2fbf9ca5b3b576916533f844dfb384024">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-fbe94cedf913dd77cab9b5a6442b95074640aea9.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-gcm\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="535d4497b5fa5d451e07a043e9e220d5c25ab7c7">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-fb27a3028955e0270bff0ebb3891597c2f0ab0e8.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-analytics-impl\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="7428f0d1debdcf1b5792a26146e51a38d992d04d">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-c67aa18c7f2acad7f7992bfff9ac5e4b54d6a461.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="dd7676ac12aa6653718b7ea33d93ce9d6915d526">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-3678136c9d14b0fa5e0b73d97493adb131865864.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.android.support\mediarouter-v7\23.0.0\jars\libs\internal_impl-23.0.0.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="03d38bb042efe3e5ce27ba66b729a9523c36d8fe">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\internal_impl-23.0.0-9879acd0b5a8ca49537c652854de4a7cd20783d3.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.firebase\firebase-analytics\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="4838df6db988160b107e954e02a745370df543b6">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-23546c4d0cc75492558d66530acdbe4134f0f64d.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-tagmanager-api\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="74694bf98bd1f856cf478bd0c516531801badced">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-cde91aa5c6a18468747e6507d55e512b9c5ddd14.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-safetynet\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="a0712565a784bedd07ada2393c95e0b1e288840f">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-f36bb929bd14fc9d37fb435f665d82fdac1ed8d3.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.firebase\firebase-auth\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="20ca7888c59f63d439f218a8810c88039f8bc7db">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-eb59a10c5cf1b42ca07fcb0ce73dfa2a3ec396ab.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-wallet\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="39261f58509b1a379df041f03da394c29da05395">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-1c59376c9d3c940a1d9b8d2ef67454104d72d560.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-location\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="a03f4d605b0f29222c2ddf8b7896258cb4b92def">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-ff478c997babee5ab5566f340d7ba23a2d923f84.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-wearable\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="08cdd337d1d9247eb915f0ab365624dd7966e7fa">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-94ae3d23d776fad98fc71a27a347f3df35a280fc.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="299e04800d1169b9f3dd04c376c7b266a3594cca">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-3a6a6a43b0e325fc2c28d263aed68dbaa6595b7f.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-gass\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="1dc44c4798cbd79e95e4838a3fdc734c0e3f895f">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-3a52349ec2095b4b09a142add14de4dfac3d21b9.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.firebase\firebase-storage-common\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="fa6c324604383981fb74c4cb036d4171ed0a9a02">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-ad5883593c0f764b56aa3440c5f4c2b09290e47b.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-cast-framework\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="163b095362fd14d682ac311bf672c2fb54de5078">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-43e3830b6538d825d2249c79def64ad87e04bf9a.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-places\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="8ec9ae00d45e758ac5b7a1c5dc0daa8a4b24280f">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-227c6c8a450c1092f938ee3349f753ec6cd193dc.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-nearby\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="404f4108b41050173f93836f5b35efdd9525a0ad">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-487eb5ebcc4254ca8c3276c0cd07ef08bfe7f1a1.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\libs\jts-1.8.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="6ad868f7fe14ef6646d584072e33247eb95f9d13">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\jts-1.8-51082ef8c9f810ca7874e058e2013a4383d63d52.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.firebase\firebase-config\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="ce9432b50a02be101bc491a1b38d3904200bd988">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-d17d5c1ef9dc9180401742ed0286daa5e9db7c6f.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\libs\internal_impl-23.0.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\internal_impl-23.0.1-4eed9d931e5cdc1b508ebc11875e1f6349e79e06.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-auth-base\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="f315c6b5b99081f16a79c9aaa557328a4644fe63">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-99318574d2f8820d12fd0f69c39d9be62fbb266b.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-tasks\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="593fbaec1c3e100480a2bd72457b64b7dde6ac2d">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-9dc0e21da0f1f36b66248273f771e761a3c0c9c1.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-panorama\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="33b5900f82d19fd3dacee518363b249ace77b8f5">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-bdd2b79c64d1b0f4dbf2b07d2b95d922bf081407.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.firebase\firebase-crash\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="0595e77431edaba6793410f9bfa3603c063c58e7">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-0d58d90e6a89b2391e6a40921215cef360ef15b4.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-auth\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="f56a68df45e18ce77814db6553fdaa229308f49b">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-a4858418caf5ffa3fb6fbb968c581347d92049f1.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="811202a9098047576814fc2171b56b83b537a8b9">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-e654500c99e16804c70da29a1521961fce891b61.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-clearcut\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="b53d61bae49278c0fa202d9066d2e72fc151c1e8">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-6f5f4ba7cef75d68c02209883c443bbc2c18491a.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-cast\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="be009dbe07b3a252c8cda07fc948ac713d2f5171">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-7b56c9b643c867358ad4c84ba3081c9d7d15b69b.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.firebase\firebase-storage\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="a378adc3106cb3560ab3dfed05f1fda26cff5b49">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-3da83d6eb49793791889b738864c3f8c0d75f7fa.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-fitness\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="982031d2aa9652bc955d0b581ec70378c0adfc56">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-616ec68f4b4bdab3b7d4ea14b5423a09a30a75fb.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="a06eb7761fca120bbb46b34b930a3a3462ba9d7f">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-9157077c64fefe6ddaffaa0358ed13616f32fc29.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-games\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="dd7b4a8e01cafa79a0b228b2ee5bd57ae5577444">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-e3544292a746530d6ceb6dfa433acf1950e8396c.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-analytics\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="18e52280643effbab30370b073e456d670a0db54">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-e7489d088465509a530780f815bb3b326c5b98bb.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.firebase\firebase-database\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="d7572433ba21aa9e4624c819fa738b2748b82d05">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-7f445eb424dd763d41f689c0cfe3d3e2f0c7c403.jar" />
+    </item>
+    <item
+        jar="C:\Users\vishal.gahlot\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\support-annotations-23.0.1-f57623ff4b5c4ca6d7e326ac8749735f655f68d8.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.firebase\firebase-common\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="363f626ad5686283250cdb6073ae1bba5cb07a87">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-9bc3be42136182611db545875d63d6e607c9c742.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.firebase\firebase-database-connection\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="33203b081101ca6242a4cd746aafe5fc2dd98a34">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-8c2422d4a0cdbcad9d2ac75723535d3f43a25f4f.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-plus\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="e3f200938bb888d83c2da807cb6aee983baae254">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-ecc683cb909698aa543c5f6086d547d20b63f4df.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.firebase\firebase-iid\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="dc4c18602ecffb3e69cda6cdc51ba4feac0f97d7">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-bcb53f3c00a26f28b104a29080905fb8717cfab7.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-iid\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="fbb50f7f89342c915898c9376a67229e2fcee286">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-329501c1cd01164255abb4a918cba87e08b68eb2.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads-lite\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="e91e1f335dc418d0138991a1d5155f0490ab6082">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-bbb8b972be829edad47cbea191dc061cbcfee388.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.firebase\firebase-analytics-impl\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="fb15fd9774b5c51dcb39d8e6fa1b6f06bcd1cd34">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-01982d01f572b73b20bc8b7384d0b87a7cde5f3b.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.firebase\firebase-auth-common\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="44120508d7240c3e34a05957981a5c3c9b9f61aa">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-e6e21803cbe78b46830f9d7340f8f029cf0a624c.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-identity\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="7c39a4b431976abc46d3cf6344c75d06c769cd35">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-db977d3e061ee861025cd349e460e48f79e16093.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\MTP Mobile1\pagerSlidingTabStrip\unspecified\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="d0453442f7dc7ecb3c373d951dbb809854d03d29">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-f73b40b1aa891eaa53ac29e2c808fabb4eca61d0.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-appinvite\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="5acfd484717d9175c175569a114d46dbeec074ed">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-a41bb0dbe9da47f5899366d1bae6588e5a3c2299.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="30489a97b06cc3945bdbcc1770089af9e3b3b64d">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-50caee6a360ab71e2a70947cf169074b0ec27610.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-vision\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="3c8fcebabb73df25937704f5566bf6c388ea941d">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-2a38b3e8101ae66c72809bde8f007223dcfc4264.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-ee5c4b94000fe4cf9fe26ea73ba5870f3c355caa.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-drive\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="7c7c21cc7a45d5c2a57d77f4840d4d4ea3c7604f">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-13ec378566f2f505fea7386a01842edbcae53b53.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-tagmanager\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="7378806b630886994099d03c369983f2848a609f">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-1ee8d731267326564814f4125b6c46c740d9e723.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.firebase\firebase-messaging\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="21bb89120d84fa29afeb0f9c0ebf415bc3b45a7e">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-537aa46c29569cb1e6fa296d3c1e3e435eebfe9b.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-9467760c01e9cb5bc7f283f39f55596759a916b7.jar" />
+    </item>
+    <item
+        jar="D:\MTP Mobile1\mTPMobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-contextmanager\9.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="8ad1b5663f367dac619256d75fb08a98c7baa4f4">
+        <dex dex="D:\MTP Mobile1\mTPMobile\build\intermediates\pre-dexed\debug\classes-62dbfc4296354605613d3bafa78877e831318d8e.jar" />
+    </item>
+
+</items>

@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.ex.pn.cloudburst.TestActivity" >
+
+    <item
+        android:id="@+id/edit_spatial"
+        android:orderInCategory="100"
+        android:title="@string/edit_spatial"
+        app:showAsAction="never"/>
+     <item
+        android:id="@+id/edit_attributes"
+        android:orderInCategory="100"
+        android:title="@string/edit_attributes"
+        app:showAsAction="never"/>
+      <item
+        android:id="@+id/delete_entry"
+        android:orderInCategory="100"
+        android:title="@string/delete_entry"
+        app:showAsAction="never"/>
+       <item
+        android:id="@+id/mark_as_complete"
+        android:orderInCategory="100"
+        android:title="@string/mark_as_complete"
+        app:showAsAction="never"/>
+
+</menu>
+<!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/src/main/res/menu/survey_listing_options.xml -->

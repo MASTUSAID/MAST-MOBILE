@@ -1,0 +1,2 @@
+include ':pagerSlidingTabStrip'
+include ':mTPMobile'

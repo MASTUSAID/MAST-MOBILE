@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.ex.pn.cloudburst.TestActivity" >
+
+     <item
+        android:id="@+id/edit"
+        android:orderInCategory="100"
+        android:title="@string/edit"
+        app:showAsAction="never"/>
+     
+     <item
+        android:id="@+id/delete_entry"
+        android:orderInCategory="100"
+        android:title="@string/delete_entry"
+        app:showAsAction="never"/>
+     
+</menu>
+<!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/src/main/res/menu/attribute_listing_options_for_poi.xml -->

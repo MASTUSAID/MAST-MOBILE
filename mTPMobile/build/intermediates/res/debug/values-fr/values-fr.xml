@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/src/main/res/values-fr/strings.xml -->
+    <eat-comment/>
+    <string-array name="Language_arrays">
+<item>Anglais</item>
+<item>Français</item>
+</string-array>
+    <string-array name="Sync_arrays">
+<item>Synchronisation Automatique</item>
+</string-array>
+    <string-array name="UserPref_arrays">
+<item>Changer la langue</item>
+<item>Configurer les outils de collecte de données</item>
+<item>Configurer la synchronisation automatique</item>
+<item>Configurer l\'affichage du plan</item>
+</string-array>
+    <string-array name="add_options_arrays">
+<item>Saisir le polygone</item>
+</string-array>
+    <string-array name="add_point_options_arrays">
+<item>Dessiner le point</item>
+<item>Saisir le lieu</item>
+</string-array>
+    <string-array name="add_poly_options_arrays">
+<item>20_Dessiner le polygone</item>
+<item>21_Saisir le polygone par GPS</item>
+</string-array>
+    <string-array name="booleanControlValues">
+<item>Sélectionner une option</item>
+<item>Oui</item>
+<item>Non</item>
+</string-array>
+    <string-array name="configureMapToolsitems">
+      <!--   <item>Point</item>
+        <item>Line</item> -->
+        <item>Polygone</item>
+</string-array>
+    <string-array name="genderArray">
+<item>Homme</item>
+<item>Femme</item>
+</string-array>
+    <string-array name="mapDisplayColors">
+<item>Jaune</item>
+<item>Rouge</item>
+<item>Vert</item>
+<item>Blanc</item>
+<item>Cyan</item>
+<item>Bleu</item>
+</string-array>
+    <string-array name="measure_options_arrays">
+ <item>Calculer la distance</item>
+<item>Calculer la superficie</item>
+<item>Mesurer la superficie du polygone</item>
+</string-array>
+    <string-array name="media">
+<item>Image</item>
+<item>Vidéo</item>
+</string-array>
+    <string-array name="parcelType_array">
+<item>Nouveau</item>
+<item>Existant</item>
+</string-array>
+    <string-array name="reviewDataStatus">
+<item>Ebauche</item>
+<item>Terminé</item>
+<item>Synchronisé</item>
+<!-- <item>Rejeté</item> -->
+</string-array>
+    <string name="AddNewMultimedia">Ajouter un nouveau multimedia</string>
+    <string name="AddNewPerson">Ajouter une nouvelle personne</string>
+    <string name="AddNewProperty">Ajouter les infos Propriété</string>
+    <string name="AddNewPropertyDetails">Ajouter des infos Propriété</string>
+    <string name="AddPerson">Ajouter une personne</string>
+    <string name="AddSocialTenureInfo">Ajouter la tenure</string>
+    <string name="Addcontact">Ajouter un contact</string>
+    <string name="AddedSuccessfully">Ajouté avec succès</string>
+    <string name="ConnectingtoWebService">Connexion au service Web..</string>
+    <string name="ConnectionTimeout">La connexion a exprié</string>
+    <string name="DataDownloadCompleted">Téléchargement des données terminé</string>
+    <string name="DataUploadedSuccessfully">données téléchargées avec succès</string>
+    <string name="DownloadError">Erreur de téléchargement ..</string>
+    <string name="DownloadFinished">Téléchargement terminé</string>
+    <string name="Downloading">En cours de téléchargement</string>
+    <string name="Error">Erreur</string>
+    <string name="ErrorDownloadingOfflineData">Erreur en téléchargent les données hors connexion</string>
+    <string name="ErrorDownloadingProjectdata">Erreur en téléchargent les données du projet</string>
+    <string name="ErrorInDownloadingData">Erreur en téléchargeant les données</string>
+    <string name="ErrorInUploadingData">Error en chargeant les données</string>
+    <string name="ErrorInUploadingFieldData">Erreur en chargeant les données de terrain</string>
+    <string name="ErrorInUploadingMultimedia">Erreur en chargeant les données multimédia</string>
+    <string name="Error_deleting_feature">Erreur en supprimant l\'élément.. !!</string>
+    <string name="Error_updating_feature">Erreur en mettant à jour l\'élément.. !!</string>
+    <string name="FieldDataUploadedSuccessfully">données de terrain chargée avec succès</string>
+    <string name="Gender">Genre</string>
+    <string name="Latitude">Latitude</string>
+    <string name="MultimediaUploadedSuccessfully">Multimédia chargé avec succès</string>
+    <string name="NoDataFoundToUpload">Aucune données trouvées à charger</string>
+    <string name="NoDataPendingforUpload">Aucune données en attente à charger</string>
+    <string name="Occupation">Profession</string>
+    <string name="OfflineDataDownloadedSuccessfully">Doonées hors connexion téléchargée avec succès</string>
+    <string name="ProjectDataDownloadedSuccessfully">données du projet téléchargées avec succès</string>
+    <string name="PropertyInfo">Info propriété</string>
+    <string name="SocialTenureInfo">Info Tenure</string>
+    <string name="TenureInfo">Info Tenure</string>
+    <string name="Tittle_Generalinformation">Info générale</string>
+    <string name="UnableToConnectToTheServer">Impossible de se connecter au serveur.. !!</string>
+    <string name="UnableToSave">Impossible d\'enregistrer</string>
+    <string name="UnableToUpload">Impossible de charger</string>
+    <string name="UploadFinished">Chargement terminé</string>
+    <string name="Uploading">Chargement…</string>
+    <string name="UploadingError">Erreur en chargement</string>
+    <string name="You_have_selected">Vous avez sélectionné :</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values-fr/values-fr.xml -->
+    <eat-comment/>
+    <string msgid="4600421777120114993" name="abc_action_bar_home_description">"Revenir à l\'accueil"</string>
+    <string msgid="1397052879051804371" name="abc_action_bar_home_description_format">"%1$s, %2$s"</string>
+    <string msgid="6623331958280229229" name="abc_action_bar_home_subtitle_description_format">"%1$s, %2$s, %3$s"</string>
+    <string msgid="1594238315039666878" name="abc_action_bar_up_description">"Revenir en haut de la page"</string>
+    <string msgid="3588849162933574182" name="abc_action_menu_overflow_description">"Plus d\'options"</string>
+    <string msgid="4076576682505996667" name="abc_action_mode_done">"OK"</string>
+    <string msgid="7468859129482906941" name="abc_activity_chooser_view_see_all">"Tout afficher"</string>
+    <string msgid="2031811694353399454" name="abc_activitychooserview_choose_application">"Sélectionner une application"</string>
+    <string msgid="7723749260725869598" name="abc_search_hint">"Rechercher…"</string>
+    <string msgid="3691816814315814921" name="abc_searchview_description_clear">"Effacer la requête"</string>
+    <string msgid="2550479030709304392" name="abc_searchview_description_query">"Requête de recherche"</string>
+    <string msgid="8264924765203268293" name="abc_searchview_description_search">"Rechercher"</string>
+    <string msgid="8928215447528550784" name="abc_searchview_description_submit">"Envoyer la requête"</string>
+    <string msgid="893419373245838918" name="abc_searchview_description_voice">"Recherche vocale"</string>
+    <string msgid="3421042268587513524" name="abc_shareactionprovider_share_with">"Partager avec"</string>
+    <string msgid="7165123711973476752" name="abc_shareactionprovider_share_with_application">"Partager avec %s"</string>
+    <string msgid="1603543279005712093" name="abc_toolbar_collapse_description">"Réduire"</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads-lite/9.2.0/res/values-fr/values.xml -->
+    <eat-comment/>
+    <string msgid="6361267646005304214" name="accept">"Accepter"</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/src/main/res/values-fr/strings.xml -->
+    <eat-comment/>
+    <string name="action_example">Exemple d\'action</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="action_sign_in">Connexion</string>
+    <string name="addMore">Ajouter un autre</string>
+    <string name="addNew">Ajouter un nouveau</string>
+    <string name="addPOI">Ajouter un ayant-droit</string>
+    <string name="add_atlest_one_person">Merci d\'ajouter au moins une personne</string>
+    <string name="add_bookmark">Ajouter un signet</string>
+    <string name="add_custom_attributes">Ajouter un attribut personalisé</string>
+    <string name="add_feature">Ajouter un élément</string>
+    <string name="add_photo">Ajouter une photo</string>
+    <string name="add_photo_of_all_persons">Merci d\'ajouter une photo à chaque personne</string>
+    <string name="add_representative">Ajouter Mandataire</string>
+    <string name="add_witness">Ajouter un témoin</string>
+    <string name="alert">Alerte</string>
+    <string name="alert_delete_photo">Etes-vous certain de vouloir supprimer la photo de la personne ?</string>
+    <string name="app_name">MAST</string>
+    <string name="app_ver">v 3.1.0</string>
+    <string name="app_ver2">3.1.0</string>
+    <string name="appname">Application Mobile de Sécurisation Foncière</string>
+    <string name="areaTxt">Superficie</string>
+    <string name="atleast_one_person">Merci d\'ajouter au moins une personne</string>
+    <string name="attribCount"/>
+    <string name="attributes">Attributs</string>
+    <string name="auto_sync">Configurer la synchronisation automatique</string>
+    <string name="back">Retour</string>
+    <string name="bookmarkDialogTitle">Sélectionner un signet</string>
+    <string name="bookmark_enter_name">Merci de saisir le nom du signer.. !!</string>
+    <string name="bookmark_save_error">Impossible d\'enregistrer le signet</string>
+    <string name="bookmark_saved_msg">Signet enregistré.. !!</string>
+    <string name="btn_cancel">Annuler</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_proceed">Poursuivre</string>
+    <string name="cancel">Annuler</string>
+    <string name="captureImage">Saisir l\'image</string>
+    <string name="capture_features">Saisir les éléments</string>
+    <string name="capture_new_data">Saisir les données</string>
+    <string name="capturedata">Saisir les données</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast-framework/9.2.0/res/values-fr/values.xml -->
+    <eat-comment/>
+    <string msgid="366047012176970604" name="cast_casting_to_device">"Diffusion sur l\'appareil %1$s…"</string>
+    <string msgid="4431992200264667209" name="cast_disconnect">"Déconnecter"</string>
+    <string msgid="7884080323096468593" name="cast_forward">"Avancer"</string>
+    <string msgid="6424889955881797947" name="cast_forward_10">"Avancer de 10 secondes"</string>
+    <string msgid="7868672855975238403" name="cast_forward_30">"Avancer de 30 secondes"</string>
+    <string msgid="6885943100773268783" name="cast_intro_overlay_button_text">"@android:string/ok"</string>
+    <string msgid="5637297909372905371" name="cast_mute">"Couper le son"</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/9.2.0/res/values-fr/values.xml -->
+    <eat-comment/>
+    <string msgid="5319032370587661362" name="cast_notification_connected_message">"Connecté à <ns1:g id="NAME">%1$s</ns1:g>"</string>
+    <string msgid="2758865089947797888" name="cast_notification_connecting_message">"Connexion à <ns1:g id="NAME">%1$s</ns1:g>…"</string>
+    <string msgid="5232008641593292969" name="cast_notification_disconnect">"Déconnecter"</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast-framework/9.2.0/res/values-fr/values.xml -->
+    <eat-comment/>
+    <string msgid="5308503786390460607" name="cast_pause">"Suspendre"</string>
+    <string msgid="5906987965619702702" name="cast_play">"Lire"</string>
+    <string msgid="1739665135565985480" name="cast_rewind">"Retour arrière"</string>
+    <string msgid="6432793028560778843" name="cast_rewind_10">"Retour arrière de 10 secondes"</string>
+    <string msgid="4677199707225681325" name="cast_rewind_30">"Retour arrière de 30 secondes"</string>
+    <string msgid="3991548379225047363" name="cast_skip_next">"Passer à l\'élément suivant"</string>
+    <string msgid="8369073097776576935" name="cast_skip_prev">"Passer à l\'élément précédent"</string>
+    <string msgid="9191388946729723891" name="cast_stop">"Arrêter"</string>
+    <string msgid="1219622777438777099" name="cast_stop_live_stream">"Arrêter la diffusion en direct"</string>
+    <string msgid="4250321332248956563" name="cast_tracks_chooser_dialog_audio">"Fichiers audio"</string>
+    <string msgid="1162380934229249476" name="cast_tracks_chooser_dialog_cancel">"Annuler"</string>
+    <string msgid="5563446400083425854" name="cast_tracks_chooser_dialog_no_audio_tracks">"Aucune piste audio disponible"</string>
+    <string msgid="7413336699113748535" name="cast_tracks_chooser_dialog_no_text_tracks">"Aucune piste de texte disponible"</string>
+    <string msgid="2332432312191219516" name="cast_tracks_chooser_dialog_no_tracks_available">"Aucune piste disponible"</string>
+    <string msgid="1176688358580178396" name="cast_tracks_chooser_dialog_none">"Aucun"</string>
+    <string msgid="3804878371876790270" name="cast_tracks_chooser_dialog_ok">"Correct"</string>
+    <string msgid="2454147715032376208" name="cast_tracks_chooser_dialog_subtitles">"Sous-titres"</string>
+    <string msgid="2913461521603516868" name="cast_unmute">"Réactiver le son"</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/src/main/res/values-fr/strings.xml -->
+    <eat-comment/>
+    <string name="change_language">Changer la langue</string>
+    <string name="clearFeatureDrawnMsg">Voulez-vous effacer cet élément?</string>
+    <string name="clear_feature">Effacer</string>
+    <string name="colorDialogTitle">Choisir la couleur</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.2.0/res/values-fr/values.xml -->
+    <eat-comment/>
+    <string msgid="4770915072144378781" name="common_google_play_services_api_unavailable_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> nécessite un ou plusieurs services Google Play qui ne sont pas disponibles actuellement. Veuillez contacter le développeur pour obtenir de l\'aide."</string>
+    <string msgid="2050101795821476669" name="common_google_play_services_enable_button">"Activer services Google Play"</string>
+    <string msgid="7045129128108380659" name="common_google_play_services_enable_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> ne fonctionnera pas tant que vous n\'aurez pas activé les services Google Play."</string>
+    <string msgid="3147157405986503375" name="common_google_play_services_enable_title">"Activer les services Google Play"</string>
+    <string msgid="7118643132557593940" name="common_google_play_services_install_button">"Installer les services Google Play"</string>
+    <string msgid="1666261992894286769" name="common_google_play_services_install_text_phone">"<ns1:g id="APP_NAME">%1$s</ns1:g> ne fonctionnera pas sans les services Google Play, qui ne sont pas installés sur votre téléphone."</string>
+    <string msgid="1701766622451829291" name="common_google_play_services_install_text_tablet">"<ns1:g id="APP_NAME">%1$s</ns1:g> ne fonctionnera pas sans les services Google Play, qui ne sont pas installés sur votre tablette."</string>
+    <string msgid="7442193194585196676" name="common_google_play_services_install_title">"Installer les services Google Play"</string>
+    <string msgid="479501935061677276" name="common_google_play_services_invalid_account_text">"Le compte indiqué n\'existe pas sur cet appareil. Veuillez sélectionner un autre compte."</string>
+    <string msgid="5775407690646375078" name="common_google_play_services_invalid_account_title">"Compte erroné"</string>
+    <string msgid="6857745590248226927" name="common_google_play_services_network_error_text">"Vous devez disposer d\'une connexion de données pour utiliser les services Google Play."</string>
+    <string msgid="4183541461338112307" name="common_google_play_services_network_error_title">"Erreur réseau"</string>
+    <string msgid="180394615667698242" name="common_google_play_services_notification_ticker">"Erreur liée aux services Google Play"</string>
+    <string msgid="8897126254633757462" name="common_google_play_services_resolution_required_text">"Veuillez effectuer l\'action requise par l\'application <ns1:g id="APP_NAME">%1$s</ns1:g>."</string>
+    <string msgid="7524004365913123453" name="common_google_play_services_resolution_required_title">"Action requise par services Google Play"</string>
+    <string msgid="3111284987662714014" name="common_google_play_services_restricted_profile_text">"L\'accès aux comptes à partir d\'un profil limité n\'est pas possible."</string>
+    <string msgid="8137798410446890929" name="common_google_play_services_restricted_profile_title">"Profil limité"</string>
+    <string msgid="2431909537598981235" name="common_google_play_services_sign_in_failed_text">"Erreur lors de la connexion au compte indiqué. Veuillez en sélectionner un autre."</string>
+    <string msgid="4402642931312190213" name="common_google_play_services_sign_in_failed_title">"Échec de la connexion"</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.2.0/res/values-fr/values.xml -->
+    <eat-comment/>
+    <string msgid="9089562800660647919" name="common_google_play_services_unknown_issue">"L\'application <ns1:g id="APP_NAME">%1$s</ns1:g> rencontre des problèmes avec les services Google Play. Si le problème persiste, veuillez contacter le développeur pour obtenir de l\'aide."</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.2.0/res/values-fr/values.xml -->
+    <eat-comment/>
+    <string msgid="1064791666906610763" name="common_google_play_services_unsupported_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> dépend des services Google Play, qui ne sont pas compatibles avec votre appareil. Veuillez contacter le fabricant pour obtenir de l\'aide."</string>
+    <string msgid="539866123733096737" name="common_google_play_services_unsupported_title">"Services Google Play"</string>
+    <string msgid="8172070149091615356" name="common_google_play_services_update_button">"Mettre à jour"</string>
+    <string msgid="7773943415006962566" name="common_google_play_services_update_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> ne fonctionnera pas tant que vous n\'aurez pas mis à jour les services Google Play."</string>
+    <string msgid="8706675115216073244" name="common_google_play_services_update_title">"Mettre à jour les services Google Play"</string>
+    <string msgid="7894275749778928941" name="common_google_play_services_updating_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> ne fonctionnera pas sans les services Google Play, qui sont en cours de mise à jour."</string>
+    <string msgid="2270671469198016014" name="common_google_play_services_updating_title">"Mise à jour des services Google Play"</string>
+    <string msgid="2804989272736383918" name="common_google_play_services_wear_update_text">"La nouvelle version des services Google Play est nécessaire. Elle sera bientôt installée automatiquement."</string>
+    <string msgid="5201977337835724196" name="common_open_on_phone">"Ouvrir sur le téléphone"</string>
+    <string msgid="3441753203274453993" name="common_signin_button_text">"Se connecter"</string>
+    <string msgid="669893613918351210" name="common_signin_button_text_long">"Se connecter avec Google"</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/src/main/res/values-fr/strings.xml -->
+    <eat-comment/>
+    <string name="communeName_lbl">communauté :</string>
+    <string name="completed">Terminé</string>
+    <string name="completedFeatureMsg">Etes-vous certain de marquer cet élément comme terminé ?</string>
+    <string name="configure_data">Configurer les outils de collecte de données</string>
+    <string name="confirmation_sync">Voulez-vous synchroniser toutes les saisies ?</string>
+    <string name="continueTologout">Déconnexion</string>
+    <string name="correctValuesWarning">Merci de saisir des valeurs correctes</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads-lite/9.2.0/res/values-fr/values.xml -->
+    <eat-comment/>
+    <string msgid="6585634416571795096" name="create_calendar_message">"Autoriser l\'annonce à créer un événement d\'agenda ?"</string>
+    <string msgid="5763102366548941325" name="create_calendar_title">"Créer un événement d\'agenda"</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/src/main/res/values-fr/strings.xml -->
+    <eat-comment/>
+    <string name="data_saved">données enregistrées avec succès</string>
+    <string name="data_summary_label1">Relation de la tenure :</string>
+    <string name="data_summary_label1_1">Type de tenure :</string>
+    <string name="data_summary_label1_owner">Propriétaire :</string>
+    <string name="data_summary_label2">Propriété :</string>
+    <string name="data_summary_label3">Détails de personne :</string>
+    <string name="data_summary_label5">Tenure :</string>
+    <string name="data_summary_label5_POI">Ayant-droits :</string>
+    <string name="data_summary_label6">Multimédia :</string>
+    <string name="data_summary_label7">Personalisé :</string>
+    <string name="deceased_person">Personne décédée</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads-lite/9.2.0/res/values-fr/values.xml -->
+    <eat-comment/>
+    <string msgid="6520798050439307862" name="decline">"Refuser"</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/src/main/res/values-fr/strings.xml -->
+    <eat-comment/>
+    <string name="delete">Supprimer</string>
+    <string name="deleteEntryMsg">Etes-vous certain de vouloir supprimer cet élément ?</string>
+    <string name="deleteFeatureEntryMsg">Etes-vous certain de vouloir supprimer cet élément ?</string>
+    <string name="deletePersonEntryMsg">Si vous supprimer une personne, les ayant-droits associés seront aussi supprimés. Voulez-vous continuer?</string>
+    <string name="delete_all_data">Toutes les données vont être supprimées</string>
+    <string name="delete_entry">Supprimer la saisie</string>
+    <string name="delete_feature">Supprimer l\'élément</string>
+    <string name="delete_photo">Supprimer la photo</string>
+    <string name="delete_poi">Voulez-vous supprimer l\'ayant-droit ? </string>
+    <string name="delete_poi_first">Merci de supprimer l\'ayant-droit en premier</string>
+    <string name="deleted">Supprimé</string>
+    <string name="do_u_want_to_add_media">Voulez-vous ajouter des fichiers Média ?</string>
+    <string name="do_u_want_to_continue">Voulez-vous continuer ?</string>
+    <string name="dowbloadFinaldata">Téléchargment des dernières données</string>
+    <string name="download_data_first">Merci de télécharger les données du projet en premier</string>
+    <string name="downloaddata">Télécharger les données</string>
+    <string name="drawer_close">Fermer</string>
+    <string name="drawer_open">Ouvrir</string>
+    <string name="edit">Modifier</string>
+    <string name="edit_Person">Modifier les informations de la personne</string>
+    <string name="edit_attributes">Modifier les attributs</string>
+    <string name="edit_spatial">Modifier les données spatiales</string>
+    <string name="emptyListText">Aucun éléments à montrer</string>
+    <string name="enterBookmarkName">Saisir le nom du signet</string>
+    <string name="enter_details">Merci d\'entrer les informations</string>
+    <string name="enter_otherExistingUse">Saisir les autres types d\'utilisation</string>
+    <string name="equal_person_nd_tenure">Merci d\'ajouter autant de personnes que de tenures</string>
+    <string name="errorDeleteFeatureMsg">Erreur en supprimant l\'élément.. !!</string>
+    <string name="errorOccured">Une erreur est apparue … !!</string>
+    <string name="error_saving_media">Erreur en enregistrant le fichier média</string>
+    <string name="featureEditTipMsg">Appui long sur les punaises pour activer le mode édition et faire glisser pour changer</string>
+    <string name="feature_not_allowed_msg">Vous n\'êtes pas autorisé à accéder à cet élément</string>
+    <string name="featurenotdraft">Cet élément n\'est pas en mode ébauche</string>
+    <string name="fill_mandatory">Merci de compléter les champs obligatoires</string>
+    <string name="fill_property_Details">Merci d\'ajouter les info de la propriété</string>
+    <string name="fill_tenure">Merci d\'entrer les informations sur la tenure en premier</string>
+    <string name="firstName">Prénom</string>
+    <string name="gps_capture_exit">Voulez-vous sortir de l\'élément utilisant le GPS ?</string>
+    <string name="gps_disabled_Msg">Le GPS est désactivé. Aller dans les paramètres pour activer le GPS</string>
+    <string name="gps_disabled_title">GPS désactivé</string>
+    <string name="gps_fix_search_msg">Recherche de localisation par GPS</string>
+    <string name="gps_fix_success_msg">Localisation déterminée par GPS</string>
+    <string name="gps_fix_wait_msg">Localisation par GPS en attente</string>
+    <string name="identity">Identité</string>
+    <string name="incomplete">Incomplet</string>
+    <string name="info">Alerte</string>
+    <string name="internet_disabled_msg">Internet est désactivé. Aller dans les paramètres pour activer Internet</string>
+    <string name="internet_disabled_title">Internet est désactivé</string>
+    <string name="invalid_parcel">Colis non valide</string>
+    <string name="lastName">Nom</string>
+    <string name="layer_manager">Gestionnaire de couche</string>
+    <string name="lengthTxt">Longeur</string>
+    <string name="login_error">L\'Authentification a présenté une erreur</string>
+    <string name="login_error_msg">Le Nom d\'Utilisateur et le Mot de Passe ne correspondent pas</string>
+    <string name="logout">Déconnexion</string>
+    <string name="logoutWarningMsg">Toutes vos données vont être supprimées. Voulez-vous vraiment vous déconnecter ?</string>
+    <string name="longitude">Longitude</string>
+    <string name="mapOptions">Options du plan</string>
+    <string name="mapviewer">Vue du plan</string>
+    <string name="maritalStatus">Statut Marital</string>
+    <string name="mark_as_complete">Marquer comme terminé</string>
+    <string name="mark_as_verified">Marquer comme vérifié</string>
+    <string name="measureDialogTitle">Sélectionner l\'élement à mesurer</string>
+    <string name="menu_gps">GPS</string>
+    <string name="menu_map_info">Info plan</string>
+    <string name="menu_measure">Mesurer</string>
+    <string name="menu_xy">Obtenir les coordonnées du lieu</string>
+    <string name="middleName">Deuxième prénom</string>
+    <string name="mobile">Numéro mobile</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/23.0.0/res/values-fr/values-fr.xml -->
+    <eat-comment/>
+    <string msgid="8327680881775995150" name="mr_media_route_button_content_description">"Caster"</string>
+    <string msgid="7553005460920830010" name="mr_media_route_chooser_searching">"Recherche d\'appareils en cours…"</string>
+    <string msgid="7106830097177242655" name="mr_media_route_chooser_title">"Connecter à l\'appareil"</string>
+    <string msgid="109793632378378069" name="mr_media_route_controller_disconnect">"Déconnecter"</string>
+    <string msgid="3641544772007543920" name="mr_media_route_controller_no_info_available">"Aucune information disponible"</string>
+    <string msgid="8315773974194466049" name="mr_media_route_controller_pause">"Pause"</string>
+    <string msgid="5214423499524760404" name="mr_media_route_controller_play">"Lecture"</string>
+    <string msgid="379358765881274425" name="mr_media_route_controller_settings_description">"Paramètres de l\'itinéraire"</string>
+    <string msgid="5398645111664294430" name="mr_media_route_controller_stop">"Arrêter la diffusion"</string>
+    <string msgid="5441529851481176817" name="mr_system_route_name">"Système"</string>
+    <string msgid="7498112907524977311" name="mr_user_route_category_name">"Appareils"</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/src/main/res/values-fr/strings.xml -->
+    <eat-comment/>
+    <string name="multimedia">Multimédia</string>
+    <string name="natural">Naturel</string>
+    <string name="navigation_drawer_close">Fermer le volet de navigation</string>
+    <string name="navigation_drawer_open">Ouvrir le volet de navigation</string>
+    <string name="next">SUIVANT</string>
+    <string name="nextKin">Ajouter un ayant-droit</string>
+    <string name="nextOfKin">Saisir l\'ayant-droit</string>
+    <string name="no">Non</string>
+    <string name="noAttributesText">Pas d\'attributs dans cette catégorie</string>
+    <string name="noFeatureFoundMsg">Aucun élément trouvé.. !!</string>
+    <string name="noFeaturesToLoad">Aucun élément à charger de la base de données.. !!</string>
+    <string name="noLocationFound">Aucune localisation trouvée</string>
+    <string name="no_bookmark_msg">Pas de signet à montrer</string>
+    <string name="no_fix_msg">Aucune réparation</string>
+    <string name="no_location">Aucunes localisation trouvée</string>
+    <string name="no_media_exist">Aucun fichier média n\'existe pour cet élément spatial</string>
+    <string name="no_pic_person">Aucune photo saisie pour cette personne</string>
+    <string name="nonnatural">Non naturel</string>
+    <string name="not_applicable">Non applicable</string>
+    <string name="not_defined">Non défini pour ce projet</string>
+    <string name="not_selected">Non selectionné</string>
+    <string name="option_00">Draw Point</string>
+    <string name="option_01">Capture point by GPS</string>
+    <string name="option_02">Enter location</string>
+    <string name="option_10">Draw Line</string>
+    <string name="option_11">Capture line by GPS</string>
+    <string name="option_12">Create Line based on bearing and distance</string>
+    <string name="option_20">Draw Polygon</string>
+    <string name="option_21">Capture polygon by GPS</string>
+    <string name="perso_of_interest">Ayant-droit</string>
+    <string name="person">Personne</string>
+    <string name="personShare">Part de la personne</string>
+    <string name="person_of_interest">Ayant-droit(s)</string>
+    <string name="person_photo">Photo</string>
+    <string name="pic_added_successfully">Photo ajoutée avec succès</string>
+    <string name="pic_delete_msg">Photo supprimée.. !!</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-places/9.2.0/res/values-fr/values.xml -->
+    <eat-comment/>
+    <string msgid="1303870564366209730" name="place_autocomplete_clear_button">"Effacer la recherche"</string>
+    <string msgid="2809095107724486040" name="place_autocomplete_search_hint">"Rechercher"</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/src/main/res/values-fr/strings.xml -->
+    <eat-comment/>
+    <string name="please_add_personDetails">Merci de saisir les infos de la personne en premier</string>
+    <string name="please_delete_Social_Tenure_first">Merci de supprimes la tenure en premier</string>
+    <string name="please_fill_tenure_details">Merci de compléter les champs "Tenure"</string>
+    <string name="plot_by_gps">Point de parcelle par GPS</string>
+    <string name="poi_deleted">Ayant-droit supprimé</string>
+    <string name="polygon_txt">Polygone</string>
+    <string name="projectname">Nom du projet :</string>
+    <string name="prompt_email">Nom d\'utilisateur</string>
+    <string name="prompt_password">Mot de Passe</string>
+    <string name="prosessing_image">Image en traitement</string>
+    <string name="radio_multiple">Multiple</string>
+    <string name="radio_single">Célibataire</string>
+    <string name="refreshing_msg">Liste en attente d\'actualisation</string>
+    <string name="representative">Mandataire</string>
+    <string name="resident">Résident</string>
+    <string name="review_data">Revoir les données</string>
+    <string name="reviewdata">Revoir les données</string>
+    <string name="satellite_map">Carte Satellite</string>
+    <string name="sats_use_msg"/>
+    <string name="save">Enregistrer</string>
+    <string name="save_feature">Enregistrer</string>
+    <string name="save_genral_attrribute">Merci d\'enregistrer les attributs généraux en premier</string>
+    <string name="select">Sélectionner une option</string>
+    <string name="selectDate">Sélectionner la date</string>
+    <string name="selectOptionDialogTitle">Sélectionner une option à saisir</string>
+    <string name="select_device">Sélectionner l\'appareil</string>
+    <string name="select_other_option">Merci de choisir une autre option</string>
+    <string name="select_person_lbl">Séléectionner une personne</string>
+    <string name="select_tenure_lbl">Appliquer la tenure</string>
+    <string name="server_logging_msg">Connexion au serveur..</string>
+    <string name="setting_btn">Paramètres</string>
+    <string name="show_bookmarks">Visualiser les signets</string>
+    <string name="spatialUnitId">Numéro d\'Identification de l\'unité spatiale</string>
+    <string name="spatialUnitValue"/>
+    <string name="spatialunit_Village_lbl">Village</string>
+    <string name="spatialunit_lbl">Numéro d\'Identification de l\'unité spatiale :</string>
+    <string name="spatialunit_parcelType_lbl">Type de parcelle</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values-fr/values-fr.xml -->
+    <eat-comment/>
+    <string msgid="2869576371154716097" name="status_bar_notification_info_overflow">">999"</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads-lite/9.2.0/res/values-fr/values.xml -->
+    <eat-comment/>
+    <string msgid="9018493135943017231" name="store_picture_message">"Autoriser l\'annonce à stocker l\'image dans la galerie d\'images ?"</string>
+    <string msgid="3745622764880844111" name="store_picture_title">"Enregistrer l\'image"</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/src/main/res/values-fr/strings.xml -->
+    <eat-comment/>
+    <string name="submit_answer">Soumettre la réponse</string>
+    <string name="successFeatureSave">Elément enregistré avec succés..!!</string>
+    <string name="sync_pending_records">Merci de synchroniser toutes les saisies en attente avant déconnexion</string>
+    <string name="syncdata">Synchronizer les données</string>
+    <string name="tap_on_map_xy">Cliquer sur le plan pour extraire X et Y</string>
+    <string name="tenureType">Type de tenure :</string>
+    <string name="title_activity_add_media">Ajouter un nouveau multimedia</string>
+    <string name="title_activity_capture_attributes">Saisir les attributs</string>
+    <string name="title_activity_capture_spatial_data">Saisir les données</string>
+    <string name="title_activity_configure_map_display">Configurer l\'affichage du plan</string>
+    <string name="title_activity_custom_attrib">Attributs personalisés</string>
+    <string name="title_activity_data_summary">Synthèse des données collectées</string>
+    <string name="title_activity_general_attribute">Attribut général</string>
+    <string name="title_activity_media_list">Liste multimédia</string>
+    <string name="title_activity_video">Activité Vidéo</string>
+    <string name="title_person">Liste des personnes</string>
+    <string name="tittle_addDeceased">Ajouter une personne décédée</string>
+    <string name="unableSaveFeatureMsg">Impossible d\'enregistrer l\'élément</string>
+    <string name="unableToDownloadAttributeData">Impossible de télécharger les attributs des données</string>
+    <string name="unableToLoadOfflineData">Impossible de charger les données hors connexion.. !!</string>
+    <string name="unableUpdatefeatureMsg">Impossible de mettre à jour l\'élément</string>
+    <string name="unable_delete">Impossible de supprimer</string>
+    <string name="unable_logout">Déconnexion impossible</string>
+    <string name="unable_to_add_person_tye">Impossible d\'enregistrer le type de personne</string>
+    <string name="unable_to_capture">Impossible de saisir l\'image. Essayer encore une fois</string>
+    <string name="unable_to_save_data">Impossible d\'enregistrer les données</string>
+    <string name="undo">Annuler laction</string>
+    <string name="updateFeatureMsg">Elément mis à jour avec succés..!!</string>
+    <string name="userpref">Préférences Utilisateur</string>
+    <string name="val_entry">Entrer une entrée valide</string>
+    <string name="verifiedFeatureMsg">Etes-vous certain de marquer cet élément comme vérifé ?</string>
+    <string name="verify_data">Vérifier les données</string>
+    <string name="verifydata">Vérifier les données</string>
+    <string name="view_attributes">Visualiser les attributs</string>
+    <string name="view_details">Visualiser les infos</string>
+    <string name="view_map">Visualiser le plan</string>
+    <string name="view_media">Visualiser les média</string>
+    <string name="view_on_map">Visualiser sur le plan</string>
+    <string name="view_person">Visualiser la personne</string>
+    <string name="villageName_lbl">Nom du village</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/9.2.0/res/values-fr/values.xml -->
+    <eat-comment/>
+    <string msgid="363496807345461806" name="wallet_buy_button_place_holder">"Acheter avec Google"</string>
+    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/src/main/res/values-fr/strings.xml -->
+    <eat-comment/>
+    <string name="want_to_add_custum_attributes">Souhaitez-vous ajouter des attributs personalisés ?</string>
+    <string name="warning">Attention</string>
+    <string name="webserviceconnectMsg">Connexion au service Web..</string>
+    <string name="xcordinate">X-Coordonnée</string>
+    <string name="xydialogTitle_captureData">Coordonnées du plan</string>
+    <string name="xydialogTitle_mapViewer">Coordonnées du plan</string>
+    <string name="ycoordinate">Y-Coordonnée</string>
+    <string name="yes">Oui</string>
+    <string name="you_can_add_only_one_photo">Vous ne pouvez ajouter qu\'une seule photo</string>
+    <string name="you_did_not_enter_custum_attributes">Avez-vous saisi des attributs personalisés ?</string>
+    <string name="zoom_curent_location">Zoom sur la localisation actuelle</string>
+</resources>

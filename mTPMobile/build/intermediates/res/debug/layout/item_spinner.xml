@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:baselineAligned="false"
+    android:orientation="vertical"
+    android:padding="5dp" >
+
+    <TextView
+        android:id="@+id/field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="label"
+        android:textColor="@color/black"
+        android:textSize="@dimen/textSize" />
+
+    <Spinner
+        android:id="@+id/spinner1"
+        style="@android:style/Widget.Spinner.DropDown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:layout_marginTop="5dp"
+       android:padding="5dp" />
+    
+        <TextView
+        android:id="@+id/textview_datepicker"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:textColor="@color/black"
+        android:textSize="@dimen/textSize"
+        android:hint="Enter Date of mandate"
+        android:padding="5dp" 
+        android:visibility="gone"/> 
+
+</LinearLayout><!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/src/main/res/layout/item_spinner.xml -->

@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_ver">v 1.1.5</string>
+    <string name="app_ver2">3.0.0</string>
+    <string name="app_name">MAST</string>
+    <string name="action_settings">Mipangilio</string>
+    <string name="appname">Matumizi ya Simu Kuthibitisha Umiliki Ardhi</string>
+    <string name="capturedata">Nasa taarifa</string>
+    <string name="reviewdata">Pitia taarifa</string>
+    <string name="logout">Malizia/toka</string>
+    <string name="downloaddata">Shusha taarifa</string>
+    <string name="syncdata">Oanisha taarifa</string>
+    <string name="userpref">Pendeleo la mtumiaji</string>
+    <string name="verifydata">Thibitisha taarifa</string>
+    <string name="btn_ok">Ndio</string>
+    <string name="change_language">Badilisha lugha</string>
+    <string name="capture_new_data">Nasa taarifa</string>
+    <string name="configure_data">Andaa Vyombo vya Ukusanyaji wa Taarifa</string>
+    <string name="auto_sync">Andaa oanisho la kujigemea</string>
+
+    <string-array name="UserPref_arrays">
+        <item>Badilisha lugha</item>
+        <item>Pangilia zana za ukusanyaji taarifa</item>
+        <item>Pangilia kusawazisha moja kwa moja</item>
+        <item>Pangilia muonekano wa ramani</item>
+    </string-array>
+    <string-array name="Language_arrays">
+        <item>English</item>
+        <item>Kiswahili</item>
+    </string-array>
+    <string-array name="add_options_arrays">
+        <item>Nasa Alama</item>
+        <item>Nasa Mstari</item>
+        <item>Nasa Umbo</item>
+    </string-array>
+    <string-array name="Sync_arrays">
+        <item>Oanisho la kujitegemea</item>
+    </string-array>
+    <string-array name="add_point_options_arrays">
+        <item>00_Chora Alama</item>
+        <item>01_Nasa Alama kwa GPS</item>
+        <item>02_Ingiza Eneo</item>
+    </string-array>
+    <string-array name="add_line_options_arrays">
+        <item>10_Chora Mstari</item>
+        <item>11_Nasa mstari kwa GPS</item>
+    </string-array>
+    <string-array name="add_poly_options_arrays">
+        <item>20_Chora umbo</item>
+        <item>21_Nasa umbo kwa GPS</item>
+    </string-array>
+
+    <!-- PLS DON'T CHANGE BELOW 8 ITEMS TO ANY OTHER LANGUAGE -->
+    <string name="option_00">Draw Point</string>
+    <string name="option_01">Capture point by GPS</string>
+    <string name="option_02">Enter location</string>
+    <string name="option_10">Draw Line</string>
+    <string name="option_11">Capture line by GPS</string>
+    <string name="option_12">Create Line based on bearing and distance</string>
+    <string name="option_20">Draw Polygon</string>
+    <string name="option_21">Capture polygon by GPS</string>
+    <!-- PLS DON'T CHANGE ABOVE 8 ITEMS TO ANY OTHER LANGUAGE -->
+
+    <string-array name="measure_options_arrays">
+        <item>kokotoa Umbali</item>
+        <item>kokotoa ukubwa wa eneo</item>
+        <item>Pima eneo la umbo</item>
+        <item>Pima urefu wa mstari</item>
+    </string-array>
+
+    <string name="title_activity_capture_attributes">Nasa Sifa</string>
+    <string name="projectname">Jina la Mradi</string>
+    <string name="attribButtons">Kitufe cha Sifa</string>
+    <string name="mapOptions">Aina za Ramani</string>
+    <string name="attribCount">00</string>
+    <string name="emptyListText">Hakuna kitu cha kuonesha</string>
+    <string name="edit_spatial">Sahihisha eneo</string>
+    <string name="edit_attributes">Sahihisha maelezo/Sifa</string>
+    <string name="delete_entry">Futa maelezo/Sifa</string>
+    <string name="mark_as_complete">Onesha imekamilika</string>
+    <string name="title_activity_login">MAST</string>
+    <string name="prompt_email">Jina la mtumiaji</string>
+    <string name="prompt_password">Neno la siri</string>
+    <string name="action_sign_in">Ingia</string>
+    <string name="navigation_drawer_open">Open droo ya kusogeza</string>
+    <string name="navigation_drawer_close">Close droo ya kusogeza</string>
+    <string name="action_example">Mfano hatua</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Karibu</string>
+    <string name="layer_manager">Muongozo wa Ramani</string>
+    <string name="mapviewer">Onesha ramani</string>
+    <string name="review_data">Pitia taarifa</string>
+    <string name="menu_gps">GPS</string>
+    <string name="menu_xy">Pata Alama za eneo</string>
+    <string name="menu_measure">Pima</string>
+    <string name="menu_map_info">Taarifa ya Ramani</string>
+    <string name="title_person">Orodha ya Watu</string>
+    <string name="save">Hifadhi</string>
+    <string name="person_photo">Picha</string>
+    <string name="cancel">Futa</string>
+    <string name="firstName">Jina la kwanza</string>
+    <string name="middleName">Jina la Kati</string>
+    <string name="lastName">Jina la Mwisho</string>
+    <string name="Gender">Jinsia</string>
+    <string name="mobile">Nambari ya Simu</string>
+    <string name="identity">Kitambulisho</string>
+    <string name="Occupation">Kazi</string>
+    <string name="maritalStatus">Hali ya ndoa</string>
+    <string name="personShare">Mgao wa Mtu</string>
+    <string name="spatialUnitId">Utambulisho wa anga</string>
+
+    <string-array name="genderArray">
+        <item>Kiume</item>
+        <item>Kike</item>
+    </string-array>
+
+    <string name="spatialUnitValue">    XXXXXXXXXX</string>
+    <string name="title_activity_add_media">Ongeza njia za mawasiliano</string>
+    <string name="addMore">Ongeza Zaidi</string>
+    <string name="PropertyInfo">Taarifa za Mali</string>
+    <string name="TenureInfo">Taarifa za umiliki</string>
+    <string name="multimedia">Njia za mawasiliano</string>
+    <string name="Tittle_Generalinformation">Taarifa ya Ujumla</string>
+    <string name="hello_world">Wapendwa dunia!</string>
+    <string name="title_activity_media_list">Orodha ya njia za mawasiliano</string>
+    <string name="addNew">Jaza MTU</string>
+    <string name="attributes">Sifa</string>
+    <string name="delete">Futa</string>
+    <string name="back">Rejea</string>
+    <string name="AddNewMultimedia">Ongeza njia za mawasiliano</string>
+    <string name="AddNewPerson">Ongeza Mtu Mpya</string>
+    <string name="AddNewProperty">Jaza taarifa za kipande cha ardhi</string>
+    <string name="AddSocialTenureInfo">Jaza taarifa za umiliki </string>
+    <string name="SocialTenureInfo">Taarifa ya miliki za kijamii</string>
+    <string name="Latitude">Latitudo</string>
+    <string name="longitude">Longitudo</string>
+    <string name="clear_feature">Safisha</string>
+    <string name="save_feature">Hifadhi</string>
+    <string name="xcordinate">Alama - X:</string>
+    <string name="ycoordinate">Alama - Y:</string>
+    <string name="xydialogTitle_mapViewer">Alama kutoka kwenye Ramani</string>
+    <string name="xydialogTitle_captureData">Alama kutoka kwenye Ramani</string>
+    <string name="measureDialogTitle">Chagua kipengele cha kupima</string>
+    <string name="deleteFeatureEntryMsg">Je, una uhakika unataka kufuta kipengele hiki?</string>
+    <string name="btn_cancel">Hapana</string>
+    <string name="completedFeatureMsg">Je, una uhakika unataka kuonesha kuwa kipengele kimekamilika?</string>
+
+    <string-array name="reviewDataStatus">
+        <item>Rasimu</item>
+        <item>Imekamilika</item>
+        <item>Zimeoanishwa</item>
+        <item>kukataliwa</item>
+    </string-array>
+
+    <string name="title_activity_capture_spatial_data">Nasa taarifa</string>
+    <string name="plot_by_gps">Ingiza alama kwa gps</string>
+    <string name="spatialunit_lbl">Kitambulisho cha anga</string>
+    <string name="undo">Tendua</string>
+    <string name="zoom_curent_location">Kuza ili eneo la sasa</string>
+    <string name="add_bookmark">Ongeza Alama</string>
+    <string name="show_bookmarks">Onesha Alama</string>
+    <string name="bookmarkDialogTitle">Chagua Alama</string>
+    <string name="clearFeatureDrawnMsg">Je, unataka kufuta kipengele hiki?</string>
+    <string name="unableSaveFeatureMsg">Haiwezekani kuhifadhi kipengele!!</string>
+    <string name="updateFeatureMsg">Kipengele kimefanikiwa kusahihishwa..!!</string>
+    <string name="unableUpdatefeatureMsg">Haikuweza kusahihisha kipengele .. !!</string>
+    <string name="errorOccured">kosa lilitokea .. !!</string>
+    <string name="successFeatureSave">Kipengele kimefanikiwa kuhifadhiwa .. !!</string>
+    <string name="noFeaturesToLoad">Hakuna vipengele kwenye db .. !!</string>
+    <string name="featureEditTipMsg">Shikiria kwa muda kwenye alama kuwezesha kufanya mabadiliko</string>
+    <string name="noLocationFound">Hakuna eneo lililopatikana .. !!</string>
+    <string name="correctValuesWarning">Tafadhali ingiza nambari sahihi</string>
+    <string name="areaTxt">Eneo</string>
+    <string name="lengthTxt">Urefu</string>
+    <string name="noFeatureFoundMsg">Hakuna kipengele kilichopatikana .. !!</string>
+    <string name="errorDeleteFeatureMsg">Kosa kwenye kufuta kipenge .. !!</string>
+    <string name="unableToLoadOfflineData">Haiwezi kuchukua taarifa pasipo na mtandao .. !!</string>
+    <string name="colorDialogTitle">Chagua rangi</string>
+
+    <string-array name="mapDisplayColors">
+        <item>Njano</item>
+        <item>Nyekundu</item>
+        <item>Kijani</item>
+        <item>Nyeupe</item>
+        <item>Cyan</item>
+        <item>Buluu</item>
+    </string-array>
+
+    <string name="title_activity_configure_map_display">Andaa muonekano wa ramani</string>
+
+    <string-array name="configureMapToolsitems">
+        <item>Alama</item>
+        <item>Mstari</item>
+        <item>Umbo</item>
+    </string-array>
+    <string-array name="media">
+        <item>Taswira</item>
+        <item>Video</item>
+    </string-array>
+
+    <string name="title_activity_add_image">Ongeza kazi ya Taswira</string>
+    <string name="captureImage">Nasa Taswira</string>
+    <string name="title_activity_video">Kazi ya Video</string>
+    <string name="view_media">Ona njia ya mawasiliano</string>
+    <string name="feature_not_allowed_msg">Huruhusiwi kufikia kipengele hiki</string>
+    <string name="add_photo">Weka picha</string>
+    <string name="gps_fix_wait_msg">Subiri taarifa ya mahali ya GPS</string>
+    <string name="gps_fix_search_msg">Tafuta mahali kupitia GPS</string>
+    <string name="gps_fix_success_msg">Mahali pameoneshwa na GPS</string>
+    <string name="bookmark_saved_msg">Alama imehifadhiwa</string>
+    <string name="bookmark_save_error">Haiwezi kuhifadhi alama</string>
+    <string name="bookmark_enter_name">Ingiza jina la eneo .. !!</string>
+
+    <string-array name="personTypeArray">
+         <item>Chagua</item>
+        <item>Kawaida</item>
+        <item>Taasisi</item>
+    </string-array>
+    
+     <string-array name="residentArray">
+       <item>Chagua</item>
+        <item>Ndio</item>
+        <item>Hapana</item>
+    </string-array>
+
+    <string name="spatialunit_personType_lbl">Chagua aina ya mmiliki</string>
+    <string name="title_activity_add_non_natural_person">Eneo la taasisi</string>
+    <string name="title_activity_custom_attrib">Sifa za watumiaji</string>
+    <string name="AddPerson">Ongeza Mtu</string>
+    <string name="select_person_lbl">Chagua Mtu</string>
+    <string name="gps_disabled_title">GPS imesitishwa </string>
+    <string name="gps_disabled_Msg">GPS imesitishwa. Ingia kwenye mpangilio kuwezesha ifanye kazi</string>
+    <string name="setting_btn">Mipangilio</string>
+    <string name="internet_disabled_title">Mtandao haufanyi kazi</string>
+    <string name="internet_disabled_msg">Mtandao haufanyi kazi. Ingia kwenye mpangilio wezesha mtandao ufanye kazi</string>
+    <string name="no_fix_msg">Hakuna Cha kurekebisha</string>
+    <string name="sats_use_msg">Satelaiti inatumika</string>
+    <string name="deleteEntryMsg">Je, unahakika unataka kufuta ulichoingiza?</string>
+    <string name="add_atlest_one_person">Tafadhali ongeza walau mtu mmoja</string>
+    <string name="warning">Onyo</string>
+    <string name="save_genral_attrribute">Hifadhi sifa zote kwa ujumla tafadhali.</string>
+    <string name="login_error">Uthibitishaji ulishindikana</string>
+    <string name="login_error_msg">Jina la mtumiaji au neno la siri haviwiani</string>
+    <string name="error_saving_media">Hitilafu katika kuhifadhi  njia ya mawasiliano</string>
+
+    <string-array name="booleanControlValues">
+         <item>Chagua</item>
+        <item>Ndio</item>
+        <item>Hapana</item>
+    </string-array>
+
+    <string name="select">Chagua</string>
+    <string name="info">Taarifa</string>
+    <string name="download_data_first">Tafadhali Shusha taarifa za mradi kwanza</string>
+    <string name="verify_data">Thibitisha taarifa</string>
+
+    <string-array name="verifyDataStatus">
+        <item>Inasubiri</item>
+        <item>Imethibitishwa</item>
+         <item>mwisho</item>
+    </string-array>
+
+    <string name="view_map">Onesha ramani</string>
+    <string name="view_attributes">Onesha Sifa</string>
+    <string name="add_witness">Ongeza Shahidi</string>
+    <string name="mark_as_verified">Weka alama palipothibitishwa</string>
+    <string name="add_custom_attributes">Ongeza sifa za mtumiaji</string>
+    <string name="verifiedFeatureMsg">Je, una uhakika kuwa kipengele hiki kimethibitishwa?</string>
+
+    <!-- changes to be done from here -->
+
+    <string name="equal_person_nd_tenure">Tafadhali ongeza idadi sawa ya mtu na umiliki</string>
+    <string name="atleast_one_person">Tafadhali ongeza japo mtu mmoja</string>
+    <string name="fill_property_Details">Tafadhali ongeza maelezo ya mali</string>
+    <string name="Error_updating_feature">Hitilafu kwenye kurekebisha kipengere..!!</string>
+    <string name="Error_deleting_feature">Hitilafu kwenye ufutaji wa kipengele..!!</string>
+    <string name="add_feature">Ongeza kipengele</string>
+    <string name="delete_feature">Futa kipengele</string>
+    <string name="webserviceconnectMsg">Unganisha huduma ya mtandao..</string>
+
+    <!-- Start Translation by google translator -->
+
+    <string name="NoDataPendingforUpload">Hakuna taarifa inayosubiri kupakiwa</string>
+    <string name="NoDataFoundToUpload">Hakuna taarifa inayotakiwa kupakiwa</string>
+    <string name="UploadFinished">Kupakiwa kumemalizika</string>
+    <string name="DataUploadedSuccessfully">Taarifa zimefanikiwa kupakiwa</string>
+    <string name="Error">Hitilafu</string>
+    <string name="UnableToUpload">Haiwezi kupakia</string>
+    <string name="ErrorInUploadingData">Hitilafu katika kupakia taarifa</string>
+    <string name="UploadingError">Hitilafu ya kupakia</string>
+    <string name="Uploading">kupakia..</string>
+    <string name="ConnectingtoWebService">Inaunganishwa na huduma ya mtandao</string>
+    <string name="DataDownloadCompleted">Upakuaji wa taarifa umekamilika</string>
+    <string name="ErrorInDownloadingData">Hitilafu katika upakuaji wa taarifa</string>
+    <string name="select_tenure_lbl">Chagua aina ya umiliki</string>
+    <string name="radio_single">Mmoja</string>
+    <string name="radio_multiple">Wengi</string>
+    <string name="delete_all_data">Futa taarifa zote</string>
+    <string name="unable_to_save_data">Haiwezi kuhifadhi taarifa</string>
+
+    <!-- End Translation by google translator -->
+
+    <string name="featurenotdraft">Kipengele hiki si katika hali ya rasimu</string>
+    <string name="dowbloadFinaldata">Pakua taarifa za mwisho</string>
+    <string name="view_details">Ona maelezo</string>
+    <string name="title_activity_data_summary">Taarifa zilizokusanywa kwa ufupi</string>
+    <string name="Addcontact">Ongeza Mtu</string>
+    <string name="noAttributesText">Hakuna sifa katika jamii hii</string>
+    <string name="natural">Eneo la kawaida</string>
+    <string name="nonnatural">Eneo la taasisi</string>
+    <string name="completed">Imekamilka</string>
+    <string name="incomplete">Haikukamilika</string>
+    <string name="not_defined">Haikuelezwa kwenye mradi</string>
+    <string name="data_saved">Taarifa imehifadhiwa</string>
+    <string name="fill_mandatory">Tafadhali jaza sehemu za lazima</string>
+    <string name="unable_logout">Imeshindikana kutoka</string>
+    <string name="sync_pending_records">Tafadhali oanisha taarifa zote zilizohifadhiwa kabla ya kutoka</string>
+    <string name="data_summary_label1">Aina ya uhusiano wa miliki :</string>
+    <string name="data_summary_label2">Mali :</string>
+    <string name="data_summary_label3">Eneo la Kawaida(s) :</string>
+    <string name="data_summary_label4">Eneo la Taasisi :</string>
+    <string name="data_summary_label5">Miliki ya kijamii :</string>
+    <string name="data_summary_label6">Mawasiliano :</string>
+    <string name="data_summary_label7">Watumiaji :</string>
+    <string name="gps_accuracy">m accuracy</string>
+    <string name="refreshing_msg">Refreshing List..</string>
+    <string name="no_bookmark_msg">Hakuna Alama yakuonyesha</string>
+    <string name="no_location">Hakuna Sehemu uliyopatikana</string>
+    <string name="point_txt">Alama</string>
+    <string name="line_txt">Mstari</string>
+    <string name="polygon_txt">Umbo</string>
+    <string name="server_logging_msg">Ingia kwenye Mfumo..</string>
+    <string name="alert_delete_photo">Unauhakika unataka kufuta picha hii ?</string>
+    <string name="delete_photo">Futa picha</string>
+    <string name="pic_delete_msg">Picha imefutwa..!!</string>
+    <string name="no_pic_person">Hakuna picha iliyochukuliwa</string>
+    <string name="pic_added_successfully">Picha imefanikiwa kuwekwa</string>
+    <string name="prosessing_image">Processing Image</string>
+    <string name="tap_on_map_xy">Gusa kwenye ramani kupata alama xy</string>
+    <string name="gps_capture_exit">Unataka kutoka kwenye kipengele cha kunasa taarifa kwa kutumia GPS?</string>
+    <string name="view_on_map">View on map</string>
+    <string name="logoutWarningMsg">Taarifa zako zitafutwa.Je unataka kutoka?</string>    
+    <string name="selectOptionDialogTitle">Chagua chaguo kukamata</string>
+    <string name="continueTologout">Malizia/toka</string> 
+     <string name="add_photo_of_all_persons">Tafdahali ongeza picha za watu wote</string>
+    
+    <!-- add on 3/Nov/2015 -->
+    
+    <string name="data_summary_label1_1">Aina ya Miliki :</string>
+    <string name="data_summary_label1_owner">Mmiliki :</string>
+    <string name="data_summary_label4_admin">Msimamizi :</string>
+    <string name="data_summary_label5_Guardian">Mlezi :</string>
+    <string name="data_summary_label5_POI">Mtu mwenye maslahi :</string>
+    
+     <string name="FieldDataUploadedSuccessfully">Upandishwaji wa taarifa umefanikiwa</string>
+ <string name="MultimediaUploadedSuccessfully">Upandishwaji wa Maltimedia umefanikiwa</string>
+<string name="ErrorInUploadingFieldData">Hitilafu katika upandishwaji wa taarifa</string>
+<string name="ErrorInUploadingMultimedia">Hitilafu katika upandishwaji wa maltimedia</string>
+<string name="UnableToConnectToTheServer">Haiwezi kuunganishwa kwenye seva</string>
+<string name="ConnectionTimeout">Uunganishaji umesitishwa</string>
+<string name="ProjectDataDownloadedSuccessfully">Taarifa za mradi zimefanikiwa kupakuliwa</string>
+<string name="OfflineDataDownloadedSuccessfully">Taarifa za nje ya mtandao zimefanikiwa kupakuliwa</string>
+<string name="ErrorDownloadingProjectdata">Hitilafu katika upakuwaji wa taarifa za mradi</string>
+<string name="ErrorDownloadingOfflineData">Hitilafu katika upakuaji wa taarifa zilizo nje ya mtandao</string>
+<string name="Downloading">Ushushaji..</string>
+<string name="unableToDownloadAttributeData">Haiwezi kupakuwa taarifa </string>
+<string name="DownloadFinished">Ushushaji umekamilika..</string>
+<string name="DownloadError">Hitilafu katika ushushaji..</string>
+<string name="spatialunit_hemlet_lbl">Chagua kitongoji</string>
+<string name="select_witness1">Chagua mhakiki 1</string>
+<string name="select_witness2">chagua mhakiki 2</string>
+<string name="nextKin">Jaza mtu mwenye maslahi</string>
+<string name="tittle_addDeceased">Jaza jina la marehemu</string>
+<string name="addPOI">Jaza MASLA</string>
+<string name="addDeceased">Jaza MAREM</string>
+<string name="nextOfKin">Ingiza watu wenye maslahi</string>
+<string name="fill_tenure">Tafdhali jaza taarifa za umiliki kwanza</string>
+<string name="villageName_lbl">Jina la kijiji</string>
+<string name="AddedSuccessfully">Umefanikiwa kuongeza</string>
+<string name="UnableToSave">Haiwezi kuhifadhi</string>
+<string name="OwnerIsMinor">Mmiliki ni mtoto. Tafadhali jaza mlezi wake</string>
+<string name="selectOwnerOrAdminFirst">Mmiliki au Msimamizi hawapo katika mpangilio huu. Tafdhali hifadhi taarifa za Mmiliki au Msimamizi kwanza katika kipingile hiki.</string>
+<string name="mandatoryPOI">Inahitaji ujaze mtu wenye maslahi inapohitajika</string>
+<string name="selectAdminOrOwner">Chagua Msimamizi au Mmiliki kwanza</string>
+<string name="poi_deleted">Mtu mwenye maslahi amefutwa</string>
+<string name="delete_poi">Unahitaji kufuta mtu mwenye maslahi?</string>
+<string name="poi_isMandatory">Mtu anayejazwa ni "Msimamizi" ni lazima kujaza "mtu mwenye maslahi" katika kipengele hiki</string>
+<string name="guardian_cant_be_minor">Mlezi lazima awe na umri unaozidi miaka 18. Mlezi hawezi kuwa mtoto</string>
+<string-array name="person_sub_type">
+    <item >Mmiliki</item>
+    <item>Msimamizi</item>
+    <item>Mlezi</item>
+</string-array>
+<string name="select_person_subtype">Chagua  aina ya mtu</string>
+<string name="edit">Rekebisha</string>
+<string name="btn_proceed">Endelea</string>
+<string name="enter_details">Tafadhali jaza taarifa</string>
+<string name="tenureType">Aina ya Miliki</string>
+
+<!-- added String on 03/Nov/15- -->
+<string name="minorNotAllowed">Hairuhusu. Umri usiwe chini ya miaka 18.</string>
+<string name="ownerShouldBeMinor">Mmiliki lazima awe mtoto katika miliki ya mlezi</string>
+<string name="guardianShudBeAdult">Mlezi lazima awe mtu mzima</string>
+<string name="infoSingleOccupantStr">Lazima ujaze mmiliki mmoja tu na unaweza kuongeza mtu mwenye maslahi mmoja au zaidi</string>
+<string name="infoMultipleJointStr">Lazima ujaze wamiliki wawili na unaweza kuongeza mtu mwenye maslahi mmoja au zaidi</string>
+<string name="infoMultipleTeneancyStr">Lazima ujaze wamiliki  2 au zaidi (watoto) na walezi wasiozidi wawili</string>
+<string name="infoTenancyInProbateStr">Unaweza kuongeza mmiliki 1 au zaidi na wasimamizi wasiozidi 2, lazima ujaze jina la marehemu, na unaweza kujaza mtu mweye maslahi 1 au zaidi.</string>
+<string name="infoGuardianMinorStr">Lazima ujaze mmiliki 1 au zaidi na walezi wasiozidi wawili</string>
+<string name="warning_multipleJoint">Katika umiliki wa pamoja  (Mke na Mume) unatakiwa kujaza wamiliki 2 tu.</string>
+<string name="warning_multipleTenancy">Katika umiliki wa pamoja kwa hisa unatakiwa kujaza wamiliki 2 au zaidi</string>
+<string name="warning_tenancyProbate">Katika umiliki chini ya msimamizi unatakiwa kujaza jina la marehemu na mtu mwenye maslahi japo mmoja</string>
+<string name="warning_pleaseAddGuardianMinor">Tafadhali jaza mlezi wa mtoto huyu</string>
+<string name="warning_addPersonPhoto">Tafadhali weka picha ya mtu</string>
+<string name="can_not_add_poi">Huwezi kuongeza mtu mwenye maslahi</string>
+<string name="add_owner_first">Tafdhali jaza mmiliki kwanza</string>
+<string name="can_not_add_adminGuardian_in_SingleOccuapncy">Haiwezekani kuongeza Msimamizi au Mlezi katika Umiliki wa mtu mmoja</string>
+<string name="can_not_add_more_than_one_owner_in_SingleOccuapncy">Huwezi kuongeza zaidi ya moja Mmiliki katika kesi ya " Single Occupancy "</string>
+<string name="can_not_add_adminGuardian_in_multipleOccuapncy_joint">Haiwezekani kuongeza Msimamizi au Mlezi katika umiliki wa pamoja (Mke na Mume)</string>
+<string name="can_not_add_more_than_two_owners_in_multipleOccuapncy_joint">Huwezi kuongeza wamiliki zaidi ya 2 katika umiliki wa pamoja (Mke na Mume)</string>
+<string name="can_not_add_adminGuardian_in_multipleOccuapncy_common">Haiwezekani kuongeza Msimamizi au Mlezi katika umiliki wa pamoja (Mke na Mume)</string>
+<string name="guardian_can_not_more_than_two">Guardian can not be more than two in case of "Guardian(Minor)"</string>
+<string name="guardian_can_not_more_than_owners">Walezi hawawezi kuwa zaidi ya wamiliki (Watoto) katika Miliki chini ya Mlezi </string>
+<string name="can_not_add_admin_in_cas_of_guardian_minor">Haiwezekani kuongeza Msimamizi katika miliki chini ya Mlezi</string>
+<string name="can_not_add_moreThanOne_dp_tenancy_inProbate">Hauwezi kuongeza zaidi ya marehemu 1</string>
+<string name="Please_add_Administrator_first_or_Owner_first">Tafadhali jaza msimamizi au mmiliki kwanza</string>
+<string name="you_can_not_add_Guardian_in_tenancy_in_Probate">Huwezi kujaza mlezi katika aina ya miliki chini ya msimamizi</string>
+<string name="Administrator_can_not_be_more_than_two_in_tenancy_in_Probate">Wasimamizi hawawezi kuwa zaidi ya wawili</string>
+<string name="Please_delete_Owner_first">Tafadhali futa “Mmiliki” kwanza</string>
+<string name="Please_select_Hamlet">Tafadhali chagua Kitongoji</string>
+<string name="Please_select_Witness_1">Tafadhali chagua Mhakiki 1</string>
+<string name="Please_select_Witness_2">Tafdhali chagua Mhakiki 2</string>
+<string name="Witness_1_and_Witness_2_can_not_be_same">Mhakiki 1 na Mhakiki 2 hawawezi kuwa sawa</string>
+<string name="deleted">Imefutwa</string>
+<string name="do_u_want_to_continue">Unaitaji kuendelea?</string>
+<string name="You_have_selected">Umechagua : </string>
+
+ <string name="yes">Ndio</string>
+ <string name="no">Hapana</string>
+ <string name="unable_to_add_person_tye">Haiwezi kuhifadhi aina ya mtu</string>
+ <string name="do_u_want_to_add_media">Unahitaji kuongeza faili la media?</string>
+ <string name="no_media_exist">Hakuna media iliyopo katika kipengele hiki cha anga</string>
+ <string name="person">Mtu</string>
+ <string name="person_of_interest">Mtu mwenye maslahi</string>
+ <string name="deceased_person">Jina la marehemu</string>
+ <string name="select_person_type">Tafadhali Chagua aina ya mmiliki</string>
+ <string name="resident">Mkazi</string>
+ <string name="you_did_not_enter_custum_attributes">Hukujaza sifa za miliki</string>
+ <string name="want_to_add_custum_attributes">Unaitaji kujaza sifa za miliki?</string>
+ <string name="delete_poi_first">Tafadhali futa “Mtu mwenye maslahi” kwanza</string>
+ <string name="delete_deceased_first">Tafdahali Futa "jina la marehemu" kwanza</string>
+ <string name="satellite_map">Muongozo wa Ramani</string>
+ <string name="capture_features">Nasa Vipengele</string>     
+ <string name="edit_Person">Sahihisha Mtu</string>
+ <string name="you_can_add_only_one_photo">Unaweza kuweka picha moja tu</string>
+ <string name="administrator_can_not_be_more_tha_Owner">Unaweza kujaza wasimamizi wawili tu</string>
+ <string name="please_fill_tenure_details">Tafdhali jaza  taarifa za milki</string>
+ <string name="please_fill_owner_details">Tafadhali jaza taarifa za mmiliki</string>
+ <string name="select_other_option">Tafadhali kuchagua njia nyingine</string> 
+ <string name="view_person">Mtazamo Mtu</string>
+ <string name="can_add_only_one_person_with_non_natural_person">Unaweza kujaza mtu mmoja tu kwenye “Taasisi”</string>
+ <string name="please_add_atleast_one_admin">Tafadhali Kuongeza angalau Msimamizi moja</string>
+    
+</resources>
