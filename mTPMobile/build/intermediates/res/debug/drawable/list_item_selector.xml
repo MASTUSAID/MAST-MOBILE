@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:drawable="@color/color_accent" android:state_selected="true"/>
-    <item android:drawable="@color/color_accent" android:state_pressed="true"/>
-    <item android:drawable="@color/color_accent" android:state_focused="true"/>
-
-</selector><!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/src/main/res/drawable/list_item_selector.xml -->

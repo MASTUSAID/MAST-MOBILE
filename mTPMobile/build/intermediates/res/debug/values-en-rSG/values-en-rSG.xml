@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- From: file:/D:/Projects_Backup/LTS_MAST_BURKINAFASO_ANDROID%20STUDIO/mtp-mobile/mTPMobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/9.2.0/res/values-en-rSG/values.xml -->
-    <eat-comment/>
-    <string msgid="363496807345461806" name="wallet_buy_button_place_holder">"Buy with Google"</string>
-</resources>
