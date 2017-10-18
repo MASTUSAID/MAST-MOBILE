@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar" />
+
+    <LinearLayout
+        android:id="@+id/list_container"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tenureType_lbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:text="@string/tenureType"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSizeL" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <TextView
+            android:id="@+id/Person"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:background="@color/color_theme_light"
+            android:text="@string/person"
+            android:paddingLeft="10sp"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+      
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <fragment
+            android:id="@+id/compPersonsList"
+            android:name="com.rmsi.android.mast.Fragment.PersonListFragment"
+            android:layout_width="match_parent"
+            android:layout_weight="4.9"
+            android:layout_height="0dp"
+            tools:layout="@layout/fragment_list" />
+
+        <View
+             android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <TextView
+            android:id="@+id/txtView_nextOfKin"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:background="@color/color_theme_light"
+            android:paddingLeft="10sp"
+            android:text="@string/person_of_interest"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <fragment
+            android:id="@+id/compPoiList"
+            android:name="com.rmsi.android.mast.Fragment.PoiListFragment"
+            android:layout_width="match_parent"
+            android:layout_weight="4.9"
+            android:layout_height="0dp"
+            tools:layout="@layout/fragment_list" />
+        
+         <View
+             android:id="@+id/divider3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <TextView
+            android:id="@+id/txtView_deceased_person"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:background="@color/color_theme_light"
+            android:paddingLeft="10sp"
+            android:text="@string/deceased_person"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <View
+            android:id="@+id/divider4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <ListView
+            android:id="@+id/list_of_deceased_person"
+            style="@style/ListStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="4.9"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/color_primary"
+        android:orientation="horizontal"
+        android:weightSum="3" >
+
+        <Button
+            android:id="@+id/btn_addNewPerson"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/mapOptions"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="@string/addNew"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btn_addNextKin"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/mapOptions"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="@string/addPOI"
+            android:textColor="@color/white" />
+        
+        <Button
+            android:id="@+id/btn_addDP"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/mapOptions"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="@string/addDeceased"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btnNext"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="@string/Next"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</LinearLayout>

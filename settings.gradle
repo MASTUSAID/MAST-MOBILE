@@ -1,2 +1,1 @@
-include ':pagerSlidingTabStrip'
-include ':mTPMobile'
+include ':MAST-MOBILE'

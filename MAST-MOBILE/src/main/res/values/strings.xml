@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_ver">v 2.3.5</string>
+    <string name="app_ver2">2.3.5</string>
+    <string name="app_name">MAST</string>
+    <string name="action_settings">Settings</string>
+    <string name="appname">Mobile Application to Secure Tenure</string>
+    <string name="capturedata">Capture Data</string>
+    <string name="reviewdata">Review Data</string>
+    <string name="logout">Logout</string>
+    <string name="downloaddata">Download Data</string>
+    <string name="syncdata">Synchronize Data</string>
+    <string name="userpref">User Preferences</string>
+    <string name="verifydata">Verify Data</string>
+    <string name="btn_ok">OK</string>
+    <string name="change_language">Change Language</string>
+    <string name="capture_new_data">Capture Data</string>
+    <string name="configure_data">Configure Data Collection Tools</string>
+    <string name="auto_sync">Configure Auto Sync</string>
+    <string name="server_address"><u>Server Address</u></string>
+    <string name="hide"><u>Hide</u></string>
+    <string name="url">URL</string>
+    <string name="snapToVertex">Snap to vertex</string>
+    <string name="snapToSegment">Snap to line</string>
+    <string name="snapTolerance">Snapping tolerance</string>
+    <string name="enableLabeling">Enable labeling</string>
+    <string name="enableVertexDrawing">Enable vertex drawing</string>
+
+    <string-array name="UserPref_arrays">
+        <item>Change Language</item>
+        <!--item>Configure Data Collection Tools</item-->
+        <item>Configure Auto Sync </item>
+        <item>Configure Map Settings</item>
+    </string-array>
+    <string-array name="Language_arrays">
+        <item>English</item>
+        <item>Swahili</item>
+    </string-array>
+    <string-array name="add_options_arrays">
+        <item>Capture Point</item>
+        <item>Capture Line</item>
+        <item>Capture Polygon</item>
+    </string-array>
+    <string-array name="Sync_arrays">
+        <item>Auto Sync</item>
+    </string-array>
+    <!-- ADDED KEYS TO FETCH SELECTED ITEM IN ENGLISH -->
+    <string-array name="add_point_options_arrays">
+        <item>00_Draw Point</item>
+        <item>01_Capture point by GPS</item>
+        <item>02_Enter location</item>
+    </string-array>
+    <string-array name="add_line_options_arrays">
+        <item>10_Draw Line</item>
+        <item>11_Capture line by GPS</item>
+        <!-- <item>Create Line based on bearing and distance</item> -->
+    </string-array>
+    <string-array name="add_poly_options_arrays">
+        <item>20_Draw Polygon</item>
+        <item>21_Capture polygon by GPS</item>
+    </string-array>
+
+    <!-- PLS DON'T CHANGE BELOW 8 ITEMS TO ANY OTHER LANGUAGE -->
+    <string name="option_00">Draw Point</string>
+    <string name="option_01">Capture point by GPS</string>
+    <string name="option_02">Enter location</string>
+    <string name="option_10">Draw Line</string>
+    <string name="option_11">Capture line by GPS</string>
+    <string name="option_12">Create Line based on bearing and distance</string>
+    <string name="option_20">Draw Polygon</string>
+    <string name="option_21">Capture polygon by GPS</string>
+    <!-- PLS DON'T CHANGE ABOVE 8 ITEMS TO ANY OTHER LANGUAGE -->
+
+    <string-array name="measure_options_arrays">
+        <item>Calculate Distance</item>
+        <item>Calculate Area</item>
+        <item>Measure Polygon Area</item>
+        <item>Measure Line Length</item>
+    </string-array>
+
+    <string name="title_activity_capture_attributes">Capture Attributes</string>
+    <string name="projectname">Project Name</string>
+    <string name="attribButtons">Attrib Buttons</string>
+    <string name="mapOptions">Map Options</string>
+    <string name="attribCount">0</string>
+    <string name="emptyListText">No items to show</string>
+    <string name="edit_spatial">Edit spatial</string>
+    <string name="edit_attributes">Edit attributes</string>
+    <string name="delete_entry">Delete entry</string>
+    <string name="mark_as_complete">Mark as complete</string>
+    <string name="title_activity_login">MAST</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Log in</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <string name="layer_manager">Layer Manager</string>
+    <string name="mapviewer">Map Viewer</string>
+    <string name="review_data">Review Data</string>
+    <string name="menu_gps">GPS</string>
+    <string name="menu_xy">Get location co-ordinates</string>
+    <string name="menu_measure">Measure</string>
+    <string name="menu_map_info">Parcel Info</string>
+    <string name="title_person">Person List</string>
+    <string name="save">Save</string>
+    <string name="person_photo">Photo</string>
+    <string name="cancel">Cancel</string>
+    <string name="firstName">First Name</string>
+    <string name="middleName">Middle Name</string>
+    <string name="lastName">Last Name</string>
+    <string name="Gender">Gender</string>
+    <string name="mobile">Mobile No.</string>
+    <string name="identity">Identity</string>
+    <string name="Occupation">Occupation</string>
+    <string name="maritalStatus">Marital Status</string>
+    <string name="personShare">Person Share</string>
+    <string name="spatialUnitId">Spatial Unit Id</string>
+
+    <string-array name="genderArray">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
+    <string name="spatialUnitValue">XXXXX</string>
+    <string name="title_activity_add_media">Add New Multimedia</string>
+    <string name="addMore">Add More</string>
+    <string name="PropertyInfo">Property Info</string>
+    <string name="TenureInfo">Tenure Info</string>
+    <string name="multimedia">Multimedia</string>
+    <string name="Tittle_Generalinformation">General information</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_media_list">Multimedia List</string>
+    <string name="addNew">Add New</string>
+    <string name="attributes">Attributes</string>
+    <string name="delete">Delete</string>
+    <string name="back">Back</string>
+    <string name="AddNewMultimedia">Add New Multimedia</string>
+    <string name="AddNewPerson">Add New Person</string>
+    <string name="AddNewProperty">Add Property Info</string>
+    <string name="AddSocialTenureInfo">Add Social Tenure</string>
+    <string name="SocialTenureInfo">Social Tenure Information</string>
+    <string name="Latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="clear_feature">Clear</string>
+    <string name="save_feature">Save</string>
+    <string name="xcordinate">X-Coordinate :</string>
+    <string name="ycoordinate">Y-Coordinate :</string>
+    <string name="xydialogTitle_mapViewer">Co-ordinates from Map</string>
+    <string name="xydialogTitle_captureData">Co-ordinates from Map</string>
+    <string name="measureDialogTitle">Select feature to measure</string>
+    <string name="deleteFeatureEntryMsg">Are you sure you want to delete this feature ?</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="completedFeatureMsg">Are you sure to mark this feature as Completed ?</string>
+
+    <string-array name="reviewDataStatus">
+        <item>Draft</item>
+        <item>Completed</item>
+        <item>Synced</item>
+        <item>Rejected</item>
+    </string-array>
+
+    <string name="title_activity_capture_spatial_data">Capture Data</string>
+    <string name="plot_by_gps">Plot point by gps</string>
+    <string name="spatialunit_lbl">Spatial unit Id</string>
+    <string name="undo">Undo</string>
+    <string name="zoom_curent_location">Zoom to current location</string>
+    <string name="add_bookmark">Add Bookmark</string>
+    <string name="show_bookmarks">View Bookmarks</string>
+    <string name="bookmarkDialogTitle">Select Bookmark</string>
+    <string name="clearFeatureDrawnMsg">Do you want to clear this feature ?</string>
+    <string name="unableSaveFeatureMsg">Unable to save Feature..!!</string>
+    <string name="updateFeatureMsg">Feature Updated Successfully..!!</string>
+    <string name="unableUpdatefeatureMsg">Unable to update feature..!!</string>
+    <string name="errorOccured">An error occurred..!!</string>
+    <string name="successFeatureSave">Feature Saved Successfully..!!</string>
+    <string name="noFeaturesToLoad">No features to load from db..!!</string>
+    <string name="featureEditTipMsg">Long Press on the Markers to activate edit mode and drag to change</string>
+    <string name="noLocationFound">No location found..!!</string>
+    <string name="correctValuesWarning">Please enter correct values</string>
+    <string name="areaTxt">Area</string>
+    <string name="lengthTxt">Length</string>
+    <string name="noFeatureFoundMsg">No feature found..!!</string>
+    <string name="errorDeleteFeatureMsg">Error deleting feature..!!</string>
+    <string name="unableToLoadOfflineData">Unable to load offline data..!!</string>
+    <string name="colorDialogTitle">Choose Color</string>
+    <string name="snappingSettingsTitle">Snapping settings</string>
+    <string name="labelingSettingsTitle">Labeling and vertex settings</string>
+
+    <string-array name="mapDisplayColors">
+        <item>Yellow</item>
+        <item>Red</item>
+        <item>Green</item>
+        <item>White</item>
+        <item>Cyan</item>
+        <item>Blue</item>
+    </string-array>
+
+    <string name="title_activity_configure_map_display">Configure Map Display</string>
+
+    <string-array name="configureMapToolsitems">
+        <item>Snapping</item>
+        <item>Labeling and vertices</item>
+    </string-array>
+    <string-array name="media">
+        <item>Image</item>
+        <item>Video</item>
+    </string-array>
+
+    <string name="title_activity_add_image">AddImageActivity</string>
+    <string name="captureImage">Capture Image</string>
+    <string name="title_activity_video">VideoActivity</string>
+    <string name="view_media">View media</string>
+    <string name="feature_not_allowed_msg">You are not allowed to access this feature.</string>
+    <string name="add_photo">Add Photo</string>
+    <string name="gps_fix_wait_msg">Waiting for GPS location</string>
+    <string name="gps_fix_search_msg">Searching for location through GPS</string>
+    <string name="gps_fix_success_msg">Location set by GPS</string>
+    <string name="bookmark_saved_msg">Bookmark saved..!!</string>
+    <string name="bookmark_save_error">Unable to save bookmark</string>
+    <string name="bookmark_enter_name">Please enter bookmark name..!!</string>
+
+    <string-array name="personTypeArray">
+        <item>Select an Option</item>
+        <item>Natural</item>
+        <item>Non-Natural</item>
+    </string-array>
+
+    <string-array name="residentArray">
+        <item>Select an Option</item>
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+
+    <string name="spatialunit_personType_lbl">Person Type</string>
+    <string name="title_activity_add_non_natural_person">Non-Natural Person</string>
+    <string name="title_activity_custom_attrib">Custom Attributes</string>
+    <string name="AddPerson">Add Person</string>
+    <string name="select_person_lbl">Select Person</string>
+    <string name="gps_disabled_title">GPS Disabled</string>
+    <string name="gps_disabled_Msg">GPS is Disabled.Go to the settings to Enable GPS</string>
+    <string name="setting_btn">Settings</string>
+    <string name="internet_disabled_title">Internet Disabled</string>
+    <string name="internet_disabled_msg">Internet is Disabled.Go to the settings to Enable Internet</string>
+    <string name="no_fix_msg">No Fix</string>
+    <string name="sats_use_msg">Sats in use</string>
+    <string name="deleteEntryMsg">Are you sure you to delete this entry ?</string>
+    <string name="add_atlest_one_person">Please add at least one person</string>
+    <string name="warning">Warning</string>
+    <string name="save_genral_attrribute">Please save general attribute first</string>
+    <string name="login_error">Authentication failed</string>
+    <string name="login_error_msg">Username or Password does not match</string>
+    <string name="error_saving_media">Error in saving media</string>
+
+    <string-array name="booleanControlValues">
+        <item>Select an option</item>
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+
+    <string name="select">Select an option</string>
+    <string name="info">Info</string>
+    <string name="download_data_first">Please download configuration first</string>
+    <string name="verify_data">Verify Data</string>
+
+    <string-array name="verifyDataStatus">
+        <item>Pending</item>
+        <item>Verified</item>
+        <item>Final</item>
+    </string-array>
+
+    <string name="view_map">View Map</string>
+    <string name="view_attributes">View taarifa</string>
+    <string name="add_witness">Add Witness</string>
+    <string name="mark_as_verified">Mark as verified</string>
+    <string name="add_custom_attributes">Add Custom Attributes</string>
+    <string name="verifiedFeatureMsg">Are you sure to mark this feature as Verified ?</string>
+    <string name="equal_person_nd_tenure">Please add equal number of person and tenure</string>
+    <string name="atleast_one_person">Please add atleast one person</string>
+    <string name="fill_property_Details">Please add property details</string>
+    <string name="Error_updating_feature">Error in updating feature..!!</string>
+    <string name="Error_deleting_feature">Error in deleting feature..!!</string>
+    <string name="add_feature">Add feature</string>
+    <string name="delete_feature">Delete feature</string>
+    <string name="webserviceconnectMsg">Connecting to Web Service..</string>
+    <string name="NoDataPendingforUpload">No data pending for upload</string>
+    <string name="NoDataFoundToUpload">No data found to upload</string>
+    <string name="UploadFinished">Upload Finished</string>
+    <string name="DataUploadedSuccessfully">Data Uploaded Successfully</string>
+    <string name="Error">Error</string>
+    <string name="UnableToUpload">Unable to upload</string>
+    <string name="ErrorInUploadingData">Error in Uploading Data</string>
+    <string name="UploadingError">Uploading Error</string>
+    <string name="Uploading">Uploading..</string>
+    <string name="ConnectingtoWebService">Connecting to Web Service..</string>
+    <string name="DataDownloadCompleted">Download completed</string>
+    <string name="ErrorInDownloadingData">Error in Downloading data</string>
+    <string name="featurenotdraft">This feature is not in draft mode</string>
+    <string name="dowbloadFinaldata">Download Final Data</string>
+    <string name="view_details">View Details</string>
+    <string name="select_tenure_lbl">Apply Social Tenure</string>
+    <string name="radio_single">Single</string>
+    <string name="radio_multiple">Multiple</string>
+    <string name="title_activity_data_summary">Collected Data Summary</string>
+    <string name="Addcontact">Add Contact</string>
+    <string name="noAttributesText">No attributes in this category</string>
+    <string name="natural">Natural</string>
+    <string name="nonnatural">Non Natural</string>
+    <string name="completed">Completed</string>
+    <string name="incomplete">Incomplete</string>
+    <string name="not_defined">Not defined for this project</string>
+    <string name="data_saved">Data Saved successfully</string>
+    <string name="fill_mandatory">Please fill mandatory fields</string>
+    <string name="unable_logout">Unable to logout</string>
+    <string name="sync_pending_records">Please Sync all Pending Records before logging off</string>
+    <string name="data_summary_label1">Tenure Relation:</string>
+    <string name="data_summary_label1_1">Tenure Type:</string>
+    <string name="data_summary_label1_owner">Owner:</string>
+    <string name="data_summary_label2">Property:</string>
+    <string name="data_summary_label3">Natural person(s):</string>
+    <string name="data_summary_label4">Non-Natural person:</string>
+    <string name="data_summary_label4_admin">Administrator:</string>
+    <string name="data_summary_label5">Social tenure:</string>
+    <string name="data_summary_label5_Guardian">Guardian:</string>
+    <string name="data_summary_label5_POI">Person of Interest:</string>
+    <string name="data_summary_label6">Multimedia:</string>
+    <string name="data_summary_label7">Custom:</string>
+    <string name="unable_to_save_data">Unable to save data</string>
+    <string name="delete_all_data">All data will be deleted.</string>
+    <string name="unable_delete">Unable to delete</string>
+    <string name="can_add_only_one_person_with_non_natural_person">You can add only one person with Non Natural Person</string>
+    <string name="you_can_add_only_one_photo">You can add only one photo</string>
+    <string name="please_delete_Social_Tenure_first">Please delete Social Tenure first</string>
+    <string name="AddNewPropertyDetails">Add Property Details</string>
+    <string name="unable_to_capture">Unable to capture image.Try Again</string>
+    <string name="gps_accuracy">m accuracy</string>
+    <string name="refreshing_msg">Refreshing List..</string>
+    <string name="no_bookmark_msg">No Bookmarks to show</string>
+    <string name="no_location">No location found</string>
+    <string name="point_txt">Point</string>
+    <string name="line_txt">Line</string>
+    <string name="polygon_txt">Polygon</string>
+    <string name="server_logging_msg">Logging from Server..</string>
+    <string name="alert_delete_photo">Are you sure to delete person\'s photo ?</string>
+    <string name="delete_photo">Delete Photo</string>
+    <string name="pic_delete_msg">Photo deleted..!!</string>
+    <string name="no_pic_person">No photo captured for this person</string>
+    <!-- Added 26th -->
+    <string name="pic_added_successfully">Photo added successfully</string>
+    <string name="prosessing_image">Processing Image</string>
+    <string name="tap_on_map_xy">Tap on map to fetch XY</string>
+    <string name="gps_capture_exit">Do you want to exit capturing feature using GPS?</string>
+    <string name="view_on_map">View on map</string>
+    <string name="logoutWarningMsg">Your all data will be deleted.Do you want to logout?</string>
+    <string name="selectOptionDialogTitle">Select option to capture</string>
+    <string name="continueTologout">Logout</string>
+
+    <!-- added String on 29/07/15- -->
+    <string name="add_photo_of_all_persons">Please add photo for all persons</string>
+    <string name="FieldDataUploadedSuccessfully">Field data uploaded successfully</string>
+    <string name="MultimediaUploadedSuccessfully">Multimedia uploaded successfully</string>
+    <string name="ErrorInUploadingFieldData">Error in uploading field data</string>
+    <string name="ErrorInUploadingMultimedia">Error in uploading multimedia</string>
+    <string name="UnableToConnectToTheServer">Unable to connect to the server..!!</string>
+    <string name="ConnectionTimeout">Connection Timeout</string>
+    <string name="ProjectDataDownloadedSuccessfully">Project data downloaded successfully</string>
+    <string name="OfflineDataDownloadedSuccessfully">Offline data downloaded successfully</string>
+    <string name="ErrorDownloadingProjectdata">Error in downloading Project data</string>
+    <string name="ErrorDownloadingOfflineData">Error in downloading offline data</string>
+    <string name="Downloading">Downloading..</string>
+    <string name="unableToDownloadAttributeData">Unable to download attribute data</string>
+    <string name="DownloadFinished">"Download Finished..</string>
+    <string name="DownloadError">Download Error..</string>
+    <string name="spatialunit_hemlet_lbl">Hamlet</string>
+    <string name="select_witness1">Adjudicator 1</string>
+    <string name="select_witness2">Adjudicator 2</string>
+    <string name="polygonNumber">Claim number</string>
+    <string name="claimType">Claim type</string>
+    <string name="surveyDate">Claim date</string>
+    <string name="nextKin">Add Person of Interest</string>
+    <string name="tittle_addDeceased">Add Deceased Person</string>
+    <string name="addPOI">Add POI</string>
+    <string name="addDeceased">Add DP</string>
+    <string name="nextOfKin">Enter Person of Interest</string>
+    <string name="fill_tenure">Please fill tenure details first</string>
+    <string name="villageName_lbl">Village</string>
+    <string name="AddedSuccessfully">Added Successfully</string>
+    <string name="UnableToSave">Unable to save</string>
+    <string name="OwnerIsMinor">Owner is Minor.Please add Guardian</string>
+    <string name="selectOwnerOrAdminFirst">Owner or Administrator does not exist for this feature.Please Save Owner or Administrator details first for this feature</string>
+    <string name="mandatoryPOI">You have to add Person of interest in case of Administrator</string>
+    <string name="selectAdminOrOwner">You have to select either Administrator or Owner first</string>
+    <string name="poi_deleted">Person of interest deleted</string>
+    <string name="delete_poi">Do you want to delete Person of interest?</string>
+    <string name="poi_isMandatory">Person sub-type is "Administrator" so It is mandatory to add "Person of Ineterest" for this feature</string>
+    <string name="guardian_cant_be_minor">Guardian should be above 18. Guardian can not be minor</string>
+    <string-array name="person_sub_type">
+        <item>Owner</item>
+        <item>Administrator</item>
+        <item>Guardian</item>
+    </string-array>
+    <string name="select_person_subtype">Select Person Sub-type</string>
+    <string name="edit">Edit</string>
+    <string name="btn_proceed">Proceed</string>
+    <string name="enter_details">Please enter Details</string>
+    <string name="tenureType">Tenure Type</string>
+
+    <!-- added String on 03/Nov/15- -->
+    <string name="minorNotAllowed">Minor not allowed.Age should not be less than 18.</string>
+    <string name="ownerShouldBeMinor">Owner should be minor in case of "Guardian(Minor)" tenure type</string>
+    <string name="guardianShudBeAdult">Guardian should be Adult.</string>
+    <string name="infoSingleOccupantStr">You must add only one "Owner" and can add one or more "Person(s) of Interest"</string>
+    <string name="infoMultipleJointStr">You must add two Owners and can add one or more "Person(s) of Interest"</string>
+    <string name="infoMultipleTeneancyStr">You must add two or more Owners and can add one or more "Person(s) of Interest"</string>
+    <string name="infoTenancyInProbateStr">You can add one or two "Administrators", you must indicated the name of the "Deceased Person", and can add one or more "Person(s) of Interest"</string>
+    <string name="infoGuardianMinorStr">You must add one or more "Minor(s)" and up to two "Guardian"</string>
+    <string name="warning_multipleJoint">In case of "Multiple Occupancy(Joint Tenancy)" you have to add two "Owners"</string>
+    <string name="warning_multipleTenancy">In case of "\"Multiple Occupancy(Tenancy in Common)\"" you have to add two or more than two "Owners"</string>
+    <string name="warning_tenancyProbate">In case of "\"Tenancy in probate(Administartor)\"" you have to add one "\"Deceased Person\""</string>
+    <string name="warning_pleaseAddGuardianMinor">Please add Guardian for this Minor</string>
+    <string name="warning_addPersonPhoto">Please add Person\'s Photo</string>
+    <string name="can_not_add_poi">You can not add "\"Person of Interest\"" if Tenure type is "\"Guardian(Minor)\""</string>
+    <string name="add_owner_first">Please add Owner first</string>
+    <string name="can_not_add_adminGuardian_in_SingleOccuapncy">You can not add "\"Administrator\"" or "\"Guardian\"" in case of "\"Single Occupancy\""</string>
+    <string name="can_not_add_more_than_one_owner_in_SingleOccuapncy">You can not add more than one Owner in case of "\"Single Occupancy\""</string>
+    <string name="can_not_add_adminGuardian_in_multipleOccuapncy_joint">You can not add "Administrator" or "Guardian" in case of "Multiple Occupancy(Joint Tenancy)"</string>
+    <string name="can_not_add_more_than_two_owners_in_multipleOccuapncy_joint">You can add more than 2 Owners in case of "Multiple Occupancy(Joint Tenancy)"</string>
+    <string name="can_not_add_adminGuardian_in_multipleOccuapncy_common">You can not add "Administrator" or "Guardian" in case of "Multiple Occupancy(Tenancy in common)"</string>
+    <string name="guardian_can_not_more_than_two">Guardian can not be more than two in case of "\"Guardian(Minor)\""</string>
+    <string name="guardian_can_not_more_than_owners">Guardian can not be more than Owners </string>
+    <string name="can_not_add_admin_in_cas_of_guardian_minor">You can not add Administrator in case of "\"Guardian(Minor)\""</string>
+    <string name="can_not_add_moreThanOne_dp_tenancy_inProbate">You can not add more than one "Deceased Person"</string>
+    <string name="Please_add_Administrator_first_or_Owner_first">Please add "Administrator"or "Owner" first</string>
+    <string name="you_can_not_add_Guardian_in_tenancy_in_Probate">You can not add Guardian or Owner if tenure type is "\"Tenancy in Probate(Administrator)\""</string>
+    <string name="Administrator_can_not_be_more_than_two_in_tenancy_in_Probate">Administrator can not be more than two</string>
+    <string name="Please_delete_Owner_first">Please delete "\"Owner\"" first</string>
+    <string name="Please_select_Hamlet">Please select Hamlet</string>
+    <string name="Please_select_Witness_1">Please select Adjudicator 1</string>
+    <string name="Please_select_Witness_2">Please select Adjudicator 2</string>
+    <string name="Witness_1_and_Witness_2_can_not_be_same">Adjudicator 1 and Adjudicator 2 can not be same</string>
+    <string name="deleted">Deleted</string>
+    <string name="do_u_want_to_continue">Do you want to continue ?</string>
+    <string name="You_have_selected">You have selected : </string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="unable_to_add_person_tye">Unable to save person type</string>
+    <string name="do_u_want_to_add_media">Do you want to Add Media Files?</string>
+    <string name="no_media_exist">No Media Exist for this Spatial feature</string>
+    <string name="person">Person(s)</string>
+    <string name="person_of_interest">Person(s) of Interest</string>
+    <string name="deceased_person">Deceased Person</string>
+    <string name="resident">Resident</string>
+    <string name="select_person_type">Please select Person Type</string>
+    <string name="you_did_not_enter_custum_attributes">You did not enter custum attributes</string>
+    <string name="want_to_add_custum_attributes">Do you want to add custom attributes?</string>
+    <string name="delete_poi_first">Please delete "\"Person of Interest\"" first</string>
+    <string name="delete_deceased_first">Please delete "\"Deceased Person\"" first</string>
+    <string name="satellite_map">Satellite Map</string>
+    <string name="capture_features">Capture features</string>
+    <string name="edit_Person">Edit Person</string>
+    <string name="administrator_can_not_be_more_tha_Owner">You can add two Administrators only</string>
+    <string name="please_fill_tenure_details">Please fill "Tenure" details.</string>
+    <string name="please_fill_owner_details">Please fill "Owner" details.</string>
+    <string name="select_other_option">Please select other option</string>
+    <string name="view_person">View Person</string>
+    <string name="please_add_atleast_one_admin">Please Add atleast one Administrator</string>
+    <string name="accept">Accept</string>
+    <string name="nonNatural">Non-Natural</string>
+    <string name="personType">Person type:</string>
+    <string name="selectPersonType">Select person type</string>
+    <string name="rightType">Type of Right</string>
+    <string name="shareType">Type of Tenancy</string>
+    <string name="certNumber">CCRO/Title number</string>
+    <string name="certDate">CCRO/Title date</string>
+    <string name="juridicalArea">Juridical area (acres)</string>
+    <string name="SelectRightType">Select tenancy type</string>
+    <string name="SelectShareType">Select occupancy type</string>
+    <string name="FillCertNumber">Fill in CCRO/Title number</string>
+    <string name="SelectCertDate">Select CCRO/Title date</string>
+    <string name="FillJuridicalArea">Fill in juridical area</string>
+    <string name="SelectResidency">Select residency</string>
+    <string name="administrator">Administrator</string>
+    <string name="Guardian">Guardian</string>
+    <string name="RightNotFound">Tenure right was not found</string>
+    <string name="PropertyNotFound">Claim was not found</string>
+    <string name="SelectClaimType">Select Claim type</string>
+    <string name="EnterClaimNumber">Enter Claim number</string>
+    <string name="SelectClaimDate">Select Claim date</string>
+    <string name="SelectOption">Select an option</string>
+    <string name="ClaimDateInFuture">Claim date cannot be in future</string>
+    <string name="ClaimNumberUnique">Provided claim number already exists</string>
+    <string name="RelationshipType">Relationship type</string>
+    <string name="SelectRelationshipType">Select relationship type</string>
+    <string name="AddNonNaturalPerson">Add Non-Natural person</string>
+    <string name="RepresentativePerson">Representative Person</string>
+    <string name="Claim">Claim</string>
+    <string name="Dob">Date of birth</string>
+    <string name="FillGeneralProperties">Fill in general properties of the claim</string>
+    <string name="FillRequiredFieldsOngeneralProp">Fill in required fields on the General properties</string>
+    <string name="FillRequiredFieldsOnRight">Fill in required fields for Social tenure</string>
+    <string name="FillMediaAttributes">Fill in multimedia attributes</string>
+    <string name="FillCustomAttributes">Fill in custom attributes</string>
+    <string name="FillRequiredFieldsOnPerson">Fill in required fields for person</string>
+    <string name="FillRequiredFieldsOnNonPerson">Fill in required fields for non-natural person</string>
+    <string name="AgeMustBe18or100">Person age must be between 18 and 110 years</string>
+    <string name="AgeLessThan18">Owner age must be less than 18 years</string>
+    <string name="SingleShareCheck">Single ownership must have only 1 owner</string>
+    <string name="MultiJointShareError">Multiple joint occupancy must have at least 2 owners</string>
+    <string name="MultiCommonShareError">Multiple occupancy in common must have at least 2 owners </string>
+    <string name="GuardianShareError">Guardian occupancy must have one or more Minors and up to 2 Guardians</string>
+    <string name="ProbateShareError">Tenancy in probate must have deceased person and up to 2 administrators. </string>
+    <string name="FillShareSize">Fill in share size field</string>
+    <string name="ShareSize">Share size</string>
+    <string name="Next">Next</string>
+    <string name="Close">Close</string>
+    <string name="Finish">Finish</string>
+    <string name="AddDisputeDetails">Add dispute details</string>
+    <string name="Dispute">Dispute</string>
+    <string name="DisputeType">Dispute type</string>
+    <string name="DisputeDescription">Dispute description</string>
+    <string name="DisputingParties">Disputing persons</string>
+    <string name="SelectDisputeType">Select dispute type</string>
+    <string name="AddDisputingPersons">Add at least 2 disputing persons</string>
+    <string name="AcquisitionType">Acquisition type</string>
+    <string name="SelectAcquisitionType">Select acquisition type</string>
+    <string name="DisputeDetails">Dispute details</string>
+    <string name="FailedToFormJson">Failed to form JSON string</string>
+    <string name="DownloadConfig">Download config</string>
+    <string name="UploadData">Upload data</string>
+    <string name="DownloadingConfig">Downloading configuration data</string>
+    <string name="DownloadingData">Downloading data. It may take few minutes.</string>
+    <string name="ConfigDownloadSuccessful">Configuration has been successfully downloaded</string>
+    <string name="DataDownloadSuccessful">Data has been downloaded successfully</string>
+    <string name="ConfigDonwloadFailed">Failed to download configuration</string>
+    <string name="DataDownloadFailed">Failed to download data</string>
+    <string name="ukaNumber">UKA/Farm/Plot Number</string>
+    <string name="EnterUkaNumber">Enter UKA/Farm/Plot Number</string>
+</resources>

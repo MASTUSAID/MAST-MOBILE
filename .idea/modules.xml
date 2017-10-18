@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/mTPMobile/mTPMobile.iml" filepath="$PROJECT_DIR$/mTPMobile/mTPMobile.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mtp-mobile.iml" filepath="$PROJECT_DIR$/mtp-mobile.iml" />
-      <module fileurl="file://$PROJECT_DIR$/pagerSlidingTabStrip/pagerSlidingTabStrip.iml" filepath="$PROJECT_DIR$/pagerSlidingTabStrip/pagerSlidingTabStrip.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MAST-MOBILE.iml" filepath="$PROJECT_DIR$/MAST-MOBILE.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MAST-MOBILE/MAST-MOBILE-MAST-MOBILE.iml" filepath="$PROJECT_DIR$/MAST-MOBILE/MAST-MOBILE-MAST-MOBILE.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MOBILE.iml" filepath="$PROJECT_DIR$/MOBILE.iml" />
     </modules>
   </component>
 </project>
