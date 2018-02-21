@@ -95,6 +95,11 @@ public class PoiListFragment extends ListFragment implements ListActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) {
+
+    }
+
     private void edit(final PersonOfInterest person) {
         final Dialog dialog = new Dialog(context, R.style.DialogTheme);
         dialog.setContentView(R.layout.dialog_person_of_interest);

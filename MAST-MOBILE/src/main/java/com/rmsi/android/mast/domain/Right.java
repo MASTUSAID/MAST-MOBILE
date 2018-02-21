@@ -143,7 +143,7 @@ public class Right implements Serializable {
         int count = 0;
         if(getNaturalPersons() != null) {
             for (Person person : getNaturalPersons()) {
-                if (person.getSubTypeId() == Person.SUBTYPE_OWNER)
+                if ((person.getSubTypeId() == Person.SUBTYPE_OWNER)||(person.getSubTypeId() == Person.SUBTYPE_OCCUPANT) )
                     count += 1;
             }
         }
@@ -222,21 +222,24 @@ public class Right implements Serializable {
         boolean result = true;
         String errorMessage = "";
 
-        if (getRightTypeId() < 1) {
-            errorMessage = context.getResources().getString(R.string.SelectRightType);
-        } else if (getShareTypeId() < 1) {
+//        if (getRightTypeId() < 1) {
+//            errorMessage = context.getResources().getString(R.string.SelectRightType);
+//        }
+         if (getShareTypeId() < 1) {
             errorMessage = context.getResources().getString(R.string.SelectShareType);
-        } else if (claimTypeCode.equals(ClaimType.TYPE_EXISTING_CLAIM)) {
-            if (StringUtility.isEmpty(getCertNumber())) {
-                errorMessage = context.getResources().getString(R.string.FillCertNumber);
-            } else if (StringUtility.isEmpty(getCertDate())) {
-                errorMessage = context.getResources().getString(R.string.SelectCertDate);
-            } else if (getJuridicalArea() == null || getJuridicalArea() == 0) {
-                errorMessage = context.getResources().getString(R.string.FillJuridicalArea);
-            }
-        } else if(getShareTypeId() == ShareType.TYPE_MUTIPLE_OCCUPANCY_JOINT && getRelationshipId() < 1){
-            errorMessage = context.getResources().getString(R.string.SelectRelationshipType);
         }
+//        else if (claimTypeCode.equals(ClaimType.TYPE_EXISTING_CLAIM)) {
+//            if (StringUtility.i sEmpty(getCertNumber())) {
+//                errorMessage = context.getResources().getString(R.string.FillCertNumber);
+//            } else if (StringUtility.isEmpty(getCertDate())) {
+//                errorMessage = context.getResources().getString(R.string.SelectCertDate);
+//            } else if (getJuridicalArea() == null || getJuridicalArea() == 0) {
+//                errorMessage = context.getResources().getString(R.string.FillJuridicalArea);
+//            }
+//        }
+//        else if(getShareTypeId() == ShareType.TYPE_MUTIPLE_OCCUPANCY_JOINT && getRelationshipId() < 1){
+//            errorMessage = context.getResources().getString(R.string.SelectRelationshipType);
+//        }
 
         // Attributes
         if(errorMessage.equals("")) {

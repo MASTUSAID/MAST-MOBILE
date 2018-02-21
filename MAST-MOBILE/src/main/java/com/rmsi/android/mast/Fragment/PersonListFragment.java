@@ -1,18 +1,25 @@
 package com.rmsi.android.mast.Fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.app.ListFragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +29,7 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.rmsi.android.mast.activity.AddPersonActivity;
+import com.rmsi.android.mast.activity.BuildConfig;
 import com.rmsi.android.mast.activity.ListActivity;
 import com.rmsi.android.mast.activity.R;
 import com.rmsi.android.mast.adapter.PersonListAdapter;
@@ -39,6 +47,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
+import static com.rmsi.android.mast.util.CommonFunctions.getApplicationContext;
 
 public class PersonListFragment extends ListFragment implements ListActivity {
     private Context context;
@@ -58,6 +68,17 @@ public class PersonListFragment extends ListFragment implements ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        if (ContextCompat.checkSelfPermission(getApplicationContext(),Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+
+                requestPermissions(new String[]{Manifest.permission.CAMERA},
+                        1024);
+            }
+
+
+
     }
 
     @Override
@@ -110,16 +131,47 @@ public class PersonListFragment extends ListFragment implements ListActivity {
                                             getResources().getString(R.string.info),
                                             getResources().getString(R.string.you_can_add_only_one_photo)
                                     );
-                        } else {
-                            timeStamp = new SimpleDateFormat("MMdd_HHmmss").format(new Date().getTime());
-                            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                            file = new File(mediaFolderName + File.separator + "mast_" + timeStamp + ".jpg");
-                            if (file != null) {
-                                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-                                cameraIntent.putExtra("ID", person.getId());
-                                startActivityForResult(cameraIntent, 1);
-                            } else {
-                                Toast.makeText(context, getResources().getString(R.string.unable_to_capture), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                                timeStamp = new SimpleDateFormat("MMdd_HHmmss").format(new Date().getTime());
+                                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                file = new File(mediaFolderName + File.separator + "mast_" + timeStamp + ".jpg");
+                                if (file != null) {
+
+                                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+//                                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,  FileProvider.getUriForFile(getActivity(),
+//                                            BuildConfig.APPLICATION_ID + ".provider",
+//                                            file));
+                                    cameraIntent.putExtra("ID", person.getId());
+//                                startActivityForResult(cameraIntent, 1);
+                                    cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                    if (cameraIntent.resolveActivity(getApplicationContext().getPackageManager()) != null) {
+                                        startActivityForResult(cameraIntent, 1);
+                                    }
+                                } else {
+                                    Toast.makeText(context, getResources().getString(R.string.unable_to_capture), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                            else{
+
+                                timeStamp = new SimpleDateFormat("MMdd_HHmmss").format(new Date().getTime());
+                                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                file = new File(mediaFolderName + File.separator + "mast_" + timeStamp + ".jpg");
+                                if (file != null) {
+                                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+//                                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,  FileProvider.getUriForFile(getActivity(),
+//                                            BuildConfig.APPLICATION_ID + ".provider",
+//                                            file));
+                                    cameraIntent.putExtra("ID", person.getId());
+                                    startActivityForResult(cameraIntent, 1);
+                                    //cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                                    if (cameraIntent.resolveActivity(getApplicationContext().getPackageManager()) != null) {
+//                                        startActivityForResult(cameraIntent, 1);
+//                                    }
+                                } else {
+                                    Toast.makeText(context, getResources().getString(R.string.unable_to_capture), Toast.LENGTH_LONG).show();
+                                }
                             }
                         }
                         return true;
@@ -148,6 +200,20 @@ public class PersonListFragment extends ListFragment implements ListActivity {
         });
         popup.show();
     }
+    @Override
+    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == 1024) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Now user should be able to use camera
+            }
+            else {
+                // Your app will not have this permission. Turn off all functions
+                // that require this permission or it will force close like your
+                // original question
+            }
+        }
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -344,7 +410,24 @@ public class PersonListFragment extends ListFragment implements ListActivity {
             Toast.makeText(context, R.string.no_pic_person, Toast.LENGTH_LONG).show();
         }
     }
+    public boolean hasPermissionInManifest(Context context, String permissionName) {
+        final String packageName = context.getPackageName();
+        try {
+            final PackageInfo packageInfo = context.getPackageManager()
+                    .getPackageInfo(packageName, PackageManager.GET_PERMISSIONS);
+            final String[] declaredPermisisons = packageInfo.requestedPermissions;
+            if (declaredPermisisons != null && declaredPermisisons.length > 0) {
+                for (String p : declaredPermisisons) {
+                    if (p.equals(permissionName)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (PackageManager.NameNotFoundException e) {
 
+        }
+        return false;
+    }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

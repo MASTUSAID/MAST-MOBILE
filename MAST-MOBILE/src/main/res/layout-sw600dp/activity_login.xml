@@ -4,9 +4,15 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingTop="50dp" >
+    android:paddingTop="50dp"
+    android:background="@drawable/homebg">
 
     <!-- Login progress -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_60sdp"
+        android:src="@drawable/us_aid"
+        android:layout_gravity="center"/>
 
     <TextView
         android:id="@+id/appName"
@@ -14,11 +20,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="40dp"
         android:padding="10dp"
+        android:background="@drawable/mast_back"
         android:text="@string/appname"
-        android:textColor="@color/color_primary"
-        android:textSize="@dimen/textSizeL" />
+        android:textColor="@color/white"
+        android:textSize="@dimen/_16sdp" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -31,6 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
+            android:layout_marginTop="20dp"
             android:orientation="vertical" >
 
             <EditText
@@ -49,7 +57,7 @@
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="25dp"
                 android:background="@drawable/editext_border"
                 android:hint="@string/prompt_password"
                 android:imeActionId="@+id/login"
@@ -101,25 +109,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginTop="15dp"
-                android:background="@color/color_primary"
+                android:layout_marginTop="25dp"
+                android:background="#f2b43e"
                 android:padding="10dp"
                 android:text="@string/action_sign_in"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/textSizeL"
                 android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="15dp"
-                android:layout_marginTop="35dp"
-                android:padding="10dp"
-                android:text="@string/app_ver2"
-                android:textColor="@color/black"
-                android:textSize="@dimen/textSize"
-                android:textStyle="bold" />
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_marginBottom="15dp"-->
+                <!--android:layout_marginTop="35dp"-->
+                <!--android:padding="10dp"-->
+                <!--android:text="@string/app_ver2"-->
+                <!--android:textColor="@color/black"-->
+                <!--android:textSize="@dimen/textSize"-->
+                <!--android:textStyle="bold" />-->
         </LinearLayout>
     </ScrollView>
 

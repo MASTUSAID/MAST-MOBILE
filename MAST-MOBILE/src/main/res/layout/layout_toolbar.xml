@@ -1,8 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/toolbar"
     style="@style/MyToolbarStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_primary"
-    android:minHeight="?attr/actionBarSize" />
+    android:background="#352d59"
+    android:minHeight="?attr/actionBarSize" >
+
+
+
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DASHIBOAD"
+        android:textColor="@android:color/white"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/_15sdp"
+
+        android:visibility="gone"
+        />
+
+
+
+   </android.support.v7.widget.Toolbar>

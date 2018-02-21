@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -75,6 +76,7 @@ public class MediaListActivity extends ActionBarActivity implements ListActivity
         if (extras != null) {
             featureId = extras.getLong("featureid");
             disputeId = extras.getLong("disputeId");
+            //PERSONTYPE
         }
 
         setContentView(R.layout.activity_media_list);
@@ -189,6 +191,11 @@ public class MediaListActivity extends ActionBarActivity implements ListActivity
         popup.show();
     }
 
+    @Override
+    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) {
+
+    }
+
     private void deleteEntry(final Long mediaId) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setMessage(R.string.deleteEntryMsg);
@@ -266,23 +273,64 @@ public class MediaListActivity extends ActionBarActivity implements ListActivity
                         int itemPosition = position;
                         if (itemPosition == 0) // Image
                         {
-                            timeStamp = new SimpleDateFormat("MMdd_HHmmss").format(new Date().getTime());
-                            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                            file = new File(mediaFolderName + File.separator + "mast_" + timeStamp + ".jpg");
-                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-                            startActivityForResult(cameraIntent, 1);
-                            dialog.dismiss();
+
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                                timeStamp = new SimpleDateFormat("MMdd_HHmmss").format(new Date().getTime());
+                                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                file = new File(mediaFolderName + File.separator + "mast_" + timeStamp + ".jpg");
+                                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+
+                                cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                if (cameraIntent.resolveActivity(getApplicationContext().getPackageManager()) != null) {
+                                    startActivityForResult(cameraIntent, 1);
+                                }
+
+                                dialog.dismiss();
+
+                            }else {
+                                timeStamp = new SimpleDateFormat("MMdd_HHmmss").format(new Date().getTime());
+                                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                file = new File(mediaFolderName + File.separator + "mast_" + timeStamp + ".jpg");
+                                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                                cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                if (cameraIntent.resolveActivity(getApplicationContext().getPackageManager()) != null) {
+                                    startActivityForResult(cameraIntent, 1);
+                                }
+                                dialog.dismiss();
+                            }
+
                         } else if (itemPosition == 1) // video
                         {
-                            timeStamp = new SimpleDateFormat("MMdd_HHmmss").format(new Date().getTime());
-                            Intent videoIntent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
-                            file = new File(mediaFolderName + File.separator + "mast_" + timeStamp + ".mp4");
-                            videoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-                            videoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-                            long maxsize = 1 * 1024 * 1024;
-                            videoIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, maxsize);  // 3MB
-                            startActivityForResult(videoIntent, 2);
-                            dialog.dismiss();
+
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                                timeStamp = new SimpleDateFormat("MMdd_HHmmss").format(new Date().getTime());
+                                Intent videoIntent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
+                                file = new File(mediaFolderName + File.separator + "mast_" + timeStamp + ".mp4");
+                                videoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                                videoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+                                long maxsize = 1 * 1024 * 1024;
+                                videoIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, maxsize);  // 3MB
+                                videoIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                if (videoIntent.resolveActivity(getApplicationContext().getPackageManager()) != null) {
+                                    startActivityForResult(videoIntent, 2);
+                                }
+
+                                dialog.dismiss();
+
+                            }else {
+                                timeStamp = new SimpleDateFormat("MMdd_HHmmss").format(new Date().getTime());
+                                Intent videoIntent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
+                                file = new File(mediaFolderName + File.separator + "mast_" + timeStamp + ".mp4");
+                                videoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                                videoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+                                long maxsize = 1 * 1024 * 1024;
+                                videoIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, maxsize);  // 3MB
+                                videoIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                if (videoIntent.resolveActivity(getApplicationContext().getPackageManager()) != null) {
+                                    startActivityForResult(videoIntent, 2);
+                                }
+                                dialog.dismiss();
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

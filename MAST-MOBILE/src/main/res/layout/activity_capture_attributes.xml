@@ -9,6 +9,7 @@
         android:id="@+id/toolbar"
         layout="@layout/layout_toolbar" />
 
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
@@ -28,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
                 android:padding="5dp"
-                android:text="@string/Claim"
+                android:text="Transaction Number"
                 android:textColor="@color/black"
                 android:textSize="18dp" />
 
@@ -38,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
                 android:padding="5dp"
-                android:text="@string/villageName_lbl"
+                android:text="Community Name"
                 android:textColor="@color/black"
                 android:textSize="18dp" />
 
@@ -82,7 +83,7 @@
                 android:id="@+id/txtPolygonNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
+                android:inputType="number"
                 android:padding="5dp" />
 
             <View
@@ -112,12 +113,15 @@
                 android:layout_height="1dp"
                 android:background="#CCCCCC" />
 
+
             <LinearLayout
                 android:id="@+id/layoutUkaNumber"
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="15"
+                android:visibility="gone"
                 android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/lblUkaNumber"
                     android:layout_width="match_parent"
@@ -139,19 +143,32 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#CCCCCC" />
+
+
             </LinearLayout>
-            <TextView
-                android:id="@+id/spatialunit_hemlet"
+
+        <LinearLayout
+            android:id="@+id/layoutExistingUSe"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="15"
+
+            android:orientation="vertical">
+
+
+
+        <TextView
+                android:id="@+id/claimRightType1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:padding="5dp"
-                android:text="@string/spatialunit_hemlet_lbl"
+                android:text="Type of Claim Right"
                 android:textColor="@color/color_primary_dark"
                 android:textSize="@dimen/textSize" />
 
             <Spinner
-                android:id="@+id/spinner_hemlet"
+                android:id="@+id/claimRightType"
                 style="@style/Widget.AppCompat.Spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -162,46 +179,278 @@
                 android:background="#CCCCCC" />
 
             <TextView
-                android:id="@+id/spatialunit_witness1"
+                android:id="@+id/value1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:padding="5dp"
-                android:text="@string/select_witness1"
+                android:text="Plot No"
                 android:textColor="@color/color_primary_dark"
                 android:textSize="@dimen/textSize" />
 
-            <Spinner
-                android:id="@+id/spinner_witness1"
-                style="@style/Widget.AppCompat.Spinner"
+            <EditText
+                android:id="@+id/plotNo"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:padding="5dp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#CCCCCC" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/value2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:padding="5dp"
+                    android:text="Is Documentation"
+                    android:textColor="@color/color_primary_dark"
+                    android:textSize="@dimen/textSize" />
+
+                <RadioGroup
+
+                    android:id="@+id/radioGroup"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/yes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Yes"
+                        android:textSize="18sp"/>
+
+                    <RadioButton
+                        android:id="@+id/no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No"
+                        android:textSize="18sp"/>
+
+                </RadioGroup>
+
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#CCCCCC" />
+
+
+            <LinearLayout
+                android:id="@+id/document"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/value3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:padding="5dp"
+                    android:text="Document Type"
+                    android:textColor="@color/color_primary_dark"
+                    android:textSize="@dimen/textSize" />
+
+                <Spinner
+                    android:id="@+id/documentType"
+                    style="@style/Widget.AppCompat.Spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#CCCCCC" />
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Document Date"
+                    android:textColor="@color/color_primary_dark"
+                    android:textSize="@dimen/textSize" />
+
+                <TextView
+                    android:id="@+id/documentTypeDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/textSize" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#CCCCCC" />
+
+
+                <TextView
+                    android:id="@+id/value5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:padding="5dp"
+                    android:text="Document Ref No"
+                    android:textColor="@color/color_primary_dark"
+                    android:textSize="@dimen/textSize" />
+
+                <EditText
+                    android:id="@+id/documentTypeRefNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:padding="5dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#CCCCCC" />
+
+            </LinearLayout>
+
+            </LinearLayout>
+
+
+            <!--<TextView-->
+            <!--android:id="@+id/spatialunit_hemlet"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:padding="5dp"-->
+            <!--android:text="@string/spatialunit_hemlet_lbl"-->
+            <!--android:textColor="@color/color_primary_dark"-->
+            <!--android:textSize="@dimen/textSize" />-->
+
+            <!--<Spinner-->
+            <!--android:id="@+id/spinner_hemlet"-->
+            <!--style="@style/Widget.AppCompat.Spinner"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#CCCCCC" />
+
+            <!--<TextView-->
+            <!--android:id="@+id/spatialunit_witness1"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:padding="5dp"-->
+            <!--android:text="@string/select_witness1"-->
+            <!--android:textColor="@color/color_primary_dark"-->
+            <!--android:textSize="@dimen/textSize" />-->
+
+            <!--<Spinner-->
+            <!--android:id="@+id/spinner_witness1"-->
+            <!--style="@style/Widget.AppCompat.Spinner"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+
+            <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="#CCCCCC" />-->
+
+            <!--<TextView-->
+            <!--android:id="@+id/spatialunit_witness2"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:padding="5dp"-->
+            <!--android:text="@string/select_witness2"-->
+            <!--android:textColor="@color/color_primary_dark"-->
+            <!--android:textSize="@dimen/textSize" />-->
+
+            <!--<Spinner-->
+            <!--android:id="@+id/spinner_witness2"-->
+            <!--style="@style/Widget.AppCompat.Spinner"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+
+            <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="#CCCCCC" />-->
+
+            <!--<TextView-->
+            <!--android:id="@+id/geometry_type_text"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:padding="5dp"-->
+            <!--android:text="Classification"-->
+            <!--android:textColor="@color/color_primary_dark"-->
+            <!--android:textSize="@dimen/textSize" />-->
+
+            <!--<Spinner-->
+            <!--android:id="@+id/geometry_type"-->
+            <!--style="@style/Widget.AppCompat.Spinner"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+
+            <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="#CCCCCC" />-->
+            <!--<TextView-->
+            <!--android:id="@+id/sub_classification_text"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:padding="5dp"-->
+            <!--android:text="Sub Classification"-->
+            <!--android:textColor="@color/color_primary_dark"-->
+            <!--android:textSize="@dimen/textSize" />-->
+
+            <!--<Spinner-->
+            <!--android:id="@+id/sub_classification"-->
+            <!--style="@style/Widget.AppCompat.Spinner"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#CCCCCC"
+                android:visibility="gone" />
 
             <TextView
-                android:id="@+id/spatialunit_witness2"
+                android:id="@+id/tenure_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:padding="5dp"
-                android:text="@string/select_witness2"
+                android:text="Tenure"
                 android:textColor="@color/color_primary_dark"
-                android:textSize="@dimen/textSize" />
+                android:textSize="@dimen/textSize"
+                android:visibility="gone" />
 
-            <Spinner
-                android:id="@+id/spinner_witness2"
-                style="@style/Widget.AppCompat.Spinner"
+            <EditText
+                android:id="@+id/Tenure_editText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:padding="5dp"
+                android:visibility="gone" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#CCCCCC" />
+
 
         </LinearLayout>
     </ScrollView>

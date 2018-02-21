@@ -3,7 +3,9 @@ package com.rmsi.android.mast.domain;
 import android.graphics.Color;
 import android.graphics.Point;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.Projection;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -14,6 +16,7 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.rmsi.android.mast.activity.R;
 import com.rmsi.android.mast.util.CommonFunctions;
 import com.rmsi.android.mast.util.GisUtility;
 import com.vividsolutions.jts.geom.LineString;
@@ -76,7 +79,25 @@ public class MapFeature {
             for (LatLng p : points) {
                 polygon.add(p);
             }
-            polygon.fillColor(Color.argb(0, 0, 0, 0)).strokeWidth(5).strokeColor(Color.argb(255, 255, 200, 0));
+
+//            polygon.fillColor(Color.argb(0, 0, 0, 0)).strokeWidth(5).strokeColor(Color.argb(255, 255, 200, 0));
+            polygon.fillColor(Color.argb(0, 0, 0, 0)).strokeWidth(5);
+            polygon.strokeColor(Color.RED);
+            polygon.zIndex(4);
+        }
+        return polygon;
+    }
+
+    public PolygonOptions getResPolygon() {
+        if(polygon == null && points != null && points.size() > 0){
+            polygon = new PolygonOptions();
+            for (LatLng p : points) {
+                polygon.add(p);
+            }
+
+//            polygon.fillColor(Color.argb(0, 0, 0, 0)).strokeWidth(5).strokeColor(Color.argb(255, 255, 200, 0));
+            polygon.fillColor(Color.argb(0, 0, 0, 0)).strokeWidth(5);
+            polygon.strokeColor(Color.YELLOW);
             polygon.zIndex(4);
         }
         return polygon;
@@ -104,7 +125,7 @@ public class MapFeature {
             } else if (feature.getStatus().equalsIgnoreCase("complete")) {
                 line.color(Color.rgb(128, 255, 0));
             } else
-                line.color(CommonFunctions.lineColor);
+                line.color(Color.YELLOW);
 
             for (LatLng p : points) {
                 line.add(p);
@@ -134,10 +155,13 @@ public class MapFeature {
         this.mapPolygon = mapPolygon;
     }
 
+
     public CircleOptions getPoint() {
+
+
         if(point == null && points != null && points.size() > 0){
             point = new CircleOptions().center(points.get(0));
-            point.radius(3); // In meters
+            point.radius(500); // In meters
             if (feature.getStatus().equalsIgnoreCase("final")) {
                 point.fillColor(Color.argb(100, 204, 153, 255)).strokeWidth(5).strokeColor(Color.BLACK);
             } else if (feature.getStatus().equalsIgnoreCase("rejected")) {
@@ -145,11 +169,16 @@ public class MapFeature {
             } else if (feature.getStatus().equalsIgnoreCase("complete")) {
                 point.fillColor(Color.argb(150, 204, 255, 153)).strokeWidth(5).strokeColor(Color.BLACK);
             } else
-                point.fillColor(CommonFunctions.pointColor).strokeWidth(4).strokeColor(Color.BLUE);
+                //point.fillColor(Color.BLACK).strokeWidth(20).strokeColor(Color.YELLOW);
+                point.fillColor(Color.argb(0, 255, 0, 0)).strokeWidth(4).strokeColor(Color.YELLOW);
             point.zIndex(4);
         }
         return point;
+
+
+
     }
+
 
     public com.vividsolutions.jts.geom.Point getWktPoint() {
         if(wktPoint == null && points != null && points.size() > 0){

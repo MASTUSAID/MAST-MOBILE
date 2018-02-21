@@ -39,6 +39,7 @@ public class DataSummaryActivity extends ActionBarActivity {
     private Property property = null;
     private boolean customAttributesExist = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +96,7 @@ public class DataSummaryActivity extends ActionBarActivity {
         TextView txtClaimType = (TextView) findViewById(R.id.txtClaimType);
         TextView txtClaimDate = (TextView) findViewById(R.id.txtClaimDate);
         TextView txtDisputeType = (TextView) findViewById(R.id.txtDisputeType);
+        TextView txtClaimNumberInput= (TextView) findViewById(R.id.ClaimNumberText);
         txtDisputingPersons = (TextView) findViewById(R.id.txtDisputingPersons);
 
         TableRow rowProperty = (TableRow) findViewById(R.id.rowProperty);
@@ -157,12 +159,15 @@ public class DataSummaryActivity extends ActionBarActivity {
         // Set claim number
         if (!StringUtility.isEmpty(property.getPolygonNumber())) {
             if (property.getServerId() != null && property.getServerId() > 0) {
-                txtClaimNumber.setText("#" + property.getPolygonNumber() + ", USIN: " + property.getServerId().toString());
+                txtClaimNumberInput.setText("#" + property.getPolygonNumber() + ", USIN: " + property.getServerId().toString());
+                txtClaimNumber.setText(property.getIpNumber());
             } else {
-                txtClaimNumber.setText("#" + property.getPolygonNumber());
+                txtClaimNumberInput.setText("#" + property.getPolygonNumber());
+                txtClaimNumber.setText(""+property.getIpNumber());
             }
         } else {
-            txtClaimNumber.setText("#" + featureId.toString());
+            txtClaimNumberInput.setText("#" + featureId.toString());
+            txtClaimNumber.setText(""+property.getIpNumber());
         }
 
         // Set claim type

@@ -44,6 +44,8 @@ public class GuiUtility {
         }
     }
 
+
+
     /**
      * Create View item based on provided attribute
      *
@@ -287,6 +289,7 @@ public class GuiUtility {
             public void run() {
                 Option selecteditem = (Option) spinner.getSelectedItem();
                 attribute.setValue(selecteditem.getId().toString());
+//                attribute.setValue(selecteditem.getId().toString());
             }
         });
         return spinner;
@@ -366,7 +369,8 @@ public class GuiUtility {
             if (hasValidation.equalsIgnoreCase("true") && StringUtility.isEmpty(value)) {
                 isValid = false;
             }
-        } else if (attribute.getControlType() == Attribute.CONTROL_TYPE_BOOLEAN) {
+        }
+        else if (attribute.getControlType() == Attribute.CONTROL_TYPE_BOOLEAN) {
             if (hasValidation.equalsIgnoreCase("true") &&
                     !StringUtility.empty(value).equalsIgnoreCase("yes") &&
                     !StringUtility.empty(value).equalsIgnoreCase("Ndiyo") &&
@@ -375,7 +379,8 @@ public class GuiUtility {
                     ) {
                 isValid = false;
             }
-        } else if (attribute.getControlType() == Attribute.CONTROL_TYPE_NUMBER) {
+        }
+        else if (attribute.getControlType() == Attribute.CONTROL_TYPE_NUMBER) {
             if (hasValidation.equalsIgnoreCase("true") && StringUtility.isEmpty(value)) {
                 isValid = false;
             }

@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompatSideChannelService;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,6 +28,7 @@ import android.util.Log;
 import com.rmsi.android.mast.activity.R;
 import com.rmsi.android.mast.activity.LandingPageActivity;
 import com.rmsi.android.mast.db.DbController;
+import com.rmsi.android.mast.domain.Property;
 import com.rmsi.android.mast.domain.User;
 import com.rmsi.android.mast.util.CommonFunctions;
 import com.rmsi.android.mast.util.MultipartUtility;
@@ -77,55 +79,69 @@ public class UploadService extends IntentService {
         String ErrorInUploadingData = getResources().getString(R.string.ErrorInUploadingData);
         String UploadingError = getResources().getString(R.string.UploadingError);
         int roleid = CommonFunctions.getRoleID();
+//        int roleid = 1;
 
         Log.d(TAG, "Upload Service Started!");
         final ResultReceiver receiver = intent.getParcelableExtra("receiver");
         displayNotification("MAST", Uploading, ConnectingtoWebService);
-
+        DbController db = DbController.getInstance(getApplicationContext());
         try {
             if (roleid == User.ROLE_TRUSTED_INTERMEDIARY) {
-                boolean results = uploadData();
+                // Property property = DbController.getInstance(UploadService.this).getProperty(featureId);
 
-                if (results) {
-                    notificationMsg.append(successMsgDisplay[0]);
+//                boolean isStatusComplete = db.isStatusComplete();
+//                if (isStatusComplete == true) {
+
+                    boolean results = uploadData();
+
+                    if (results) {
+                        notificationMsg.append(successMsgDisplay[0]);
+                    } else {
+                        notificationMsg.append(failureMsgDisplay[0]);
+                    }
+
+                    if (results) {
+
+                        boolean isMultimedia = false;
+                        isMultimedia = startMultimediaUpload();
+
+                        notificationMsg.append("\n");
+                        //if (results && nodata) {
+                        if (results) {
+                            notificationMsg.append(successMsgDisplay[1]);
+                            updateNotification("MAST", notificationMsg.toString(), UploadFinished);
+                            receiver.send(STATUS_FINISHED, Bundle.EMPTY);
+                        } else if (results && nodata) {
+                            updateNotification("MAST", NoDataPendingforUpload, NoDataFoundToUpload);
+                            if (receiver != null) receiver.send(STATUS_NO_DATA, Bundle.EMPTY);
+                        } else {
+                            notificationMsg.append(failureMsgDisplay[1]);
+                            updateNotification("MAST", notificationMsg.toString(), Error);
+                            receiver.send(STATUS_ERROR, Bundle.EMPTY);
+                        }
+                    } else {
+                        updateNotification("MAST", UnableToUpload, Error);
+                        if (receiver != null) receiver.send(STATUS_ERROR, Bundle.EMPTY);
+                    }
+                    //fetchRejectedFeatures();
                 } else {
-                    notificationMsg.append(failureMsgDisplay[0]);
-                }
-
-                if (results) {
-                    results = startMultimediaUpload();
-
-                    notificationMsg.append("\n");
+                    boolean results = uploadverifiedData();
                     if (results && nodata) {
                         updateNotification("MAST", NoDataPendingforUpload, NoDataFoundToUpload);
                         if (receiver != null) receiver.send(STATUS_NO_DATA, Bundle.EMPTY);
                     } else if (results) {
-                        notificationMsg.append(successMsgDisplay[1]);
-                        updateNotification("MAST", notificationMsg.toString(), UploadFinished);
-                        receiver.send(STATUS_FINISHED, Bundle.EMPTY);
+                        updateNotification("MAST", DataUploadedSuccessfully, UploadFinished);
+                        if (receiver != null) receiver.send(STATUS_FINISHED, Bundle.EMPTY);
                     } else {
-                        notificationMsg.append(failureMsgDisplay[1]);
-                        updateNotification("MAST", notificationMsg.toString(), Error);
-                        receiver.send(STATUS_ERROR, Bundle.EMPTY);
+                        updateNotification("MAST", UnableToUpload, Error);
+                        if (receiver != null) receiver.send(STATUS_ERROR, Bundle.EMPTY);
                     }
-                } else {
-                    updateNotification("MAST", UnableToUpload, Error);
-                    if (receiver != null) receiver.send(STATUS_ERROR, Bundle.EMPTY);
                 }
-                //fetchRejectedFeatures();
-            } else {
-                boolean results = uploadverifiedData();
-                if (results && nodata) {
-                    updateNotification("MAST", NoDataPendingforUpload, NoDataFoundToUpload);
-                    if (receiver != null) receiver.send(STATUS_NO_DATA, Bundle.EMPTY);
-                } else if (results) {
-                    updateNotification("MAST", DataUploadedSuccessfully, UploadFinished);
-                    if (receiver != null) receiver.send(STATUS_FINISHED, Bundle.EMPTY);
-                } else {
-                    updateNotification("MAST", UnableToUpload, Error);
-                    if (receiver != null) receiver.send(STATUS_ERROR, Bundle.EMPTY);
-                }
-            }
+           // }
+//            else{
+//                updateNotification("MAST", NoDataPendingforUpload, NoDataFoundToUpload);
+//                if (receiver != null) receiver.send(STATUS_NO_DATA, Bundle.EMPTY);
+//            }
         } catch (IOException e) {
             String unableToConnect = getResources().getString(R.string.UnableToConnectToTheServer);
             String timeOut = getResources().getString(R.string.ConnectionTimeout);
@@ -143,58 +159,180 @@ public class UploadService extends IntentService {
     }
 
     private boolean uploadData() throws IOException {
-        String requestUrl = SERVER_ADDRESS + "/mast/sync/mobile/attributes/sync/";
+
         DbController db = DbController.getInstance(getApplicationContext());
-
+        String requestUrl = null;
+        String syncData = null;
+        String type = "Resource";
+        String type1 = "Parcel";
         InputStream is = null;
-        String syncData = db.getProjectDataForUpload();
-        if (!TextUtils.isEmpty(syncData)) {
-            try {
-                StringBuilder postData = new StringBuilder();
-                postData.append(URLEncoder.encode("projectName", "UTF-8") + "=" + URLEncoder.encode(db.getProjectname(), "UTF-8"));
-                postData.append("&");
-                postData.append(URLEncoder.encode("userId", "UTF-8") + "=" + URLEncoder.encode(db.getLoggedUser().getUserId().toString(), "UTF-8"));
-                postData.append("&");
-                postData.append(URLEncoder.encode("data", "UTF-8") + "=" + URLEncoder.encode(syncData, "UTF-8"));
 
-                HttpURLConnection conn = (HttpURLConnection) new URL(requestUrl).openConnection();
-                conn.setReadTimeout(1000000);
-                conn.setConnectTimeout(1000000);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                conn.setRequestProperty("charset", "utf-8");
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-                conn.setUseCaches(false);
 
-                DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-                wr.write(postData.toString().getBytes("UTF-8"));
-                wr.flush();
-                wr.close();
+        if (type == "Resource") {
+            syncData = db.getProjectDataForUpload("R");
+            requestUrl = SERVER_ADDRESS + "/mast/sync/mobile/resource/sync/";
 
-                if (conn.getResponseCode() > 1) {
-                    is = conn.getInputStream();
-                    // Convert the InputStream into a string
-                    String response = CommonFunctions.getStringFromInputStream(is);
+            if (!TextUtils.isEmpty(syncData)) {
+                try {
+                    StringBuilder postData = new StringBuilder();
+                    postData.append(URLEncoder.encode("projectName", "UTF-8") + "=" + URLEncoder.encode(db.getProjectname(), "UTF-8"));
+                    postData.append("&");
+                    //db.getLoggedUser().getUserId().toString()
+                    postData.append(URLEncoder.encode("userId", "UTF-8") + "=" + URLEncoder.encode(db.getLoggedUser().getUserId().toString(), "UTF-8"));
+                    postData.append("&");
+                    postData.append(URLEncoder.encode("data", "UTF-8") + "=" + URLEncoder.encode(syncData, "UTF-8"));
 
-                    if (!TextUtils.isEmpty(response) && !response.contains("Exception")) {
-                        return db.updateServerFeatureId(response);
-                    } else {
-                        cf.addErrorMessage("UploadService", response);
-                        return false;
+                    HttpURLConnection conn = (HttpURLConnection) new URL(requestUrl).openConnection();
+                    conn.setReadTimeout(1000000);
+                    conn.setConnectTimeout(1000000);
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                    conn.setRequestProperty("charset", "utf-8");
+                    conn.setDoInput(true);
+                    conn.setDoOutput(true);
+                    conn.setUseCaches(false);
+
+                    DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+                    wr.write(postData.toString().getBytes("UTF-8"));
+                    wr.flush();
+                    wr.close();
+
+                    int status = conn.getResponseCode();
+
+                    if (conn.getResponseCode() > 1) {
+                        is = conn.getInputStream();
+                        // Convert the InputStream into a string
+                        String response = CommonFunctions.getStringFromInputStream(is);
+
+                        if (!TextUtils.isEmpty(response) && !response.contains("Exception")) {
+                            return db.updateServerFeatureId(response);
+                        } else {
+                            cf.addErrorMessage("UploadService", response);
+                            return false;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    cf.syncLog("", e);
+                    return false;
+                } finally {
+                    if (is != null) {
+                        is.close();
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                cf.syncLog("", e);
-                return false;
-            } finally {
-                if (is != null) {
-                    is.close();
+            } else
+                nodata = true;
+
+        } if (type1 == "Parcel") {
+            syncData = db.getProjectDataForUpload("P");
+            requestUrl = SERVER_ADDRESS + "/mast/sync/mobile/attributes/sync/";
+
+            if (!TextUtils.isEmpty(syncData)) {
+                try {
+                    StringBuilder postData = new StringBuilder();
+                    postData.append(URLEncoder.encode("projectName", "UTF-8") + "=" + URLEncoder.encode(db.getProjectname(), "UTF-8"));
+                    postData.append("&");
+                    //db.getLoggedUser().getUserId().toString()
+                    postData.append(URLEncoder.encode("userId", "UTF-8") + "=" + URLEncoder.encode(db.getLoggedUser().getUserId().toString(), "UTF-8"));
+                    postData.append("&");
+                    postData.append(URLEncoder.encode("data", "UTF-8") + "=" + URLEncoder.encode(syncData, "UTF-8"));
+
+                    HttpURLConnection conn = (HttpURLConnection) new URL(requestUrl).openConnection();
+                    conn.setReadTimeout(1000000);
+                    conn.setConnectTimeout(1000000);
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                    conn.setRequestProperty("charset", "utf-8");
+                    conn.setDoInput(true);
+                    conn.setDoOutput(true);
+                    conn.setUseCaches(false);
+
+                    DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+                    wr.write(postData.toString().getBytes("UTF-8"));
+                    wr.flush();
+                    wr.close();
+
+                    int status = conn.getResponseCode();
+
+                    if (conn.getResponseCode() > 1) {
+                        is = conn.getInputStream();
+                        // Convert the InputStream into a string
+                        String response = CommonFunctions.getStringFromInputStream(is);
+
+                        if (!TextUtils.isEmpty(response) && !response.contains("Exception")) {
+                            return db.updateServerFeatureId(response);
+                        } else {
+                            cf.addErrorMessage("UploadService", response);
+                            return false;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    cf.syncLog("", e);
+                    return false;
+                } finally {
+                    if (is != null) {
+                        is.close();
+                    }
                 }
-            }
-        } else
-            nodata = true;
+            } else
+                nodata = true;
+
+        }
+
+
+//        String syncData = db.getProjectDataForUpload();
+
+//        if (!TextUtils.isEmpty(syncData)) {
+//            try {
+//                StringBuilder postData = new StringBuilder();
+//                postData.append(URLEncoder.encode("projectName", "UTF-8") + "=" + URLEncoder.encode(db.getProjectname(), "UTF-8"));
+//                postData.append("&");
+//                //db.getLoggedUser().getUserId().toString()
+//                postData.append(URLEncoder.encode("userId", "UTF-8") + "=" + URLEncoder.encode(db.getLoggedUser().getUserId().toString(), "UTF-8"));
+//                postData.append("&");
+//                postData.append(URLEncoder.encode("data", "UTF-8") + "=" + URLEncoder.encode(syncData, "UTF-8"));
+//
+//                HttpURLConnection conn = (HttpURLConnection) new URL(requestUrl).openConnection();
+//                conn.setReadTimeout(1000000);
+//                conn.setConnectTimeout(1000000);
+//                conn.setRequestMethod("POST");
+//                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+//                conn.setRequestProperty("charset", "utf-8");
+//                conn.setDoInput(true);
+//                conn.setDoOutput(true);
+//                conn.setUseCaches(false);
+//
+//                DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+//                wr.write(postData.toString().getBytes("UTF-8"));
+//                wr.flush();
+//                wr.close();
+//
+//                int status = conn.getResponseCode();
+//
+//                if (conn.getResponseCode() > 1) {
+//                    is = conn.getInputStream();
+//                    // Convert the InputStream into a string
+//                    String response = CommonFunctions.getStringFromInputStream(is);
+//
+//                    if (!TextUtils.isEmpty(response) && !response.contains("Exception")) {
+//                        return db.updateServerFeatureId(response);
+//                    } else {
+//                        cf.addErrorMessage("UploadService", response);
+//                        return false;
+//                    }
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                cf.syncLog("", e);
+//                return false;
+//            } finally {
+//                if (is != null) {
+//                    is.close();
+//                }
+//            }
+//        } else
+//            nodata = true;
         return true;
     }
 
@@ -202,12 +340,14 @@ public class UploadService extends IntentService {
     private boolean uploadMultimedia(String filepath, String attribData) {
         nodata = false;
         String requestUrl = SERVER_ADDRESS + "/mast/sync/mobile/document/upload/";
+        DbController db = DbController.getInstance(getApplicationContext());
         try {
             MultipartUtility multipart = new MultipartUtility(requestUrl, "UTF-8");
 
             multipart.addFormField("fileattribs", attribData);
 
             multipart.addFilePart("file", new File(filepath));
+            //  multipart.addFilePart("userId",db.getLoggedUser().getUserId().toString() );
 
             String json_string = multipart.finish();
 
@@ -232,31 +372,42 @@ public class UploadService extends IntentService {
 
     private boolean startMultimediaUpload() {
         boolean mediaAvailable = false;
-        do {
-            try {
-                JSONArray syncDataObj = DbController.getInstance(getApplicationContext()).getMultimediaforUpload();
-                if (syncDataObj.length() > 0) {
-                    mediaAvailable = true;
-                    String filepath = syncDataObj.getJSONArray(0).getString(3);
-                    String attribData = syncDataObj.toString();
-                    int mediaId = syncDataObj.getJSONArray(0).getInt(2);
-                    boolean uploadResult = uploadMultimedia(filepath, attribData);
+        boolean isMultimediaUploaded=false;
 
-                    if (!uploadResult)
-                        DbController.getInstance(getApplicationContext()).updateMediaSyncedStatus(mediaId + "", CommonFunctions.MEDIA_SYNC_ERROR);
-                } else {
-                    if (mediaAvailable)
-                        DbController.getInstance(getApplicationContext()).resetMediaStatus();
-                    mediaAvailable = false;
+
+            do {
+                try {
+                    JSONArray syncDataObj = DbController.getInstance(getApplicationContext()).getMultimediaforUpload();
+                    if (syncDataObj.length() > 0) {
+                        mediaAvailable = true;
+                        String filepath = syncDataObj.getJSONArray(0).getString(3);
+                        String attribData = syncDataObj.toString();
+
+                        int mediaId = syncDataObj.getJSONArray(0).getInt(2);
+                        boolean uploadResult = uploadMultimedia(filepath, attribData);
+
+                        if (!uploadResult) {
+                            DbController.getInstance(getApplicationContext()).updateMediaSyncedStatus(mediaId + "", CommonFunctions.MEDIA_SYNC_ERROR);
+
+                        }
+                        else
+                        {
+                            isMultimediaUploaded=true;
+                        }
+                    } else {
+                        if (mediaAvailable)
+                            DbController.getInstance(getApplicationContext()).resetMediaStatus();
+                        mediaAvailable = false;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    cf.syncLog("", e);
+                    return false;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                cf.syncLog("", e);
-                return false;
             }
-        }
-        while (mediaAvailable);
-        return true;
+            while (mediaAvailable);
+        return isMultimediaUploaded;
+        //return true;
     }
 
     private void fetchRejectedFeatures() {
@@ -316,7 +467,7 @@ public class UploadService extends IntentService {
         mBuilder.setNumber(++numMessages);
         mBuilder.setOngoing(true);
         mBuilder.setPriority(Notification.PRIORITY_HIGH);
-		/* Creates an explicit intent for an Activity in your app */
+        /* Creates an explicit intent for an Activity in your app */
         Intent resultIntent = new Intent(this, LandingPageActivity.class);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);

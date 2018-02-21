@@ -22,13 +22,18 @@ public class Property extends Feature implements Serializable {
     private Long hamletId;
     private String adjudicator1;
     private String adjudicator2;
+
     private String claimTypeCode;
     private String ukaNumber;
 
     private Right right;
     private DeceasedPerson deceasedPerson;
     private List<PersonOfInterest> personOfInterests = new ArrayList<>();
+    private List<ResourcePersonOfInterest> personOfInterestsRes1 = new ArrayList<>();
+    private List<ResourcePoiSync> personOfInterestsRes = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
+
+    private List<ResourceCustomAttribute> customAttributes = new ArrayList<>();
     private List<Media> media = new ArrayList<>();
     private Dispute dispute;
 
@@ -40,6 +45,266 @@ public class Property extends Feature implements Serializable {
     public static String COL_ADJUDICATOR2 = "WITNESS_2";
     public static String COL_CLAIM_TYPE_CODE = "CLAIM_TYPE";
     public static String COL_UKA_NUMBER = "UKA_NUMBER";
+    public static String COL_CLASSIFICATION_ID = "CLASSIFICATION_ID";
+    public static String COL_SUBCLASSIFICATION_ID = "SUBCLASSIFICATION_ID";
+    public static String COL_TENURE_ID = "TENURE_ID";
+    public static String COL_FLAG = "FLAG";
+    public static String COL_IP_NUMBER = "IP_NUMBER";
+    public static String COL_CLAIM_RIGHT = "CLAIM_RIGHT";
+    public static String COL_PLOT_NO = "PLOT_NO";
+    public static String COL_DOCUMENT = "DOCUMENT";
+    public static String COL_DOCUMENT_TYPE = "DOCUMENT_TYPE";
+    public static String COL_DOCUMENT_DATE = "DOCUMENT_DATE";
+    public static String COL_DOCUMENT_REF_NO = "DOCUMENT_REF_NO";
+
+
+
+    private List<Classification> classification=new ArrayList<>();
+
+
+    private List<ClassificationAttribute> classificationAttributes=new ArrayList<>();
+
+    private List<TenureInformation> tenureInformation=new ArrayList<>();
+    private String flag;
+
+
+
+    private int ipNumber;
+     private String classificationValue;
+     private String subClassificationValue;
+     private  String tenureTypeValue;
+
+
+
+     private String tenureTypeID;
+
+    private String firstName;
+    private String middleName;
+
+
+    private int mID;
+    private String lastName;
+    private int lastID;
+    private String age;
+    private String gender;
+    private String maritalstatus;
+    private String cityzenship;
+    private String ethinicity;
+    private String residential;
+    private int residentialID;
+    private String address;
+    private int addressID;
+    private String country;
+    private int countryID;
+    private String community;
+    private String region;
+    private String mob_no;
+    private String classificationId;
+     private String subClassificationId;
+
+    private String claimRight;
+    private String plotNo;
+    private String document;
+    private String documentType;
+    private String documentDate;
+    private String documentRefNo;
+
+    public String getClaimRight() {
+        return claimRight;
+    }
+
+    public void setClaimRight(String claimRight) {
+        this.claimRight = claimRight;
+    }
+
+    public String getPlotNo() {
+        return plotNo;
+    }
+
+    public void setPlotNo(String plotNo) {
+        this.plotNo = plotNo;
+    }
+
+    public String getDocument() {
+        return document;
+    }
+
+    public void setDocument(String document) {
+        this.document = document;
+    }
+
+    public String getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
+    }
+
+    public String getDocumentDate() {
+        return documentDate;
+    }
+
+    public void setDocumentDate(String documentDate) {
+        this.documentDate = documentDate;
+    }
+
+    public String getDocumentRefNo() {
+        return documentRefNo;
+    }
+
+    public void setDocumentRefNo(String documentRefNo) {
+        this.documentRefNo = documentRefNo;
+    }
+
+
+    public List<ResourceCustomAttribute> getAttributesres() {
+        return customAttributes;
+    }
+
+    public void setAttributesres(List<ResourceCustomAttribute> attributesres) {
+        this.customAttributes = attributesres;
+    }
+
+    public int getmID() {
+        return mID;
+    }
+
+    public void setmID(int mID) {
+        this.mID = mID;
+    }
+
+    public int getLastID() {
+        return lastID;
+    }
+
+    public void setLastID(int lastID) {
+        this.lastID = lastID;
+    }
+
+    public int getResidentialID() {
+        return residentialID;
+    }
+
+    public void setResidentialID(int residentialID) {
+        this.residentialID = residentialID;
+    }
+
+    public int getAddressID() {
+        return addressID;
+    }
+
+    public void setAddressID(int addressID) {
+        this.addressID = addressID;
+    }
+
+    public int getCountryID() {
+        return countryID;
+    }
+
+    public void setCountryID(int countryID) {
+        this.countryID = countryID;
+    }
+
+
+    public String getTenureTypeID() {
+        return tenureTypeID;
+    }
+
+    public void setTenureTypeID(String tenureTypeID) {
+        this.tenureTypeID = tenureTypeID;
+    }
+
+    public String getSubClassificationId() {
+        return subClassificationId;
+    }
+
+    public void setSubClassificationId(String subClassificationId) {
+        this.subClassificationId = subClassificationId;
+    }
+
+
+    public List<ClassificationAttribute> getClassificationAttributes() {
+        return classificationAttributes;
+    }
+
+    public void setClassificationAttributes(List<ClassificationAttribute> classificationAttributes) {
+        this.classificationAttributes = classificationAttributes;
+    }
+
+
+    public String getClassificationId() {
+        return classificationId;
+    }
+
+    public void setClassificationId(String classificationId) {
+        this.classificationId = classificationId;
+    }
+
+
+
+    public String getTenureTypeValue() {
+        return tenureTypeValue;
+    }
+
+    public void setTenureTypeValue(String tenureTypeValue) {
+        this.tenureTypeValue = tenureTypeValue;
+    }
+
+
+    public String getClassificationValue() {
+        return classificationValue;
+    }
+
+    public void setClassificationValue(String classificationValue) {
+        this.classificationValue = classificationValue;
+    }
+
+    public String getSubClassificationValue() {
+        return subClassificationValue;
+    }
+
+    public void setSubClassificationValue(String subClassificationValue) {
+        this.subClassificationValue = subClassificationValue;
+    }
+
+
+
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+
+    public int getIpNumber() {
+        return ipNumber;
+    }
+
+    public void setIpNumber(int ipNumber) {
+        this.ipNumber = ipNumber;
+    }
+
+
+    public List<Classification> getClassification() {
+        return classification;
+    }
+
+    public void setClassification(List<Classification> classification) {
+        this.classification = classification;
+    }
+
+    public List<TenureInformation> getTenureInformation() {
+        return tenureInformation;
+    }
+
+    public void setTenureInformation(List<TenureInformation> tenureInformation) {
+        this.tenureInformation = tenureInformation;
+    }
+
+
 
     public String getCreationDate() {
         return creationDate;
@@ -97,6 +362,15 @@ public class Property extends Feature implements Serializable {
         this.claimTypeCode = claimTypeCode;
     }
 
+
+//    public String getClaimType() {
+//        return claimType;
+//    }
+//
+//    public void setClaimType(String claimType) {
+//        this.claimType = claimType;
+//    }
+
     public Right getRight() {
         return right;
     }
@@ -143,6 +417,24 @@ public class Property extends Feature implements Serializable {
 
     public void setPersonOfInterests(List<PersonOfInterest> personOfInterests) {
         this.personOfInterests = personOfInterests;
+    }
+
+
+
+    public List<ResourcePersonOfInterest> getResPersonOfInterests() {
+        return personOfInterestsRes1;
+    }
+
+    public void setResPersonOfInterests(List<ResourcePersonOfInterest> personOfInterestsRes1) {
+        this.personOfInterestsRes1 = personOfInterestsRes1;
+    }
+
+    public List<ResourcePoiSync> getResPOI() {
+        return personOfInterestsRes;
+    }
+
+    public void setResPOI(List<ResourcePoiSync> personOfInterestsRes) {
+        this.personOfInterestsRes = personOfInterestsRes;
     }
 
     public Dispute getDispute() {
@@ -249,15 +541,17 @@ public class Property extends Feature implements Serializable {
             errorMessage = context.getResources().getString(R.string.EnterClaimNumber);
         } else if (StringUtility.isEmpty(getSurveyDate())) {
             errorMessage = context.getResources().getString(R.string.SelectClaimDate);
-        } else if (getHamletId() == 0L) {
-            errorMessage = context.getResources().getString(R.string.Please_select_Hamlet);
-        } else if (StringUtility.isEmpty(getAdjudicator1())) {
-            errorMessage = context.getResources().getString(R.string.Please_select_Witness_1);
-        } else if (StringUtility.isEmpty(getAdjudicator2())) {
-            errorMessage = context.getResources().getString(R.string.Please_select_Witness_2);
-        } else if (getAdjudicator1() == getAdjudicator2()) {
-            errorMessage = context.getResources().getString(R.string.Witness_1_and_Witness_2_can_not_be_same);
-        } else if (DateUtility.isDateInFuture(DateUtility.getDate(getSurveyDate()))) {
+        }
+//        else if (getHamletId() == 0L) {
+//            errorMessage = context.getResources().getString(R.string.Please_select_Hamlet);
+//        } else if (StringUtility.isEmpty(getAdjudicator1())) {
+//            errorMessage = context.getResources().getString(R.string.Please_select_Witness_1);
+//        } else if (StringUtility.isEmpty(getAdjudicator2())) {
+//            errorMessage = context.getResources().getString(R.string.Please_select_Witness_2);
+//        } else if (getAdjudicator1() == getAdjudicator2()) {
+//            errorMessage = context.getResources().getString(R.string.Witness_1_and_Witness_2_can_not_be_same);
+//        }
+        else if (DateUtility.isDateInFuture(DateUtility.getDate(getSurveyDate()))) {
             errorMessage = context.getResources().getString(R.string.ClaimDateInFuture);
         } else if (!DbController.getInstance(context).isClaimNumberUnique(getId(), getPolygonNumber())) {
             errorMessage = context.getResources().getString(R.string.ClaimNumberUnique);
@@ -338,9 +632,9 @@ public class Property extends Feature implements Serializable {
         int shareId = getRight().getShareTypeId();
 
         // Check photos for all natural persons
-        if (!getRight().checkPersonsHavePhoto()) {
-            return handleError(context, R.string.warning_addPersonPhoto, showMessage);
-        }
+//        if (!getRight().checkPersonsHavePhoto()) {
+//            return handleError(context, R.string.warning_addPersonPhoto, showMessage);
+//        }
 
         // Check non-natural share type
         if (shareId == ShareType.TYPE_NON_NATURAL) {
@@ -353,21 +647,28 @@ public class Property extends Feature implements Serializable {
         }
 
         // Check single ownership
-        if (shareId == ShareType.TYPE_SINGLE_OCCUPANT) {
-            if(getRight().getNaturalPersons().size() != 1 || !getRight().hasPersonSubType(Person.SUBTYPE_OWNER)){
+        if (shareId == ShareType.TYPE_Single_Tenancy) {
+            if(getRight().getNaturalPersons().size() != 1 || !getRight().hasPersonSubType(Person.SUBTYPE_OCCUPANT)){
                 return handleError(context, R.string.SingleShareCheck, showMessage);
             }
         }
 
         // Check multiple occupancy joint ownership
-        if (shareId == ShareType.TYPE_MUTIPLE_OCCUPANCY_JOINT) {
+        if (shareId == ShareType.TYPE_Joint_Tenency) {
             if(getRight().getOwnersCount() != 2 || getRight().getNaturalPersons().size() != getRight().getOwnersCount()){
                 return handleError(context, R.string.MultiJointShareError, showMessage);
             }
         }
 
         // Check multiple occupancy common ownership
-        if (shareId == ShareType.TYPE_MUTIPLE_OCCUPANCY_IN_COMMON) {
+        if (shareId == ShareType.TYPE_Collective_Tenancy ) {
+            if(getRight().getOwnersCount() < 1  || getRight().getOwnersCount() != getRight().getNaturalPersons().size()){
+                return handleError(context, R.string.SingleShareCheck, showMessage);
+            }
+        }
+
+        // Check multiple occupancy common Tenancy ownership
+        if ( shareId==ShareType.TYPE_Common_Tenancy) {
             if(getRight().getOwnersCount() < 2  || getRight().getOwnersCount() != getRight().getNaturalPersons().size()){
                 return handleError(context, R.string.MultiCommonShareError, showMessage);
             }
@@ -397,6 +698,209 @@ public class Property extends Feature implements Serializable {
             CommonFunctions.getInstance().showToast(context, context.getResources().getString(messageId), Toast.LENGTH_LONG, Gravity.CENTER);
         }
         return false;
+    }
+
+    public String getMob_no() {
+        return mob_no;
+    }
+
+    public void setMob_no(String mob_no) {
+        this.mob_no = mob_no;
+    }
+
+
+
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+
+    public String getCommunity() {
+        return community;
+    }
+
+    public void setCommunity(String community) {
+        this.community = community;
+    }
+
+
+
+
+    public String getResidential() {
+        return residential;
+    }
+
+    public void setResidential(String residential) {
+        this.residential = residential;
+    }
+
+
+
+    public String getEthinicity() {
+        return ethinicity;
+    }
+
+    public void setEthinicity(String ethinicity) {
+        this.ethinicity = ethinicity;
+    }
+
+
+
+    public String getCityzenship() {
+        return cityzenship;
+    }
+
+    public void setCityzenship(String cityzenship) {
+        this.cityzenship = cityzenship;
+    }
+
+
+
+
+    public String getMaritalstatus() {
+        return maritalstatus;
+    }
+
+    public void setMaritalstatus(String maritalstatus) {
+        this.maritalstatus = maritalstatus;
+    }
+
+
+
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+
+
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+
+
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+
+
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getMiddelName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+
+
+    public boolean validateTenureInfo(Context context, boolean b) {
+        boolean result = true;
+        String errorMessage = "";
+
+        if (StringUtility.isEmpty(getFirstName())) {
+            errorMessage = context.getResources().getString(R.string.SelectFirstName);
+        } else if (StringUtility.isEmpty(getMiddelName())) {
+            errorMessage = context.getResources().getString(R.string.SelectMiddleName);
+        } else if (StringUtility.isEmpty(getLastName())) {
+            errorMessage = context.getResources().getString(R.string.SelectLastName);
+        }
+        else if (StringUtility.isEmpty(getGender())) {
+            errorMessage = context.getResources().getString(R.string.SelectGender);
+        }else if (getGender().equalsIgnoreCase(context.getResources().getString(R.string.SelectOption))) {
+            errorMessage = context.getResources().getString(R.string.SelectGender);
+        }
+        else if (StringUtility.isEmpty(getAge())) {
+            errorMessage = context.getResources().getString(R.string.SelectAge);
+        } else if (StringUtility.isEmpty(getMaritalstatus())) {
+            errorMessage = context.getResources().getString(R.string.SelectMarital);
+        }else if (getMaritalstatus().equalsIgnoreCase(context.getResources().getString(R.string.SelectOption))) {
+            errorMessage = context.getResources().getString(R.string.SelectMarital);
+        }
+        else if (StringUtility.isEmpty(getCityzenship())) {
+            errorMessage = context.getResources().getString(R.string.SelectCitizenship);
+        } else if (StringUtility.isEmpty(getEthinicity())) {
+            errorMessage =  context.getResources().getString(R.string.SelectEthinicity);
+        }
+        else if (StringUtility.isEmpty(getResidential())) {
+            errorMessage = context.getResources().getString(R.string.SelectResidency);
+        }else if (getResidential().equalsIgnoreCase(context.getResources().getString(R.string.SelectOption))) {
+            errorMessage = context.getResources().getString(R.string.SelectResidency);
+        }
+        else if (StringUtility.isEmpty(getAddress())) {
+            errorMessage = context.getResources().getString(R.string.SelectAddress);
+        }
+
+        else if (StringUtility.isEmpty(getCommunity())) {
+            errorMessage ="Enter Community";
+        }
+
+        else if (StringUtility.isEmpty(getRegion())) {
+            errorMessage = context.getResources().getString(R.string.SelectRegion);
+        }
+
+        else if (StringUtility.isEmpty(getCountry())) {
+            errorMessage = context.getResources().getString(R.string.SelectCountry);
+        }
+
+        else if (StringUtility.isEmpty(getMob_no())) {
+            errorMessage = context.getResources().getString(R.string.SelectMobileNumber);
+        }
+
+        if (!errorMessage.equals("")) {
+            result = false;
+            if (b)
+                CommonFunctions.getInstance().showToast(context, errorMessage, Toast.LENGTH_LONG, Gravity.CENTER);
+        }
+        return result;
     }
 
 }

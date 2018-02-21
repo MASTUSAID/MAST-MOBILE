@@ -12,7 +12,19 @@ public class Feature implements Serializable {
     private String surveyDate;
     private int userId;
 
+
+    public int getResID() {
+        return resID;
+    }
+
+    public void setResID(int resID) {
+        this.resID = resID;
+    }
+
+    private int resID;
+
     public static String TABLE_NAME = "SPATIAL_FEATURES";
+    public static String TABLE_NAME_RESO = "SPATIAL_RESORCE_FEATURES";
     public static String COL_ID = "FEATURE_ID";
     public static String COL_SERVER_ID = "SERVER_FEATURE_ID";
     public static String COL_COORDINATES = "COORDINATES";
@@ -20,6 +32,9 @@ public class Feature implements Serializable {
     public static String COL_STATUS = "STATUS";
     public static String COL_POLYGON_NUMBER = "POLYGON_NUMBER";
     public static String COL_SURVEY_DATE = "SURVEY_DATE";
+
+
+
 
     public static String GEOM_POINT = "Point";
     public static String GEOM_LINE = "Line";

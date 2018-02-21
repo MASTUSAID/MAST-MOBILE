@@ -31,7 +31,6 @@ import com.rmsi.android.mast.domain.PersonOfInterest;
 import com.rmsi.android.mast.domain.Property;
 import com.rmsi.android.mast.domain.RelationshipType;
 import com.rmsi.android.mast.domain.ShareType;
-import com.rmsi.android.mast.domain.User;
 import com.rmsi.android.mast.util.CommonFunctions;
 import com.rmsi.android.mast.util.GuiUtility;
 
@@ -51,6 +50,7 @@ public class PersonListActivity extends ActionBarActivity {
     private PoiListFragment poiFragment;
     private int personSubType;
     private TextView lblShareType;
+    private Long rightId = 0L;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +72,7 @@ public class PersonListActivity extends ActionBarActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             featureId = extras.getLong("featureid");
+            rightId = extras.getLong("rightId");
         }
 
         readOnly = CommonFunctions.isFeatureReadOnly(featureId);
@@ -96,101 +97,70 @@ public class PersonListActivity extends ActionBarActivity {
             btnNext.setText(backStr);
         }
 
+
+        //Ambar
         addnewPerson.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    String[] person_subType = getResources().getStringArray(R.array.person_sub_type);
-                    final Dialog dialog = new Dialog(context, R.style.DialogTheme);
-                    dialog.setContentView(R.layout.dialog_show_list);
-                    dialog.setTitle(getResources().getString(R.string.select_person_subtype));
-                    dialog.getWindow().getAttributes().width = LayoutParams.MATCH_PARENT;
-                    ListView listViewForPersonSubtype = (ListView) dialog.findViewById(R.id.commonlistview);
-                    Button save = (Button) dialog.findViewById(R.id.btn_ok);
-                    save.setText(saveStr);
+                    DbController db = DbController.getInstance(context);
+                    int IsNatural=db.getpersonType(featureId);
+                    if (IsNatural==3) {
+                        openNatural_NonNaturalList();
+                    }else{
+                        boolean ifAllowed = false;
+                        int ownerCount = property.getRight().getOwnersCount();
 
-                    personSubType = Person.SUBTYPE_OWNER;
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
-                            R.layout.item_list_single_choice, person_subType);
 
-                    listViewForPersonSubtype.setAdapter(adapter);
-                    listViewForPersonSubtype.setItemChecked(0, false);
+                        if ((property.getRight().getShareTypeId() == ShareType.TYPE_SINGLE_OCCUPANT) || (property.getRight().getShareTypeId() == ShareType.TYPE_Customary_Individual) || (property.getRight().getShareTypeId() == ShareType.TYPE_Single_Tenancy)) {
+                            ifAllowed = checkSingleOccupancyType(personSubType, ownerCount);
+                            if (ifAllowed) {
+                                Intent myIntent = new Intent(context, AddPersonActivity.class);
+                                myIntent.putExtra("groupid", 0L);
+                                myIntent.putExtra("featureid", featureId);
+                                myIntent.putExtra("rightId", property.getRight().getId());
+                                myIntent.putExtra("subTypeId", personSubType);
+                                startActivity(myIntent);
 
-                    listViewForPersonSubtype.setOnItemClickListener(new OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent,
-                                                View view, int position, long id) {
-                            int itemPosition = position;
 
-                            if (itemPosition == 0) // for Owner
-                            {
-                                personSubType = Person.SUBTYPE_OWNER;
-                            } else if (itemPosition == 1) // for Administrator
-                            {
-                                personSubType = Person.SUBTYPE_ADMINISTRATOR;
-                            } else if (itemPosition == 2) // for Guardian
-                            {
-                                personSubType = Person.SUBTYPE_GUARDIAN;
+                            }
+                        } else if ((property.getRight().getShareTypeId() == ShareType.TYPE_MUTIPLE_OCCUPANCY_JOINT) || (property.getRight().getShareTypeId() == ShareType.TYPE_Joint_Tenency) || (property.getRight().getShareTypeId() == ShareType.TYPE_Customary_Collective)) {
+                            ifAllowed = checkMultipleOcuupany_Joint(personSubType, ownerCount);
+                            if (ifAllowed) {
+                                Intent myIntent = new Intent(context, AddPersonActivity.class);
+                                myIntent.putExtra("groupid", 0L);
+                                myIntent.putExtra("featureid", featureId);
+                                myIntent.putExtra("rightId", property.getRight().getId());
+                                myIntent.putExtra("subTypeId", personSubType);
+                                startActivity(myIntent);
+
+
+                            }
+                        } else if (property.getRight().getShareTypeId() == ShareType.TYPE_Collective_Tenancy || (property.getRight().getShareTypeId() == ShareType.TYPE_Common_Tenancy)) {
+                            ifAllowed = checkMultipleOcuupany_TenancyInCommon(personSubType);
+                            if (ifAllowed) {
+                                Intent myIntent = new Intent(context, AddPersonActivity.class);
+                                myIntent.putExtra("groupid", 0L);
+                                myIntent.putExtra("featureid", featureId);
+                                myIntent.putExtra("rightId", property.getRight().getId());
+                                myIntent.putExtra("subTypeId", personSubType);
+                                startActivity(myIntent);
+
+                            }
+                        } else if (property.getRight().getShareTypeId() == ShareType.TYPE_GUARDIAN) {
+                            ifAllowed = checkOccupancyType_GuardianMinor(personSubType, ownerCount);
+                            if (ifAllowed) {
+                                Intent myIntent = new Intent(context, AddPersonActivity.class);
+                                myIntent.putExtra("groupid", 0L);
+                                myIntent.putExtra("featureid", featureId);
+                                myIntent.putExtra("rightId", property.getRight().getId());
+                                myIntent.putExtra("subTypeId", personSubType);
+                                startActivity(myIntent);
                             }
                         }
-                    });
-
-                    save.setOnClickListener(new OnClickListener() {
-                        //Run when button is clicked
-                        @Override
-                        public void onClick(View v) {
-                            boolean ifAllowed = false;
-                            int ownerCount = property.getRight().getOwnersCount();
-
-                            if (property.getRight().getShareTypeId() == ShareType.TYPE_SINGLE_OCCUPANT) {
-                                ifAllowed = checkSingleOccupancyType(personSubType, ownerCount);
-                                if (ifAllowed) {
-                                    Intent myIntent = new Intent(context, AddPersonActivity.class);
-                                    myIntent.putExtra("groupid", 0L);
-                                    myIntent.putExtra("featureid", featureId);
-                                    myIntent.putExtra("rightId", property.getRight().getId());
-                                    myIntent.putExtra("subTypeId", personSubType);
-                                    startActivity(myIntent);
-                                    dialog.dismiss();
-                                }
-                            } else if (property.getRight().getShareTypeId() == ShareType.TYPE_MUTIPLE_OCCUPANCY_JOINT) {
-                                ifAllowed = checkMultipleOcuupany_Joint(personSubType, ownerCount);
-                                if (ifAllowed) {
-                                    Intent myIntent = new Intent(context, AddPersonActivity.class);
-                                    myIntent.putExtra("groupid", 0L);
-                                    myIntent.putExtra("featureid", featureId);
-                                    myIntent.putExtra("rightId", property.getRight().getId());
-                                    myIntent.putExtra("subTypeId", personSubType);
-                                    startActivity(myIntent);
-                                    dialog.dismiss();
-                                }
-                            } else if (property.getRight().getShareTypeId() == ShareType.TYPE_MUTIPLE_OCCUPANCY_IN_COMMON) {
-                                ifAllowed = checkMultipleOcuupany_TenancyInCommon(personSubType);
-                                if (ifAllowed) {
-                                    Intent myIntent = new Intent(context, AddPersonActivity.class);
-                                    myIntent.putExtra("groupid", 0L);
-                                    myIntent.putExtra("featureid", featureId);
-                                    myIntent.putExtra("rightId", property.getRight().getId());
-                                    myIntent.putExtra("subTypeId", personSubType);
-                                    startActivity(myIntent);
-                                    dialog.dismiss();
-                                }
-                            } else if (property.getRight().getShareTypeId() == ShareType.TYPE_GUARDIAN) {
-                                ifAllowed = checkOccupancyType_GuardianMinor(personSubType, ownerCount);
-                                if (ifAllowed) {
-                                    Intent myIntent = new Intent(context, AddPersonActivity.class);
-                                    myIntent.putExtra("groupid", 0L);
-                                    myIntent.putExtra("featureid", featureId);
-                                    myIntent.putExtra("rightId", property.getRight().getId());
-                                    myIntent.putExtra("subTypeId", personSubType);
-                                    startActivity(myIntent);
-                                    dialog.dismiss();
-                                }
-                            }
-                        }
-                    });
-
-                    dialog.show();
+                    }
+                    //   personSubType = Person.SUBTYPE_OWNER;
+//                  personSubType = Person.SUBTYPE_OCCUPANT;
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -198,6 +168,190 @@ public class PersonListActivity extends ActionBarActivity {
                 }
             }
         });
+
+        //for natural person only
+//        addnewPerson.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                try {
+//
+//
+//                 //   personSubType = Person.SUBTYPE_OWNER;
+//                  personSubType = Person.SUBTYPE_OCCUPANT;
+//
+//                            boolean ifAllowed = false;
+//                            int ownerCount = property.getRight().getOwnersCount();
+//
+//
+//
+//                            if ((property.getRight().getShareTypeId() == ShareType.TYPE_SINGLE_OCCUPANT)||(property.getRight().getShareTypeId() == ShareType.TYPE_Customary_Individual)||(property.getRight().getShareTypeId() == ShareType.TYPE_Single_Tenancy)) {
+//                                ifAllowed = checkSingleOccupancyType(personSubType, ownerCount);
+//                                if (ifAllowed) {
+//                                    Intent myIntent = new Intent(context, AddPersonActivity.class);
+//                                    myIntent.putExtra("groupid", 0L);
+//                                    myIntent.putExtra("featureid", featureId);
+//                                    myIntent.putExtra("rightId", property.getRight().getId());
+//                                    myIntent.putExtra("subTypeId", personSubType);
+//                                    startActivity(myIntent);
+//
+//                                }
+//                            } else if ((property.getRight().getShareTypeId() == ShareType.TYPE_MUTIPLE_OCCUPANCY_JOINT)||(property.getRight().getShareTypeId() == ShareType.TYPE_Joint_Tenency)||(property.getRight().getShareTypeId() == ShareType.TYPE_Customary_Collective)) {
+//                                ifAllowed = checkMultipleOcuupany_Joint(personSubType, ownerCount);
+//                                if (ifAllowed) {
+//                                    Intent myIntent = new Intent(context, AddPersonActivity.class);
+//                                    myIntent.putExtra("groupid", 0L);
+//                                    myIntent.putExtra("featureid", featureId);
+//                                    myIntent.putExtra("rightId", property.getRight().getId());
+//                                    myIntent.putExtra("subTypeId", personSubType);
+//                                    startActivity(myIntent);
+//
+//                                }
+//                            } else if (property.getRight().getShareTypeId() == ShareType.TYPE_Collective_Tenancy ||(property.getRight().getShareTypeId() == ShareType.TYPE_Common_Tenancy)) {
+//                                ifAllowed = checkMultipleOcuupany_TenancyInCommon(personSubType);
+//                                if (ifAllowed) {
+//                                    Intent myIntent = new Intent(context, AddPersonActivity.class);
+//                                    myIntent.putExtra("groupid", 0L);
+//                                    myIntent.putExtra("featureid", featureId);
+//                                    myIntent.putExtra("rightId", property.getRight().getId());
+//                                    myIntent.putExtra("subTypeId", personSubType);
+//                                    startActivity(myIntent);
+//
+//                                }
+//                            } else if (property.getRight().getShareTypeId() == ShareType.TYPE_GUARDIAN) {
+//                                ifAllowed = checkOccupancyType_GuardianMinor(personSubType, ownerCount);
+//                                if (ifAllowed) {
+//                                    Intent myIntent = new Intent(context, AddPersonActivity.class);
+//                                    myIntent.putExtra("groupid", 0L);
+//                                    myIntent.putExtra("featureid", featureId);
+//                                    myIntent.putExtra("rightId", property.getRight().getId());
+//                                    myIntent.putExtra("subTypeId", personSubType);
+//                                    startActivity(myIntent);
+//
+//                                }
+//                            }
+//
+//
+//
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    System.out.println(e.getMessage());
+//                }
+//            }
+//        });
+
+        //Ambar
+
+
+
+//        addnewPerson.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                try {
+//                    String[] person_subType = getResources().getStringArray(R.array.person_sub_type);
+//                    final Dialog dialog = new Dialog(context, R.style.DialogTheme);
+//                    dialog.setContentView(R.layout.dialog_show_list);
+//                    dialog.setTitle(getResources().getString(R.string.select_person_subtype));
+//                    dialog.getWindow().getAttributes().width = LayoutParams.MATCH_PARENT;
+//                    ListView listViewForPersonSubtype = (ListView) dialog.findViewById(R.id.commonlistview);
+//                    Button save = (Button) dialog.findViewById(R.id.btn_ok);
+//                    save.setText(saveStr);
+//
+////                    personSubType = Person.SUBTYPE_OWNER;
+//                    personSubType = Person.SUBTYPE_OCCUPANT;
+//
+//                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
+//                            R.layout.item_list_single_choice, person_subType);
+//
+//                    listViewForPersonSubtype.setAdapter(adapter);
+//                    listViewForPersonSubtype.setItemChecked(0, false);
+//
+//                    listViewForPersonSubtype.setOnItemClickListener(new OnItemClickListener() {
+//                        @Override
+//                        public void onItemClick(AdapterView<?> parent,
+//                                                View view, int position, long id) {
+//                            int itemPosition = position;
+//
+//
+//                            if (itemPosition == 0) // for Owner
+//                            {
+//                                personSubType = Person.SUBTYPE_OCCUPANT;
+//                                //personSubType = Person.SUBTYPE_OWNER;
+//                            } else if (itemPosition == 1) // for Administrator
+//                            {
+//                                personSubType = Person.SUBTYPE_ADMINISTRATOR;
+//                            } else if (itemPosition == 2) // for Guardian
+//                            {
+//                                personSubType = Person.SUBTYPE_GUARDIAN;
+//                            }
+//                        }
+//                    });
+//
+//                    save.setOnClickListener(new OnClickListener() {
+//                        //Run when button is clicked
+//                        @Override
+//                        public void onClick(View v) {
+//                            boolean ifAllowed = false;
+//                            int ownerCount = property.getRight().getOwnersCount();
+//
+//
+//
+//                            if ((property.getRight().getShareTypeId() == ShareType.TYPE_SINGLE_OCCUPANT)||(property.getRight().getShareTypeId() == ShareType.TYPE_Customary_Individual)||(property.getRight().getShareTypeId() == ShareType.TYPE_Single_Tenancy)||(property.getRight().getShareTypeId() == ShareType.TYPE_Common_Tenancy)) {
+//                                ifAllowed = checkSingleOccupancyType(personSubType, ownerCount);
+//                                if (ifAllowed) {
+//                                    Intent myIntent = new Intent(context, AddPersonActivity.class);
+//                                    myIntent.putExtra("groupid", 0L);
+//                                    myIntent.putExtra("featureid", featureId);
+//                                    myIntent.putExtra("rightId", property.getRight().getId());
+//                                    myIntent.putExtra("subTypeId", personSubType);
+//                                    startActivity(myIntent);
+//                                    dialog.dismiss();
+//                                }
+//                            } else if ((property.getRight().getShareTypeId() == ShareType.TYPE_MUTIPLE_OCCUPANCY_JOINT)||(property.getRight().getShareTypeId() == ShareType.TYPE_Joint_Tenency)||(property.getRight().getShareTypeId() == ShareType.TYPE_Collective_Tenancy)||(property.getRight().getShareTypeId() == ShareType.TYPE_Customary_Collective)) {
+//                                ifAllowed = checkMultipleOcuupany_Joint(personSubType, ownerCount);
+//                                if (ifAllowed) {
+//                                    Intent myIntent = new Intent(context, AddPersonActivity.class);
+//                                    myIntent.putExtra("groupid", 0L);
+//                                    myIntent.putExtra("featureid", featureId);
+//                                    myIntent.putExtra("rightId", property.getRight().getId());
+//                                    myIntent.putExtra("subTypeId", personSubType);
+//                                    startActivity(myIntent);
+//                                    dialog.dismiss();
+//                                }
+//                            } else if (property.getRight().getShareTypeId() == ShareType.TYPE_MUTIPLE_OCCUPANCY_IN_COMMON) {
+//                                ifAllowed = checkMultipleOcuupany_TenancyInCommon(personSubType);
+//                                if (ifAllowed) {
+//                                    Intent myIntent = new Intent(context, AddPersonActivity.class);
+//                                    myIntent.putExtra("groupid", 0L);
+//                                    myIntent.putExtra("featureid", featureId);
+//                                    myIntent.putExtra("rightId", property.getRight().getId());
+//                                    myIntent.putExtra("subTypeId", personSubType);
+//                                    startActivity(myIntent);
+//                                    dialog.dismiss();
+//                                }
+//                            } else if (property.getRight().getShareTypeId() == ShareType.TYPE_GUARDIAN) {
+//                                ifAllowed = checkOccupancyType_GuardianMinor(personSubType, ownerCount);
+//                                if (ifAllowed) {
+//                                    Intent myIntent = new Intent(context, AddPersonActivity.class);
+//                                    myIntent.putExtra("groupid", 0L);
+//                                    myIntent.putExtra("featureid", featureId);
+//                                    myIntent.putExtra("rightId", property.getRight().getId());
+//                                    myIntent.putExtra("subTypeId", personSubType);
+//                                    startActivity(myIntent);
+//                                    dialog.dismiss();
+//                                }
+//                            }
+//                        }
+//                    });
+//
+//                    dialog.show();
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    System.out.println(e.getMessage());
+//                }
+//            }
+//        });
 
         btnNext.setOnClickListener(new OnClickListener() {
             @Override
@@ -218,10 +372,11 @@ public class PersonListActivity extends ActionBarActivity {
 
             @Override
             public void onClick(View v) {
-                if (property.getRight().hasPersonSubType(Person.SUBTYPE_OWNER)) {
-                    if (property.getRight().getShareTypeId() == ShareType.TYPE_SINGLE_OCCUPANT ||
-                            property.getRight().getShareTypeId() == ShareType.TYPE_MUTIPLE_OCCUPANCY_IN_COMMON ||
-                            property.getRight().getShareTypeId() == ShareType.TYPE_MUTIPLE_OCCUPANCY_JOINT) {
+                if (property.getRight().hasPersonSubType(Person.SUBTYPE_OCCUPANT)) {
+                    if (property.getRight().getShareTypeId() == ShareType.TYPE_Single_Tenancy ||
+                            property.getRight().getShareTypeId() == ShareType.TYPE_Joint_Tenency ||
+                            property.getRight().getShareTypeId() == ShareType.TYPE_Common_Tenancy ||
+                            property.getRight().getShareTypeId() == ShareType.TYPE_Collective_Tenancy) {
                         final Dialog dialog = new Dialog(context, R.style.DialogTheme);
                         dialog.setContentView(R.layout.dialog_person_of_interest);
                         dialog.setTitle(getResources().getString(R.string.nextKin));
@@ -261,6 +416,7 @@ public class PersonListActivity extends ActionBarActivity {
                                 String poi_middleName = middleName.getText().toString();
                                 String poi_lastName = lastName.getText().toString();
                                 String name = firstName.getText().toString() + " " + middleName.getText().toString() + " " + lastName.getText().toString();
+                                String name1 = firstName.getText().toString() + "," + middleName.getText().toString() + "," + lastName.getText().toString();
 
                                 if (!TextUtils.isEmpty(poi_fName) || !TextUtils.isEmpty(poi_middleName) || !TextUtils.isEmpty(poi_lastName)) {
                                     PersonOfInterest poi = new PersonOfInterest();
@@ -270,7 +426,8 @@ public class PersonListActivity extends ActionBarActivity {
                                     if(relSpinner.getSelectedItem() != null)
                                         poi.setRelationshipId(((RelationshipType)relSpinner.getSelectedItem()).getCode());
                                     poi.setDob(txtDob.getText().toString());
-                                    poi.setName(name);
+                                    poi.setName(name1);
+                                    //poi.setName(name);
 
                                     boolean result = DbController.getInstance(context).savePersonOfInterest(poi);
                                     if (result) {
@@ -302,6 +459,114 @@ public class PersonListActivity extends ActionBarActivity {
             }
 
         });
+    }
+
+    private void openNatural_NonNaturalList() {
+
+        String[] person_subType = getResources().getStringArray(R.array.person_natural_non);
+        final Dialog dialog = new Dialog(context, R.style.DialogTheme);
+        dialog.setContentView(R.layout.dialog_show_list);
+        dialog.setTitle(getResources().getString(R.string.select_person_subtype));
+        dialog.getWindow().getAttributes().width = LayoutParams.MATCH_PARENT;
+        ListView listViewForPersonSubtype = (ListView) dialog.findViewById(R.id.commonlistview);
+        final Button save = (Button) dialog.findViewById(R.id.btn_ok);
+        save.setText(saveStr);
+
+//                    personSubType = Person.SUBTYPE_OWNER;
+        personSubType = Person.SUBTYPE_OCCUPANT;
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
+                R.layout.item_list_single_choice, person_subType);
+
+        listViewForPersonSubtype.setAdapter(adapter);
+        listViewForPersonSubtype.setItemChecked(0, false);
+
+        listViewForPersonSubtype.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent,
+                                    View view, int position, long id) {
+                final int itemPosition = position;
+
+
+                save.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (itemPosition == 0) // for Natural
+                        {
+                            personSubType = Person.SUBTYPE_OCCUPANT;
+
+                            boolean ifAllowed = false;
+                            int ownerCount = property.getRight().getOwnersCount();
+
+
+                            if ((property.getRight().getShareTypeId() == ShareType.TYPE_SINGLE_OCCUPANT) || (property.getRight().getShareTypeId() == ShareType.TYPE_Customary_Individual) || (property.getRight().getShareTypeId() == ShareType.TYPE_Single_Tenancy)) {
+                                ifAllowed = checkSingleOccupancyType(personSubType, ownerCount);
+                                if (ifAllowed) {
+                                    Intent myIntent = new Intent(context, AddPersonActivity.class);
+                                    myIntent.putExtra("groupid", 0L);
+                                    myIntent.putExtra("featureid", featureId);
+                                    myIntent.putExtra("rightId", property.getRight().getId());
+                                    myIntent.putExtra("subTypeId", personSubType);
+                                    startActivity(myIntent);
+                                    dialog.dismiss();
+
+                                }
+                            } else if ((property.getRight().getShareTypeId() == ShareType.TYPE_MUTIPLE_OCCUPANCY_JOINT) || (property.getRight().getShareTypeId() == ShareType.TYPE_Joint_Tenency) || (property.getRight().getShareTypeId() == ShareType.TYPE_Customary_Collective)) {
+                                ifAllowed = checkMultipleOcuupany_Joint(personSubType, ownerCount);
+                                if (ifAllowed) {
+                                    Intent myIntent = new Intent(context, AddPersonActivity.class);
+                                    myIntent.putExtra("groupid", 0L);
+                                    myIntent.putExtra("featureid", featureId);
+                                    myIntent.putExtra("rightId", property.getRight().getId());
+                                    myIntent.putExtra("subTypeId", personSubType);
+                                    startActivity(myIntent);
+                                    dialog.dismiss();
+
+                                }
+                            } else if (property.getRight().getShareTypeId() == ShareType.TYPE_Collective_Tenancy || (property.getRight().getShareTypeId() == ShareType.TYPE_Common_Tenancy)) {
+                                ifAllowed = checkMultipleOcuupany_TenancyInCommon(personSubType);
+                                if (ifAllowed) {
+                                    Intent myIntent = new Intent(context, AddPersonActivity.class);
+                                    myIntent.putExtra("groupid", 0L);
+                                    myIntent.putExtra("featureid", featureId);
+                                    myIntent.putExtra("rightId", property.getRight().getId());
+                                    myIntent.putExtra("subTypeId", personSubType);
+                                    startActivity(myIntent);
+                                    dialog.dismiss();
+
+                                }
+                            } else if (property.getRight().getShareTypeId() == ShareType.TYPE_GUARDIAN) {
+                                ifAllowed = checkOccupancyType_GuardianMinor(personSubType, ownerCount);
+                                if (ifAllowed) {
+                                    Intent myIntent = new Intent(context, AddPersonActivity.class);
+                                    myIntent.putExtra("groupid", 0L);
+                                    myIntent.putExtra("featureid", featureId);
+                                    myIntent.putExtra("rightId", property.getRight().getId());
+                                    myIntent.putExtra("subTypeId", personSubType);
+                                    startActivity(myIntent);
+                                    dialog.dismiss();
+
+                                }
+                            }
+
+                            //personSubType = Person.SUBTYPE_OWNER;
+                        } else if (itemPosition == 1) // for NonNatural
+                        {
+                            personSubType = Person.SUBTYPE_ADMINISTRATOR;
+                            Intent myIntent = new Intent(context, AddNonNaturalPersonActivity.class);
+                            myIntent.putExtra("featureid", featureId);
+                            myIntent.putExtra("rightId", rightId);
+                            startActivity(myIntent);
+                            dialog.dismiss();
+                        }
+                    }
+                });
+
+            }
+        });
+
+
+        dialog.show();
     }
 
     @Override
@@ -339,7 +604,7 @@ public class PersonListActivity extends ActionBarActivity {
         boolean flag = false;
         if (ownerCount == 0) {
             //allow
-            if (personSubType == Person.SUBTYPE_OWNER) {
+            if ((personSubType == Person.SUBTYPE_OWNER) ||(personSubType == Person.SUBTYPE_OCCUPANT)) {
                 return flag = true;
             } else if (personSubType == Person.SUBTYPE_ADMINISTRATOR || personSubType == Person.SUBTYPE_GUARDIAN) {
                 msg = getResources().getString(R.string.can_not_add_adminGuardian_in_SingleOccuapncy);
@@ -347,7 +612,7 @@ public class PersonListActivity extends ActionBarActivity {
                 return flag = false;
             }
         } else if (ownerCount > 0) {
-            if (personSubType == Person.SUBTYPE_OWNER) {
+            if ((personSubType == Person.SUBTYPE_OWNER) ||(personSubType == Person.SUBTYPE_OCCUPANT)) {
                 msg = getResources().getString(R.string.can_not_add_more_than_one_owner_in_SingleOccuapncy);
                 cf.showMessage(context, infoStr, msg);
                 return flag = false;
@@ -365,7 +630,7 @@ public class PersonListActivity extends ActionBarActivity {
         boolean flag = false;
         if (ownerCount <= 1) {
             //allow
-            if (personSubType == Person.SUBTYPE_OWNER) {
+            if ((personSubType == Person.SUBTYPE_OWNER) ||(personSubType == Person.SUBTYPE_OCCUPANT)) {
                 return flag = true;
             } else if (personSubType == Person.SUBTYPE_ADMINISTRATOR || personSubType == Person.SUBTYPE_GUARDIAN) {
                 msg = getResources().getString(R.string.can_not_add_adminGuardian_in_multipleOccuapncy_joint);
@@ -373,7 +638,7 @@ public class PersonListActivity extends ActionBarActivity {
                 return flag = false;
             }
         } else if (ownerCount == 2) {
-            if (personSubType == Person.SUBTYPE_OWNER) {
+            if ((personSubType == Person.SUBTYPE_OWNER) ||(personSubType == Person.SUBTYPE_OCCUPANT)) {
                 msg = getResources().getString(R.string.can_not_add_more_than_two_owners_in_multipleOccuapncy_joint);
                 cf.showMessage(context, infoStr, msg);
                 return flag = false;
@@ -390,7 +655,7 @@ public class PersonListActivity extends ActionBarActivity {
     {
         boolean flag = false;
         //allow
-        if (personSubType == Person.SUBTYPE_OWNER) {
+        if (personSubType == Person.SUBTYPE_OCCUPANT) {
             return flag = true;
         } else if (personSubType == Person.SUBTYPE_ADMINISTRATOR || personSubType == Person.SUBTYPE_GUARDIAN) {
             msg = getResources().getString(R.string.can_not_add_adminGuardian_in_multipleOccuapncy_common);

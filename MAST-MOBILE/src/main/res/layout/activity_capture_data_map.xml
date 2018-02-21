@@ -4,17 +4,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <LinearLayout
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar1"
+        style="@style/MyToolbarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#352d59"
+        android:minHeight="?attr/actionBarSize" >
+
+
+
+        <ImageView
+            android:id="@+id/backPress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/chevron"
+            android:layout_gravity="left"
+
+
+            />
+
+
+    </android.support.v7.widget.Toolbar>
+
     <include
         android:id="@+id/toolbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         layout="@layout/layout_toolbar" />
 
+    </LinearLayout>
+
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar" >
+        android:layout_below="@+id/toolbar2" >
 
         <FrameLayout
             android:layout_width="match_parent"

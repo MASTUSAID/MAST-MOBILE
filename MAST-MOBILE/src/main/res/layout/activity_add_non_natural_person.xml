@@ -4,11 +4,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
-
     <include
         android:id="@+id/toolbar"
         layout="@layout/layout_toolbar" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -41,6 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:padding="5dp"
+                android:visibility="gone"
                 android:text="@string/resident"
                 android:textColor="@color/color_primary_dark"
                 android:textSize="@dimen/textSize" />
@@ -49,6 +48,7 @@
                 android:id="@+id/spinnerResident"
                 style="@style/Widget.AppCompat.Spinner"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:entries="@array/residentArray" />
 
@@ -61,15 +61,16 @@
                 android:id="@+id/personsLayout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/Person"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:background="@color/color_theme_light"
                     android:paddingLeft="10sp"
-                    android:layout_marginTop="10dp"
                     android:text="@string/RepresentativePerson"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
@@ -96,6 +97,8 @@
         </LinearLayout>
     </ScrollView>
 
+
+
     <LinearLayout
         style="?android:attr/buttonBarStyle"
         android:layout_width="fill_parent"
@@ -105,6 +108,18 @@
         android:orientation="horizontal"
         android:weightSum="2">
 
+        <!--<Button-->
+            <!--android:id="@+id/btn_save"-->
+            <!--style="?android:attr/buttonBarButtonStyle"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:contentDescription="@string/mapOptions"-->
+            <!--android:gravity="center"-->
+            <!--android:padding="2dp"-->
+            <!--android:text="@string/AddPerson"-->
+            <!--android:textColor="@color/white" />-->
         <Button
             android:id="@+id/btn_save"
             style="?android:attr/buttonBarButtonStyle"
@@ -115,7 +130,7 @@
             android:contentDescription="@string/mapOptions"
             android:gravity="center"
             android:padding="2dp"
-            android:text="@string/AddPerson"
+            android:text="@string/back"
             android:textColor="@color/white" />
 
 

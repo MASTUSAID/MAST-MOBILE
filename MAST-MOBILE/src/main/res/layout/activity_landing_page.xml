@@ -3,44 +3,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@drawable/homebg">
 
-    <TextView
-        android:id="@+id/appName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|center"
-        android:paddingBottom="30dp"
-        android:paddingTop="30dp"
-        android:text="@string/appname"
-        android:textColor="@color/color_primary"
-        android:textSize="@dimen/AppNameSize"
-        android:textStyle="bold" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#CCCCCC" />
+    <!--<TextView-->
+        <!--android:id="@+id/appName"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_horizontal|center"-->
+        <!--android:paddingBottom="30dp"-->
+        <!--android:paddingTop="30dp"-->
+        <!--android:text="@string/appname"-->
+        <!--android:textColor="@color/color_primary"-->
+        <!--android:textSize="@dimen/AppNameSize"-->
+        <!--android:textStyle="bold" />-->
+
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="#CCCCCC" />-->
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent">
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:gravity="center_vertical|center_horizontal"
             android:orientation="vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp" >
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:background="@drawable/linearborder"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal"
                 android:paddingBottom="5dp"
-                android:paddingTop="5dp" >
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/mapviewerImage"
@@ -48,35 +55,31 @@
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:minWidth="100dp"
-                    android:src="@drawable/map_viewer" />
+                    android:paddingLeft="15dp"
+                    android:src="@drawable/mapviewer" />
 
                 <Button
                     android:id="@+id/mapviewer"
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/menu_button_selector"
-                    android:drawableRight="@drawable/action_next"
+                    android:background="@null"
                     android:gravity="left|center_vertical"
-                    android:paddingLeft="10dp"
                     android:text="@string/mapviewer"
-                    android:textColor="@color/black"
-                    android:textSize="22sp" />
+
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
             </LinearLayout>
 
-            <View
-                android:id="@+id/ti_view1"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#CCCCCC" />
 
             <LinearLayout
-                android:id="@+id/ti_menu1"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/linearborder"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal"
                 android:paddingBottom="5dp"
-                android:paddingTop="5dp" >
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/capturedataImage"
@@ -84,35 +87,62 @@
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:minWidth="100dp"
-                    android:src="@drawable/capture_data" />
+                    android:paddingLeft="15dp"
+                    android:src="@drawable/capturedata" />
 
                 <Button
                     android:id="@+id/capturedata"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/menu_button_selector"
-                    android:drawableRight="@drawable/action_next"
+                    android:background="@null"
                     android:gravity="left|center_vertical"
-                    android:paddingLeft="10dp"
-                    android:text="@string/capturedata"
-                    android:textColor="@color/black"
-                    android:textSize="22sp" />
+
+                    android:text="Capture Parcel"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
             </LinearLayout>
 
-            <View
-                android:id="@+id/ti_view2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#CCCCCC" />
 
             <LinearLayout
-                android:id="@+id/ti_menu2"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/linearborder"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal"
                 android:paddingBottom="5dp"
-                android:paddingTop="5dp" >
+                android:paddingTop="10dp">
+
+                <ImageView
+                    android:id="@+id/captureresorce"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:minWidth="100dp"
+                    android:paddingLeft="15dp"
+                    android:src="@drawable/mapresource" />
+
+                <Button
+                    android:id="@+id/captureresorce_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:gravity="left|center_vertical"
+                    android:text="Capture Resource"
+
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/linearborder"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp"
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/reviewdataImage"
@@ -120,35 +150,31 @@
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:minWidth="100dp"
-                    android:src="@drawable/review_data" />
+                    android:paddingLeft="15dp"
+                    android:src="@drawable/reviewdata" />
 
                 <Button
                     android:id="@+id/reviewdata"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/menu_button_selector"
-                    android:drawableRight="@drawable/action_next"
+                    android:background="@null"
                     android:gravity="left|center_vertical"
-                    android:paddingLeft="10dp"
                     android:text="@string/reviewdata"
-                    android:textColor="@color/black"
-                    android:textSize="22sp" />
+
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
             </LinearLayout>
 
-            <View
-                android:id="@+id/ad_view1"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#CCCCCC" />
 
             <LinearLayout
-                android:id="@+id/ad_menu1"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/linearborder"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal"
                 android:paddingBottom="5dp"
-                android:paddingTop="5dp" >
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/verifydataImage"
@@ -156,33 +182,29 @@
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:minWidth="100dp"
-                    android:src="@drawable/verify_data" />
+                    android:paddingLeft="15dp"
+                    android:src="@drawable/verifydata" />
 
                 <Button
                     android:id="@+id/verifydata"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/menu_button_selector"
-                    android:drawableRight="@drawable/action_next"
+                    android:background="@null"
                     android:gravity="left|center_vertical"
-                    android:paddingLeft="10dp"
                     android:text="@string/verifydata"
-                    android:textColor="@color/black"
-                    android:textSize="22sp" />
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#CCCCCC" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/linearborder"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal"
                 android:paddingBottom="5dp"
-                android:paddingTop="5dp" >
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/downloaddataImage"
@@ -190,33 +212,31 @@
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:minWidth="100dp"
-                    android:src="@drawable/download_data" />
+                    android:paddingLeft="15dp"
+                    android:src="@drawable/downloaddata" />
 
                 <Button
                     android:id="@+id/downloaddata"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/menu_button_selector"
-                    android:drawableRight="@drawable/action_next"
+                    android:background="@null"
                     android:gravity="left|center_vertical"
-                    android:paddingLeft="10dp"
                     android:text="@string/downloaddata"
-                    android:textColor="@color/black"
-                    android:textSize="22sp" />
+
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#CCCCCC" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/linearborder"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal"
                 android:paddingBottom="5dp"
-                android:paddingTop="5dp" >
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/syncdataImage"
@@ -224,35 +244,31 @@
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:minWidth="100dp"
-                    android:src="@drawable/sync_data" />
+                    android:paddingLeft="15dp"
+                    android:src="@drawable/uploaddata" />
 
                 <Button
                     android:id="@+id/syncdata"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/menu_button_selector"
-                    android:drawableRight="@drawable/action_next"
+                    android:background="@null"
                     android:gravity="left|center_vertical"
-                    android:paddingLeft="10dp"
                     android:text="@string/UploadData"
-                    android:textColor="@color/black"
-                    android:textSize="22sp" />
+
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
             </LinearLayout>
 
 
-            <View
-                android:id="@+id/ad_view2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#CCCCCC" />
-
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/linearborder"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal"
                 android:paddingBottom="5dp"
-                android:paddingTop="5dp" >
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/downloadConfigImage"
@@ -260,33 +276,30 @@
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:minWidth="100dp"
-                    android:src="@drawable/download_data" />
+                    android:paddingLeft="15dp"
+                    android:src="@drawable/downloadconfig" />
 
                 <Button
                     android:id="@+id/downloadConfig"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/menu_button_selector"
-                    android:drawableRight="@drawable/action_next"
+                    android:background="@null"
                     android:gravity="left|center_vertical"
-                    android:paddingLeft="10dp"
                     android:text="@string/DownloadConfig"
-                    android:textColor="@color/black"
-                    android:textSize="22sp" />
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#CCCCCC" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/linearborder"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal"
                 android:paddingBottom="5dp"
-                android:paddingTop="5dp" >
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/userprefImage"
@@ -294,33 +307,30 @@
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:minWidth="100dp"
-                    android:src="@drawable/user_preferences" />
+                    android:paddingLeft="15dp"
+                    android:src="@drawable/userprefrences" />
 
                 <Button
                     android:id="@+id/userpref"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/menu_button_selector"
-                    android:drawableRight="@drawable/action_next"
+                    android:background="@null"
                     android:gravity="left|center_vertical"
-                    android:paddingLeft="10dp"
                     android:text="@string/userpref"
-                    android:textColor="@color/black"
-                    android:textSize="22sp" />
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#CCCCCC" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/linearborder"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal"
                 android:paddingBottom="5dp"
-                android:paddingTop="5dp" >
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/logoutImage"
@@ -328,25 +338,21 @@
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:minWidth="100dp"
-                    android:src="@drawable/log_out" />
+                    android:paddingLeft="15dp"
+                    android:src="@drawable/logout" />
 
                 <Button
                     android:id="@+id/logout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/menu_button_selector"
-                    android:drawableRight="@drawable/action_next"
+                    android:background="@null"
                     android:gravity="left|center_vertical"
-                    android:paddingLeft="10dp"
                     android:text="@string/logout"
-                    android:textColor="@color/black"
-                    android:textSize="22sp" />
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#CCCCCC" />
+
         </LinearLayout>
     </ScrollView>
 

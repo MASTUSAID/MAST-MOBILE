@@ -60,6 +60,7 @@ public class PersonOfInterestListAdapter extends BaseAdapter {
         options.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 activityObj.showPopup(v, position);
             }
         });
@@ -71,6 +72,7 @@ public class PersonOfInterestListAdapter extends BaseAdapter {
         String name = "";
         if(person != null){
             name = StringUtility.empty(person.getName());
+            name=name.replace(","," ");
             if(person.getRelationshipId() > 0 && relTypes != null){
                 for(RelationshipType relType : relTypes){
                     if(relType.getCode() == person.getRelationshipId()){

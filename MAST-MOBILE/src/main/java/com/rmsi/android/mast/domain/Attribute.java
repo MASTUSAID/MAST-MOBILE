@@ -15,19 +15,37 @@ public class Attribute implements Serializable {
     transient private int controlType;
     transient private String name;
     transient private View view;
-    private String value;
-    transient private Long groupId;
+     private String value;
+//    transient private Long groupId;
+    private Long groupId;
     transient private int listing;
     transient private List<Option> OptionsList = new ArrayList<>();
     transient private Long featureId;
     transient private String validate;
     transient private Drawable initialBackground;
 
+
+//    private Long id;
+//    transient private String type;
+//    transient private int controlType;
+//    transient private String name;
+//    transient private View view;
+//    private String value;
+//    transient private Long groupId;
+//    transient private int listing;
+//    transient private List<Option> OptionsList = new ArrayList<>();
+//    transient private Long featureId;
+//    transient private String validate;
+//    transient private Drawable initialBackground;
+
     public static String TABLE_NAME = "ATTRIBUTE_MASTER";
     public static String TABLE_ATTRIBUTE_VALUE_NAME = "FORM_VALUES";
 
     public static String COL_ID = "ATTRIB_ID";
     public static String COL_TYPE = "ATTRIBUTE_TYPE";
+    //ATTRIBUTE_TYPE_NAME
+    public static String COL_TYPE_NAME = "ATTRIBUTE_TYPE_NAME";
+    public static String COL_FLAG = "FLAG";
     public static String COL_CONTROL_TYPE = "ATTRIBUTE_CONTROLTYPE";
     public static String COL_NAME = "ATTRIBUTE_NAME";
     public static String COL_NAME_OTHER_LANG = "ATTRIBUTE_NAME_OTHER";
@@ -38,6 +56,7 @@ public class Attribute implements Serializable {
     public static String COL_VALUE_ATTRIBUTE_ID = "ATTRIB_ID";
     public static String COL_VALUE_VALUE = "ATTRIB_VALUE";
     public static String COL_VALUE_FEATURE_ID = "FEATURE_ID";
+    public static String COL_VALUE_LABEL_NAME = "LABEL_NAME";
 
     public static int CONTROL_TYPE_STIRNG = 1;
     public static int CONTROL_TYPE_DATE = 2;
@@ -52,6 +71,29 @@ public class Attribute implements Serializable {
     public static String TYPE_NON_NATURAL_PERSON = "5";
     public static String TYPE_CUSTOM = "6";
     public static String TYPE_GENERAL_PROPERTY = "7";
+    public static String TYPE_TENURE_INFOMRATION = "Resource";
+    private String resID;
+    private String labelName;
+
+    public String getLabelName() {
+        return labelName;
+    }
+
+    public void setLabelName(String labelName) {
+        this.labelName = labelName;
+    }
+
+
+
+    public String getResID() {
+        return resID;
+    }
+
+    public void setResID(String resID) {
+        this.resID = resID;
+    }
+
+
 
     public Long getId() {
         return id;

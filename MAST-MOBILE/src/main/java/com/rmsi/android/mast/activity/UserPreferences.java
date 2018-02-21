@@ -13,6 +13,7 @@ import android.util.SparseBooleanArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -21,7 +22,10 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.rmsi.android.mast.activity.R;
+import com.rmsi.android.mast.domain.AOI;
 import com.rmsi.android.mast.util.CommonFunctions;
+
+import java.util.List;
 
 
 public class UserPreferences extends ActionBarActivity {
@@ -30,6 +34,7 @@ public class UserPreferences extends ActionBarActivity {
     CommonFunctions cf = CommonFunctions.getInstance();
     String lang = "";
     String dct = "";
+    private String corrdinates = null;
 
     Editor editor;
     Dialog dialog = null;
@@ -72,7 +77,7 @@ public class UserPreferences extends ActionBarActivity {
         auto = cf.getAutoSync();
         listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 if (position == 0) {
                     try {
                         String[] language = getResources().getStringArray(R.array.Language_arrays);
@@ -224,6 +229,15 @@ public class UserPreferences extends ActionBarActivity {
                             }
                         });
 
+                        listViewForSync.setOnItemClickListener(new OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                if (position == 0) {
+
+                                }
+                            }
+                        });
+
                         if (auto) {
                             listViewForSync.setItemChecked(0, true);
                         }
@@ -236,6 +250,64 @@ public class UserPreferences extends ActionBarActivity {
                 if (position == 2) {
                     Intent intent = new Intent(context, ConfigureMapDisplay.class);
                     startActivity(intent);
+                }
+
+                if (position == 3) {
+                    final List<AOI> aoiList = cf.getAOIList();
+                    final Dialog dialog = new Dialog(context, R.style.DialogTheme);
+                    dialog.setContentView(R.layout.dialog_show_list);
+                    dialog.setTitle(getResources().getString(R.string.selectAOI));
+                    dialog.getWindow().getAttributes().width = ViewGroup.LayoutParams.MATCH_PARENT;
+                    final ListView listViewForPersonSubtype = (ListView) dialog.findViewById(R.id.commonlistview);
+                    Button save = (Button) dialog.findViewById(R.id.btn_ok);
+                    save.setText("OK");
+
+//
+                    ArrayAdapter<AOI> adapter = new ArrayAdapter<AOI>(context,
+                            R.layout.item_list_single_choice, aoiList);
+
+                    listViewForPersonSubtype.setAdapter(adapter);
+                    for (int i = 0; i < aoiList.size(); i++) {
+                        if (aoiList.get(i).getCoOrdinates().equalsIgnoreCase(cf.getAOICoordinates())) {
+                            listViewForPersonSubtype.setItemChecked(i, true);
+                            break;
+                        }
+                    }
+
+                    listViewForPersonSubtype.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent,
+                                                View view, int position, long id) {
+
+                            corrdinates = aoiList.get(position).getCoOrdinates();
+
+
+                        }
+                    });
+
+                    save.setOnClickListener(new OnClickListener() {
+                        //Run when button is clicked
+                        @Override
+                        public void onClick(View v) {
+
+                            if (corrdinates == null) {
+                                String info = getResources().getString(R.string.info);
+                                String msg = "Please Select any Option.";
+                                cf.showMessage(context, info, msg);
+
+                            } else {
+                                dialog.dismiss();
+                                cf.saveAOI(corrdinates);
+                                recreate();
+                                //listViewForPersonSubtype.setItemChecked(position, true);
+                                // cf.loadLocale(getApplicationContext());
+
+
+                            }
+                        }
+                    });
+
+                    dialog.show();
                 }
 
             }

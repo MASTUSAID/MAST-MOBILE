@@ -13,4 +13,6 @@ public interface ListActivity {
      * @param position Item position in the underlying source list
      */
     void showPopup(View v, int position);
+
+    void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults);
 }

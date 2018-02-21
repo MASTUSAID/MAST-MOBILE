@@ -45,6 +45,7 @@ public class Person implements Serializable {
     public static int SUBTYPE_OWNER = 3;
     public static int SUBTYPE_ADMINISTRATOR = 4;
     public static int SUBTYPE_GUARDIAN = 5;
+    public static int SUBTYPE_OCCUPANT = 0;
 
     public static int ATTRIBUTE_FIRST_NAME = 1;
     public static int ATTRIBUTE_LAST_NAME = 2;
@@ -256,9 +257,9 @@ public class Person implements Serializable {
         boolean result = true;
         String errorMessage = "";
 
-        if (getResident() < 0) {
-            errorMessage = context.getResources().getString(R.string.SelectResidency);
-        }
+//        if (getResident() < 0) {
+//            errorMessage = context.getResources().getString(R.string.SelectResidency);
+//        }
 
         // Attributes
         if (errorMessage.equals("")) {

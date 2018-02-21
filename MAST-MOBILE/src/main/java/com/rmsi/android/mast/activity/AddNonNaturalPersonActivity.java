@@ -13,15 +13,12 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.rmsi.android.mast.Fragment.PersonListFragment;
-import com.rmsi.android.mast.adapter.PersonListAdapter;
 import com.rmsi.android.mast.db.DbController;
 import com.rmsi.android.mast.domain.Attribute;
 import com.rmsi.android.mast.domain.Person;
 import com.rmsi.android.mast.domain.Property;
 import com.rmsi.android.mast.domain.ShareType;
-import com.rmsi.android.mast.domain.User;
 import com.rmsi.android.mast.util.CommonFunctions;
 import com.rmsi.android.mast.util.GuiUtility;
 
@@ -102,7 +99,7 @@ public class AddNonNaturalPersonActivity extends ActionBarActivity {
         } else {
             nonNaturalPerson = new Person();
             nonNaturalPerson.setFeatureId(featureId);
-            nonNaturalPerson.setIsNatural(0);
+            nonNaturalPerson.setIsNatural(2);
             nonNaturalPerson.setRightId(rightId);
 
             spinnerResident.setSelection(0);
@@ -142,23 +139,26 @@ public class AddNonNaturalPersonActivity extends ActionBarActivity {
         btnAddPerson.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveData(true);
+                Intent intent=new Intent(context,AddSocialTenureActivity.class);
+                intent.putExtra("featureid", featureId);
+                startActivity(intent);
             }
         });
 
         btnNext.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (readOnly) {
-                    finish();
-                    return;
-                }
-
-                if(saveData(false) && property.validatePersonsList(context, true)){
-                    Intent myIntent = new Intent(context, MediaListActivity.class);
-                    myIntent.putExtra("featureid", featureId);
-                    startActivity(myIntent);
-                }
+//                if (readOnly) {
+//                    finish();
+//                    return;
+//                }
+//
+//                if(saveData(false) && property.validatePersonsList(context, true)){
+//                    Intent myIntent = new Intent(context, MediaListActivity.class);
+//                    myIntent.putExtra("featureid", featureId);
+//                    startActivity(myIntent);
+//                }
+                saveData(true);
             }
         });
     }
@@ -181,12 +181,17 @@ public class AddNonNaturalPersonActivity extends ActionBarActivity {
             if (saveResult) {
                 if(showNextScreen) {
                     property.getRight().setNonNaturalPerson(nonNaturalPerson);
-                    Intent myIntent = new Intent(context, AddPersonActivity.class);
-                    myIntent.putExtra("groupid", 0L);
+//                    Intent myIntent = new Intent(context, AddPersonActivity.class);
+//                    myIntent.putExtra("groupid", 0L);
+//                    myIntent.putExtra("featureid", featureId);
+//                    myIntent.putExtra("subTypeId", 0);
+//                    myIntent.putExtra("rightId", property.getRight().getId());
+//                    startActivity(myIntent);
+                    Intent myIntent = new Intent(context, MediaListActivity.class);
                     myIntent.putExtra("featureid", featureId);
-                    myIntent.putExtra("subTypeId", 0);
-                    myIntent.putExtra("rightId", property.getRight().getId());
                     startActivity(myIntent);
+                    Toast.makeText(context, R.string.data_saved, Toast.LENGTH_SHORT).show();
+
                 }
                 return true;
             } else {

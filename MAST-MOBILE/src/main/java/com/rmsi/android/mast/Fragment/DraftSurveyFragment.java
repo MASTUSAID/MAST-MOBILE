@@ -20,6 +20,8 @@ import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rmsi.android.mast.activity.CapturePareclData;
+import com.rmsi.android.mast.activity.CollectedResourceDataSummary;
 import com.rmsi.android.mast.activity.R;
 import com.rmsi.android.mast.activity.R.string;
 import com.rmsi.android.mast.activity.CaptureDataMapActivity;
@@ -73,24 +75,63 @@ public class DraftSurveyFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.edit_spatial:
-                        Intent intent = new Intent(context, CaptureDataMapActivity.class);
-                        intent.putExtra("featureid", featureId);
-                        startActivity(intent);
-                        return true;
+
+                        Property property2 = DbController.getInstance(context).getProperty(featureId);
+                        if(property2.getFlag().equalsIgnoreCase("R")){
+                            Intent intent = new Intent(context, CaptureDataMapActivity.class);
+                            intent.putExtra("featureid", featureId);
+                            startActivity(intent);
+                            return true;
+
+                        }else if (property2.getFlag().equalsIgnoreCase("P")) {
+                            Intent intent = new Intent(context, CapturePareclData.class);
+                            intent.putExtra("featureid", featureId);
+                            startActivity(intent);
+                            return true;
+
+                        }
+
                     case R.id.edit_attributes:
+                        Property property1 = DbController.getInstance(context).getProperty(featureId);
+                        if(property1.getFlag().equalsIgnoreCase("R")){
+                            Intent myIntent = new Intent(context, CollectedResourceDataSummary.class);
+                            myIntent.putExtra("featureid", featureId);
+                            myIntent.putExtra("Server_featureid", server_featureId);
+                            myIntent.putExtra("className", "draftSurveyFragment");
+                            //myIntent.putExtra("flag",true);
+                            startActivity(myIntent);
+                            return true;
+                        }else if (property1.getFlag().equalsIgnoreCase("P")) {
+                            Intent myIntent = new Intent(context, DataSummaryActivity.class);
+                            myIntent.putExtra("featureid", featureId);
+                            myIntent.putExtra("Server_featureid", server_featureId);
+                            myIntent.putExtra("className", "draftSurveyFragment");
+                            //myIntent.putExtra("flag",true);
+                            startActivity(myIntent);
+                            return true;
+                        }
+
                         //Open attributes form to edit --------------
-                        Intent myIntent = new Intent(context, DataSummaryActivity.class);
-                        myIntent.putExtra("featureid", featureId);
-                        myIntent.putExtra("Server_featureid", server_featureId);
-                        myIntent.putExtra("className", "draftSurveyFragment");
-                        //myIntent.putExtra("flag",true);
-                        startActivity(myIntent);
+
                         return true;
                     case R.id.delete_entry:
                         deleteEntry(featureId);
                         return true;
                     case R.id.mark_as_complete:
-                        markFeatureAsComplete(featureId);
+                        int IsNatural=DbController.getInstance(context).getpersonType(featureId);
+                        Property property = DbController.getInstance(context).getProperty(featureId);
+                        if(property.getFlag().equalsIgnoreCase("R")){
+                            AllowToComplete(property);
+                            return true;
+                        }else if (property.getFlag().equalsIgnoreCase("P")) {
+                            if (IsNatural==1|IsNatural==3) {
+                                markFeatureAsComplete(featureId);
+                            }else {
+                                AllowToComplete(property);
+                            }
+                            return true;
+                        }
+
                         return true;
                     default:
                         return false;
@@ -102,8 +143,8 @@ public class DraftSurveyFragment extends Fragment {
 
     private void deleteEntry(final Long featureId) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-        alertDialogBuilder.setMessage(R.string.deleteFeatureEntryMsg);
-        alertDialogBuilder.setPositiveButton(R.string.btn_ok,
+        alertDialogBuilder.setMessage(string.deleteFeatureEntryMsg);
+        alertDialogBuilder.setPositiveButton(string.btn_ok,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
@@ -121,7 +162,7 @@ public class DraftSurveyFragment extends Fragment {
                     }
                 });
 
-        alertDialogBuilder.setNegativeButton(R.string.btn_cancel,
+        alertDialogBuilder.setNegativeButton(string.btn_cancel,
                 new DialogInterface.OnClickListener() {
 
                     @Override
@@ -155,9 +196,9 @@ public class DraftSurveyFragment extends Fragment {
 
     public void AllowToComplete(final Property property) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-        alertDialogBuilder.setMessage(R.string.completedFeatureMsg);
+        alertDialogBuilder.setMessage(string.completedFeatureMsg);
 
-        alertDialogBuilder.setPositiveButton(R.string.btn_ok,
+        alertDialogBuilder.setPositiveButton(string.btn_ok,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
@@ -174,7 +215,7 @@ public class DraftSurveyFragment extends Fragment {
                     }
                 });
 
-        alertDialogBuilder.setNegativeButton(R.string.btn_cancel,
+        alertDialogBuilder.setNegativeButton(string.btn_cancel,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

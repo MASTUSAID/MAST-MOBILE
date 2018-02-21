@@ -1,5 +1,6 @@
 package com.rmsi.android.mast.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -18,6 +19,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -56,8 +59,17 @@ public class CaptureAttributesActivity extends ActionBarActivity {
     private RelativeLayout layoutPersons;
     private RelativeLayout layoutDispute;
     private RelativeLayout layoutMedia;
-    private LinearLayout layoutUkaNumber;
-    EditText txtUkaNumber;
+    private LinearLayout layoutUkaNumber, linearLayoutlayoutExistingUSe,linearLayoutDocument;
+    private EditText txtUkaNumber;
+    private RadioGroup radioGroup;
+    private Spinner spinnerClaimRight,spinnerDocumentType;
+    List<String> claimRights,documentTypes;
+    private EditText editTextPlotNo,editTextdocumentRefNo;
+    private TextView textViewDocumentDate;
+
+
+    private static boolean keyboardHidden = true;
+    private static int reduceHeight = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,12 +107,22 @@ public class CaptureAttributesActivity extends ActionBarActivity {
         List<Option> hamletList = db.getHamletOptions();
         List<Option> witnessList = db.getAdjudicators();
         List<ClaimType> claimTypes = db.getClaimTypes(true);
+         claimRights= new ArrayList<>();
+        claimRights.add("Customary Right of Occupancy");
+        claimRights.add("Freehold Title");
+        claimRights.add("Other");
+
+         documentTypes= new ArrayList<>();
+        documentTypes.add("DOC");
+        documentTypes.add("PDF");
+        documentTypes.add("PNG");
+        documentTypes.add("JPEG");
 
         TextView spatialunitValue = (TextView) findViewById(R.id.spatialunit_lbl);
         TextView VillageName = (TextView) findViewById(R.id.villageName_lbl);
-        Spinner spinnerHamlet = (Spinner) findViewById(R.id.spinner_hemlet);
-        Spinner spinnerWitness1 = (Spinner) findViewById(R.id.spinner_witness1);
-        Spinner spinnerWitness2 = (Spinner) findViewById(R.id.spinner_witness2);
+       // Spinner spinnerHamlet = (Spinner) findViewById(R.id.spinner_hemlet);
+        //Spinner spinnerWitness1 = (Spinner) findViewById(R.id.spinner_witness1);
+       // Spinner spinnerWitness2 = (Spinner) findViewById(R.id.spinner_witness2);
         final TextView txtClaimDate = (TextView) findViewById(R.id.txtClaimDate);
         final EditText txtClaimNumber = (EditText) findViewById(R.id.txtPolygonNumber);
         txtUkaNumber = (EditText) findViewById(R.id.txtUkaNumber);
@@ -115,21 +137,31 @@ public class CaptureAttributesActivity extends ActionBarActivity {
         layoutPersons = (RelativeLayout) findViewById(R.id.layoutPersons);
         layoutMedia = (RelativeLayout) findViewById(R.id.layoutMedia);
         layoutCustom = (RelativeLayout) findViewById(R.id.layoutCustom);
+        linearLayoutlayoutExistingUSe= (LinearLayout) findViewById(R.id.layoutExistingUSe);
+        linearLayoutDocument= (LinearLayout) findViewById(R.id.document);
+        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        radioGroup.clearCheck();
+        spinnerClaimRight= (Spinner) findViewById(R.id.claimRightType);
+        spinnerDocumentType= (Spinner) findViewById(R.id.documentType);
+        editTextPlotNo= (EditText) findViewById(R.id.plotNo);
+        editTextdocumentRefNo= (EditText) findViewById(R.id.documentTypeRefNo);
+        textViewDocumentDate= (TextView) findViewById(R.id.documentTypeDate);
 
-        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(this.context, android.R.layout.simple_spinner_item, hamletList);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerHamlet.setAdapter(spinnerAdapter);
+//        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(this.context, android.R.layout.simple_spinner_item, hamletList);
+//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinnerHamlet.setAdapter(spinnerAdapter);
 
-        SpinnerAdapter spinnerAdapterWitness1 = new SpinnerAdapter(this.context, android.R.layout.simple_spinner_item, witnessList);
-        spinnerAdapterWitness1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerWitness1.setAdapter(spinnerAdapterWitness1);
+//        SpinnerAdapter spinnerAdapterWitness1 = new SpinnerAdapter(this.context, android.R.layout.simple_spinner_item, witnessList);
+//        spinnerAdapterWitness1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinnerWitness1.setAdapter(spinnerAdapterWitness1);
 
-        SpinnerAdapter spinnerAdapterWitness2 = new SpinnerAdapter(this.context, android.R.layout.simple_spinner_item, witnessList);
-        spinnerAdapterWitness2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerWitness2.setAdapter(spinnerAdapterWitness2);
+//        SpinnerAdapter spinnerAdapterWitness2 = new SpinnerAdapter(this.context, android.R.layout.simple_spinner_item, witnessList);
+//        spinnerAdapterWitness2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinnerWitness2.setAdapter(spinnerAdapterWitness2);
 
         spinnerClaimType.setAdapter(new ArrayAdapter(context, android.R.layout.simple_spinner_item, claimTypes));
         ((ArrayAdapter) spinnerClaimType.getAdapter()).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
 
         spinnerClaimType.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
@@ -144,46 +176,71 @@ public class CaptureAttributesActivity extends ActionBarActivity {
             }
         });
 
-        spinnerHamlet.setOnItemSelectedListener(new OnItemSelectedListener() {
+        spinnerClaimRight.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View arg1, int pos, long arg3) {
-                property.setHamletId(((Option) parent.getItemAtPosition(pos)).getId());
-            }
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                property.setClaimRight((String) parent.getItemAtPosition(position));
+                }
 
             @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
-        spinnerWitness1.setOnItemSelectedListener(new OnItemSelectedListener() {
+        spinnerDocumentType.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View arg1, int pos, long arg3) {
-                Option selecteOption = (Option) parent.getItemAtPosition(pos);
-                if (selecteOption.getId() == 0L)
-                    property.setAdjudicator1("");
-                else
-                    property.setAdjudicator1(selecteOption.getName());
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                property.setDocumentType((String) parent.getItemAtPosition(position));
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
-        spinnerWitness2.setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View arg1, int pos, long arg3) {
-                Option selecteOption = (Option) parent.getItemAtPosition(pos);
-                if (selecteOption.getId() == 0L)
-                    property.setAdjudicator2("");
-                else
-                    property.setAdjudicator2(selecteOption.getName());
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-            }
-        });
+//        spinnerHamlet.setOnItemSelectedListener(new OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View arg1, int pos, long arg3) {
+//                property.setHamletId(((Option) parent.getItemAtPosition(pos)).getId());
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> arg0) {
+//            }
+//        });
+
+//        spinnerWitness1.setOnItemSelectedListener(new OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View arg1, int pos, long arg3) {
+//                Option selecteOption = (Option) parent.getItemAtPosition(pos);
+//                if (selecteOption.getId() == 0L)
+//                    property.setAdjudicator1("");
+//                else
+//                    property.setAdjudicator1(selecteOption.getName());
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> arg0) {
+//            }
+//        });
+
+//        spinnerWitness2.setOnItemSelectedListener(new OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View arg1, int pos, long arg3) {
+//                Option selecteOption = (Option) parent.getItemAtPosition(pos);
+//                if (selecteOption.getId() == 0L)
+//                    property.setAdjudicator2("");
+//                else
+//                    property.setAdjudicator2(selecteOption.getName());
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> arg0) {
+//            }
+//        });
 
         GuiUtility.bindActionOnFieldChange(txtClaimNumber, new Runnable() {
             @Override
@@ -213,6 +270,9 @@ public class CaptureAttributesActivity extends ActionBarActivity {
             }
         });
 
+
+
+
         VillageName.setText(VillageName.getText() + ": " + db.villageName());
         String claimStr = context.getResources().getString(R.string.Claim);
 
@@ -225,7 +285,39 @@ public class CaptureAttributesActivity extends ActionBarActivity {
         if (property.getServerId() != null && property.getServerId() > 0) {
             claimStr = claimStr + ", USIN: " + property.getServerId().toString();
         }
+        //    "CLAIM_RIGHT TEXT," +
+//            "PLOT_NO TEXT," +
+//            "DOCUMENT TEXT," +
+//            "DOCUMENT_TYPE TEXT," +
+//            "DOCUMENT_DATE TEXT," +
+//            "DOCUMENT_REF_NO TEXT" +
+        GuiUtility.bindActionOnFieldChange(editTextPlotNo, new Runnable() {
+            @Override
+            public void run() {
+                property.setPlotNo(editTextPlotNo.getText().toString());
+            }
+        });
 
+        GuiUtility.bindActionOnFieldChange(editTextdocumentRefNo, new Runnable() {
+            @Override
+            public void run() {
+                property.setDocumentRefNo(editTextdocumentRefNo.getText().toString());
+            }
+        });
+
+        GuiUtility.bindActionOnLabelChange(textViewDocumentDate, new Runnable() {
+            @Override
+            public void run() {
+                property.setDocumentDate(textViewDocumentDate.getText().toString());
+            }
+        });
+
+        textViewDocumentDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GuiUtility.showDatePicker(textViewDocumentDate, property.getSurveyDate());
+            }
+        });
         spatialunitValue.setText(claimStr);
 
         // Populate fields
@@ -237,6 +329,7 @@ public class CaptureAttributesActivity extends ActionBarActivity {
             }
 
             txtClaimDate.setText(DateUtility.formatDateString(property.getSurveyDate()));
+            textViewDocumentDate.setText(DateUtility.formatDateString(property.getSurveyDate()));
             txtClaimNumber.setText(StringUtility.empty(property.getPolygonNumber()));
             txtUkaNumber.setText(StringUtility.empty(property.getUkaNumber()));
 
@@ -248,20 +341,20 @@ public class CaptureAttributesActivity extends ActionBarActivity {
                 }
             }
 
-            for (int i = 0; i < hamletList.size(); i++) {
-                if (hamletList.get(i).getId() == property.getHamletId()) {
-                    spinnerHamlet.setSelection(i);
-                }
-            }
+//            for (int i = 0; i < hamletList.size(); i++) {
+//                if (hamletList.get(i).getId() == property.getHamletId()) {
+//                    spinnerHamlet.setSelection(i);
+//                }
+//            }
 
-            for (int i = 0; i < witnessList.size(); i++) {
-                if (witnessList.get(i).getName().equalsIgnoreCase(property.getAdjudicator1())) {
-                    spinnerWitness1.setSelection(i);
-                }
-                if (witnessList.get(i).getName().equalsIgnoreCase(property.getAdjudicator2())) {
-                    spinnerWitness2.setSelection(i);
-                }
-            }
+//            for (int i = 0; i < witnessList.size(); i++) {
+//                if (witnessList.get(i).getName().equalsIgnoreCase(property.getAdjudicator1())) {
+//                    spinnerWitness1.setSelection(i);
+//                }
+//                if (witnessList.get(i).getName().equalsIgnoreCase(property.getAdjudicator2())) {
+//                    spinnerWitness2.setSelection(i);
+//                }
+//            }
         } else {
             txtClaimDate.setText(DateUtility.getCurrentStringDate());
         }
@@ -269,9 +362,9 @@ public class CaptureAttributesActivity extends ActionBarActivity {
         showHideUkaNumber();
 
         if (readOnly) {
-            spinnerHamlet.setEnabled(false);
-            spinnerWitness1.setEnabled(false);
-            spinnerWitness2.setEnabled(false);
+           // spinnerHamlet.setEnabled(false);
+            //spinnerWitness1.setEnabled(false);
+           // spinnerWitness2.setEnabled(false);
             spinnerClaimType.setEnabled(false);
             txtClaimDate.setEnabled(false);
             txtClaimNumber.setEnabled(false);
@@ -443,14 +536,71 @@ public class CaptureAttributesActivity extends ActionBarActivity {
     }
 
     private void showHideUkaNumber(){
-        if(StringUtility.empty(property.getClaimTypeCode()).equalsIgnoreCase(ClaimType.TYPE_EXISTING_CLAIM))
-            layoutUkaNumber.setVisibility(View.VISIBLE);
+        if(StringUtility.empty(property.getClaimTypeCode()).equalsIgnoreCase(ClaimType.TYPE_EXISTING_CLAIM)) {
+            DisplayExistingClaimFields(true);
+            layoutUkaNumber.setVisibility(View.GONE);
+
+        }
+
         else {
+            DisplayExistingClaimFields(false);
             layoutUkaNumber.setVisibility(View.GONE);
             txtUkaNumber.setText("");
             property.setUkaNumber(null);
+
         }
     }
+
+    public void DisplayExistingClaimFields(boolean isVisible) {
+        if(isVisible) {
+
+            linearLayoutlayoutExistingUSe.setVisibility(View.VISIBLE);
+            spinnerClaimRight.setAdapter(new ArrayAdapter(context, android.R.layout.simple_spinner_item, claimRights));
+            ((ArrayAdapter) spinnerClaimRight.getAdapter()).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    RadioButton rb = (RadioButton) group.findViewById(checkedId);
+//                    String str=rb.getText().toString();
+                    property.setDocument(rb.getText().toString());
+                    if (null != rb && checkedId > -1) {
+                        if (rb.getText().toString().equalsIgnoreCase("Yes")){
+                            linearLayoutDocument.setVisibility(View.VISIBLE);
+                            //Ambar
+
+
+                            spinnerDocumentType.setAdapter(new ArrayAdapter(context, android.R.layout.simple_spinner_item, documentTypes));
+                            ((ArrayAdapter) spinnerDocumentType.getAdapter()).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                            //Ambar
+
+                        }else {
+                            linearLayoutDocument.setVisibility(View.GONE);
+                            property.setDocumentType(null);
+                            property.setDocumentDate(null);
+                            property.setDocumentRefNo(null);
+                        }
+
+                    }
+
+                }
+            });
+        }
+        else{
+            linearLayoutDocument.setVisibility(View.GONE);
+
+            linearLayoutlayoutExistingUSe.setVisibility(View.GONE);
+            property.setClaimRight(null);
+            property.setPlotNo(null);
+            property.setDocument("No");
+            property.setDocumentType(null);
+            property.setDocumentDate(null);
+            property.setDocumentRefNo(null);
+        }
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -476,7 +626,7 @@ public class CaptureAttributesActivity extends ActionBarActivity {
             return true;
         }
 
-        if (!property.validateBasicInfo(context, true)) {
+        if (!property. validateBasicInfo(context, true)) {
             return false;
         }
 
@@ -484,6 +634,7 @@ public class CaptureAttributesActivity extends ActionBarActivity {
             boolean saveResult = DbController.getInstance(context).updatePropertyBasicInfo(property);
             if (saveResult) {
                 if (goToNextScreen) {
+
                     cf.showToast(context, R.string.data_saved, Toast.LENGTH_SHORT);
 
                     // For unclaimed go to the final page
@@ -529,7 +680,7 @@ public class CaptureAttributesActivity extends ActionBarActivity {
                     media = tmpProp.getMedia().size();
                 }
 
-                txtPersonCount.setText(Integer.toString(persons));
+                txtPersonCount.setText( Integer.toString(persons));
                 txtMediaCount.setText(Integer.toString(media));
             }
         } catch (Exception e) {

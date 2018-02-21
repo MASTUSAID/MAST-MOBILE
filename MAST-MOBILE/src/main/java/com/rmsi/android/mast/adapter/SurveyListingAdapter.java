@@ -14,7 +14,9 @@ import android.widget.TextView;
 import com.rmsi.android.mast.activity.R;
 import com.rmsi.android.mast.Fragment.DraftSurveyFragment;
 import com.rmsi.android.mast.Fragment.VerifyDataFragment;
+import com.rmsi.android.mast.db.DbController;
 import com.rmsi.android.mast.domain.Feature;
+import com.rmsi.android.mast.domain.Property;
 import com.rmsi.android.mast.util.CommonFunctions;
 import com.rmsi.android.mast.util.StringUtility;
 
@@ -32,7 +34,7 @@ public class SurveyListingAdapter extends BaseAdapter {
         this.lInflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.classname = classname;
         this.fragmentObj = fragmentObj;
-        claimStr = context.getResources().getString(R.string.Claim);
+        claimStr = context.getResources().getString(R.string.ParcelClaim);
     }
 
     public int getCount() {
@@ -67,10 +69,33 @@ public class SurveyListingAdapter extends BaseAdapter {
             viewHolder = (ViewHolderItem) convertView.getTag();
         }
 
-        if (!StringUtility.isEmpty(feat.getPolygonNumber()))
-            viewHolder.textViewItem.setText(claimStr + " " + feat.getPolygonNumber());
-        else
-            viewHolder.textViewItem.setText(claimStr + " " + feat.getId());
+        Property property = DbController.getInstance(context).getProperty(feat.getId());
+//        if(property.getFlag().equalsIgnoreCase("R")){
+//            if (!StringUtility.isEmpty(feat.getPolygonNumber()))
+//                viewHolder.textViewItem.setText("Resource "+" " + property.getiIndex());
+//            else
+//                viewHolder.textViewItem.setText("Resource "+" " + property.getiIndex());
+//
+//        }else if (property.getFlag().equalsIgnoreCase("P")) {
+//            if (!StringUtility.isEmpty(feat.getPolygonNumber()))
+//                viewHolder.textViewItem.setText(claimStr + " " +  property.getiIndex());
+//            else
+//                viewHolder.textViewItem.setText(claimStr + " " +  property.getiIndex());
+//        }
+
+        if(property.getFlag().equalsIgnoreCase("R")){
+            if (!StringUtility.isEmpty(feat.getPolygonNumber()))
+                viewHolder.textViewItem.setText("Resource "+" " + property.getIpNumber());
+            else
+                viewHolder.textViewItem.setText("Resource "+" " +  property.getIpNumber());
+
+        }else if (property.getFlag().equalsIgnoreCase("P")) {
+            if (!StringUtility.isEmpty(feat.getPolygonNumber()))
+                viewHolder.textViewItem.setText(claimStr + " " +  property.getIpNumber());
+            else
+                viewHolder.textViewItem.setText(claimStr + " " +  property.getIpNumber());
+        }
+
 
         viewHolder.options.setTag(position);
 

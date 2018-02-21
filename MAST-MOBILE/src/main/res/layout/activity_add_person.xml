@@ -24,7 +24,7 @@
             <LinearLayout
                 android:id="@+id/mainLayout"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <GridView
@@ -74,6 +74,7 @@
                     android:layout_marginTop="5dp"
                     android:padding="5dp"
                     android:text="@string/resident"
+                    android:visibility="gone"
                     android:textColor="@color/color_primary_dark"
                     android:textSize="@dimen/textSize" />
 
@@ -81,6 +82,7 @@
                     android:id="@+id/spinnerResident"
                     style="@style/Widget.AppCompat.Spinner"
                     android:layout_width="match_parent"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:entries="@array/residentArray" />
 

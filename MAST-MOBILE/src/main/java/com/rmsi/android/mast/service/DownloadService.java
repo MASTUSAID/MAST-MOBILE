@@ -115,7 +115,9 @@ public class DownloadService extends IntentService {
     private boolean startConfigDownloading(ResultReceiver receiver, String userid) throws IOException {
         displayNotification("MAST", getResources().getString(R.string.DownloadingConfig),
                 getResources().getString(R.string.Downloading));
-        if(downloadConfiguration(userid) && downloadMBtiles()){
+
+       // && downloadMBtiles()
+        if(downloadConfiguration(userid) ){
             updateNotification("MAST", getResources().getString(R.string.ConfigDownloadSuccessful),
                     getResources().getString(R.string.DownloadFinished));
             if(receiver != null)
@@ -145,7 +147,7 @@ public class DownloadService extends IntentService {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setReadTimeout(100000 /* milliseconds */);
         conn.setConnectTimeout(timeout /* milliseconds */);
-        conn.setRequestMethod("POST");
+        conn.setRequestMethod("GET");
         conn.setDoInput(true);
         // Starts the query
         conn.connect();

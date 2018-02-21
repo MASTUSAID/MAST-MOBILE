@@ -1,12 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" >
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
     <item
         android:id="@+id/plot_by_gps"
         android:icon="@drawable/action_gps"
+        android:title="@string/plot_by_gps"
         app:showAsAction="always"
-        android:title="@string/plot_by_gps"/>
+        />
     <item
         android:id="@+id/undo"
         android:icon="@drawable/action_undo"
@@ -22,5 +24,8 @@
         android:icon="@drawable/action_save"
         app:showAsAction="always"
         android:title="@string/save_feature"/>
+
+
+
 
 </menu>

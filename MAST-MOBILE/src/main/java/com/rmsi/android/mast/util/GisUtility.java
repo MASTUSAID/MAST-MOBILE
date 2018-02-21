@@ -296,14 +296,15 @@ public class GisUtility {
             googleMap.moveCamera(cu);
             googleMap.animateCamera(cu);
         } else {
+
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                    new LatLng(CommonFunctions.latitude, CommonFunctions.longitude), 15)
+                    new LatLng(CommonFunctions.latitude, CommonFunctions.longitude), 10)
             );
         }
     }
 
     /**
-     * Zooms to the polyline
+     * Zooms to the polyline`
      * @param googleMap Google map component to zoom on
      * @param line Polyline to zoom to
      */
@@ -359,7 +360,8 @@ public class GisUtility {
 
         LatLngBounds extent = new LatLngBounds(new LatLng(minY, minX), new LatLng(maxY, maxX));
         if(extent != null) {
-            com.google.android.gms.maps.CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(extent, 30);
+            com.google.android.gms.maps.CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(extent, 5);
+            //com.google.android.gms.maps.CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(extent, 15);
             googleMap.moveCamera(cu);
             googleMap.animateCamera(cu);
         }

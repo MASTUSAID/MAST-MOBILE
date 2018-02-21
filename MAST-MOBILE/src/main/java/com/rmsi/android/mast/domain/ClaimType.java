@@ -11,10 +11,16 @@ public class ClaimType implements Serializable {
     private String nameOtherLang;
 
     public static String TABLE_NAME = "CLAIM_TYPE";
-    public static String TYPE_NEW_CLAIM = "newClaim";
-    public static String TYPE_EXISTING_CLAIM = "existingClaim";
-    public static String TYPE_UNCLAIMED = "unclaimed";
-    public static String TYPE_DISPUTE = "dispute";
+//    public static String TYPE_NEW_CLAIM = "newClaim";
+////    public static String TYPE_EXISTING_CLAIM = "existingClaim";
+//public static String TYPE_EXISTING_CLAIM = "existingClaim";
+//    public static String TYPE_UNCLAIMED = "unclaimed";
+//    public static String TYPE_DISPUTE = "dispute";
+    public static String TYPE_NEW_CLAIM = "1";
+    //    public static String TYPE_EXISTING_CLAIM = "existingClaim";
+    public static String TYPE_EXISTING_CLAIM = "2";
+    public static String TYPE_UNCLAIMED = "4";
+    public static String TYPE_DISPUTE = "3";
 
     public String getCode() {
         return code;

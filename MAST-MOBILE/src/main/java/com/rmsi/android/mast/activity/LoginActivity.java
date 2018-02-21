@@ -12,33 +12,45 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rmsi.android.mast.activity.R.string;
 import com.rmsi.android.mast.db.DbController;
 import com.rmsi.android.mast.domain.User;
 import com.rmsi.android.mast.util.CommonFunctions;
 
+import static pub.devrel.easypermissions.EasyPermissions.hasPermissions;
+
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends ActionBarActivity {
+public   class LoginActivity extends ActionBarActivity {
     Context context = this;
     // UI references.
     private EditText mUsernameView;
@@ -54,16 +66,26 @@ public class LoginActivity extends ActionBarActivity {
     ProgressDialog ringProgressDialog;
     String userName, password, roleName;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Creating Shared Prefs and Required Folders
+
+ // Creating Shared Prefs and Required Folders
         cf.Initialize(getApplicationContext());
         cf.createLogfolder();
         cf.loadLocale(getApplicationContext());
 
         setContentView(R.layout.activity_login);
+
+
+
+//        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 111);
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE,android.Manifest.permission.ACCESS_COARSE_LOCATION}, 111);
+
+
+
 
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);
@@ -83,9 +105,7 @@ public class LoginActivity extends ActionBarActivity {
             }
         });
 
-        //Fetching Logged In USER
 
-        getLoggedUserFromDB();
         Button signInButton = (Button) findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -130,6 +150,12 @@ public class LoginActivity extends ActionBarActivity {
         });
     }
 
+//    @Override
+//    public void onPermissionsGranted(int requestCode) {
+//
+//    }
+
+
     private void attemptLogin() {
         if (user == null) {
             if (TextUtils.isEmpty(txtServerAddress.getText().toString())) {
@@ -157,23 +183,48 @@ public class LoginActivity extends ActionBarActivity {
         }
     }
 
+//    private void getLoggedUserFromDB() {
+//        DbController sqllite = DbController.getInstance(context);
+//        user = sqllite.getLoggedUser();
+//        //########## Setting logged USER
+//        if (user != null) {
+//            mUsernameView.setText(user.getUserName());
+//            mPasswordView.setText(user.getPassword());
+//            roleName = user.getRoleName();
+//
+//            mUsernameView.setEnabled(false);
+//            mPasswordView.setEnabled(false);
+//        } else {
+//            mUsernameView.setText("");
+//            mPasswordView.setText("");
+//        }
+//    }
+
     private void getLoggedUserFromDB() {
+        Log.d("LoggedIn","LoggedIn");
         DbController sqllite = DbController.getInstance(context);
+
         user = sqllite.getLoggedUser();
         //########## Setting logged USER
-        if (user != null) {
-            mUsernameView.setText(user.getUserName());
-            mPasswordView.setText(user.getPassword());
-            roleName = user.getRoleName();
+        boolean checkUser=sqllite.checkUserExist();
+        Log.d("LoggedUser",String.valueOf(checkUser));
+        if(checkUser) {
+            if (user != null &&
+                    user.getUserName() != null) {
+                mUsernameView.setText(user.getUserName());
+                mPasswordView.setText(user.getPassword());
+                roleName = user.getRoleName();
 
-            mUsernameView.setEnabled(false);
-            mPasswordView.setEnabled(false);
-        } else {
+                mUsernameView.setEnabled(false);
+                mPasswordView.setEnabled(false);
+            }
+        }else{
+
             mUsernameView.setText("");
             mPasswordView.setText("");
+
         }
     }
-
     private void validateUserOnline(User newUser) {
         if (cf.getConnectivityStatus()) {
             ringProgressDialog = ProgressDialog.show(new ContextThemeWrapper(context, android.R.style.Theme_Holo),
@@ -181,9 +232,24 @@ public class LoginActivity extends ActionBarActivity {
             ringProgressDialog.setCancelable(false);
             ringProgressDialog.setCanceledOnTouchOutside(false);
             new validateUser().execute(newUser);
+
+//        if (userName.equalsIgnoreCase("Live_TI4")&&password.equalsIgnoreCase("testme")){
+//            values.put("USER_NAME",newUser.getUserName() );
+//            values.put("ROLE_NAME", "ROLE_TRUSTED_INTERMEDIARY");
+//            values.put("PASSWORD", newUser.getPassword());
+//            values.put("USER_ID", "235");
+//            values.put("ROLE_ID", "4");
+//            roleName="ROLE_TRUSTED_INTERMEDIARY";
+//        valueList.add(values);
+//        String tableName = "USER";
+//        DbController.getInstance(getApplicationContext()).insertValues(valueList, tableName);
+//        loginAction(true, "Success");
         } else {
             cf.showIntenetSettingsAlert(context);
             user = null;
+//            error_msg = getResources().getString(string.login_error);
+//            loginAction(false, error_msg);
+//            user = null;
         }
 
     }
@@ -198,7 +264,7 @@ public class LoginActivity extends ActionBarActivity {
 
                 HttpURLConnection conn = (HttpURLConnection) new URL(requestUrl).openConnection();
                 conn.setReadTimeout(100000 /* milliseconds */);
-                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(150000 /* milliseconds */);
                 conn.setRequestMethod("POST");
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
@@ -262,13 +328,17 @@ public class LoginActivity extends ActionBarActivity {
                         }
 
 
+//roles
+                        if (Obj.has("userRole")) {
+                            JSONArray jsonarrayForRoles = Obj.getJSONArray("userRole");
 
-                        if (Obj.has("roles")) {
-                            JSONArray jsonarrayForRoles = Obj.getJSONArray("roles");
-                            childObj = new JSONObject(jsonarrayForRoles.get(0).toString());
-                            roleName = childObj.get("name").toString();
-                            values.put("ROLE_ID", childObj.get("id").toString());
-                            values.put("ROLE_NAME", childObj.get("name").toString());
+                            for (int i = 0; i < jsonarrayForRoles.length(); i++) {
+                                JSONObject childObj1 = new JSONObject(jsonarrayForRoles.get(0).toString());
+                                JSONObject jsonObject=childObj1.getJSONObject("roleBean");
+                                roleName = jsonObject.get("name").toString();
+                                values.put("ROLE_ID", jsonObject.get("roleid").toString());
+                                values.put("ROLE_NAME", jsonObject.get("name").toString());
+                            }
                         }
                         valueList.add(values);
                         String tableName = "USER";
@@ -299,12 +369,26 @@ public class LoginActivity extends ActionBarActivity {
                 CommonFunctions.setRoleID(User.ROLE_TRUSTED_INTERMEDIARY);
             } else if (roleName.equals("ROLE_ADJUDICATOR")) {
                 CommonFunctions.setRoleID(User.ROLE_ADJUDICATOR);
+            }else if (roleName.equals("ROLE_ADMIN")) {
+                CommonFunctions.setRoleID(User.ROLE_TRUSTED_INTERMEDIARY);
             }
 
             Intent intentlogin = new Intent(getApplicationContext(), LandingPageActivity.class);
             startActivity(intentlogin);
         } else {
             cf.showMessage(context, "Login Failed", msg);
+        }
+    }
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+        //resume tasks needing this permission
+            //Fetching Logged In USER
+            getLoggedUserFromDB();
         }
     }
 }

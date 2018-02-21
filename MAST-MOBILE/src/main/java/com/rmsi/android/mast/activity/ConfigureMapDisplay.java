@@ -3,7 +3,7 @@ package com.rmsi.android.mast.activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.rmsi.android.mast.activity.R;
 import com.rmsi.android.mast.util.CommonFunctions;
 
-public class ConfigureMapDisplay extends ActionBarActivity 
+public class ConfigureMapDisplay extends AppCompatActivity
 {
 	ListView listView;
 	Context context = this;

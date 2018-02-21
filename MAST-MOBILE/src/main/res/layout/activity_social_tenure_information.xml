@@ -31,6 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:padding="5dp"
+                android:visibility="gone"
                 android:text="@string/rightType"
                 android:textColor="@color/color_primary_dark"
                 android:textSize="@dimen/textSize" />
@@ -38,6 +39,7 @@
             <Spinner
                 android:id="@+id/spinnerRightType"
                 style="@style/Widget.AppCompat.Spinner"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -46,13 +48,23 @@
                 android:layout_height="1dp"
                 android:background="#CCCCCC" />
 
+            <!--<TextView-->
+                <!--android:id="@+id/lblShareType"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:padding="5dp"-->
+                <!--android:text="@string/shareType"-->
+                <!--android:textColor="@color/color_primary_dark"-->
+                <!--android:textSize="@dimen/textSize" />-->
             <TextView
                 android:id="@+id/lblShareType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:padding="5dp"
-                android:text="@string/shareType"
+
+                android:text="Type of Tenure/ Occupancy"
                 android:textColor="@color/color_primary_dark"
                 android:textSize="@dimen/textSize" />
 
@@ -99,6 +111,7 @@
                 android:id="@+id/certLayout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:orientation="vertical">
 
                 <TextView

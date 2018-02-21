@@ -14,6 +14,10 @@ public class Option  implements Serializable
 	private String nameOtherLang;
 	transient private View view;
 
+
+
+	private Long optionID;
+
 	public static String TABLE_NAME = "OPTIONS";
 	public static String COL_ID = "OPTION_ID";
 	public static String COL_ATTRIBUTE_ID = "ATTRIB_ID";
@@ -53,6 +57,14 @@ public class Option  implements Serializable
 	}
 	public void setNameOtherLang(String nameOtherLang) {
 		this.nameOtherLang = nameOtherLang;
+	}
+
+	public Long getOptionID() {
+		return optionID;
+	}
+
+	public void setOptionID(Long optionID) {
+		this.optionID = optionID;
 	}
 
     @Override

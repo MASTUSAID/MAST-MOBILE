@@ -65,11 +65,11 @@ public class AddMediaActivity extends ActionBarActivity {
             btnSave.setEnabled(false);
         }
 
-        if(mediaId != null && mediaId > 0){
+        if (mediaId != null && mediaId > 0) {
             media = db.getMedia(mediaId);
         }
 
-        if(media == null){
+        if (media == null) {
             media = new Media();
             media.setFeatureId(featureId);
             media.setDisputeId(disputeId);

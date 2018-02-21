@@ -65,6 +65,12 @@ public class AddSocialTenureActivity extends ActionBarActivity {
         cf.loadLocale(getApplicationContext());
 
         infoStr = getResources().getString(R.string.info);
+//        infoSingleOccupantStr = getResources().getString(R.string.infoSingleOccupantStr);
+//        infoMultipleJointStr = getResources().getString(R.string.infoMultipleJointStr);
+//        infoMultipleTeneancyStr = getResources().getString(R.string.infoMultipleTeneancyStr);
+//        infoTenancyInProbateStr = getResources().getString(R.string.infoTenancyInProbateStr);
+//        infoGuardianMinorStr = getResources().getString(R.string.infoGuardianMinorStr);
+
         infoSingleOccupantStr = getResources().getString(R.string.infoSingleOccupantStr);
         infoMultipleJointStr = getResources().getString(R.string.infoMultipleJointStr);
         infoMultipleTeneancyStr = getResources().getString(R.string.infoMultipleTeneancyStr);
@@ -82,7 +88,8 @@ public class AddSocialTenureActivity extends ActionBarActivity {
         setContentView(R.layout.activity_social_tenure_information);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.AddSocialTenureInfo);
+//        toolbar.setTitle(R.string.AddSocialTenureInfo);
+        toolbar.setTitle("Add Tenure Information");
         if (toolbar != null)
             setSupportActionBar(toolbar);
 
@@ -187,14 +194,16 @@ public class AddSocialTenureActivity extends ActionBarActivity {
             }
         });
 
+
+
         GuiUtility.bindActionOnSpinnerChange(spinnerShareType, new Runnable() {
             @Override
             public void run() {
                 int code = ((ShareType) spinnerShareType.getSelectedItem()).getCode();
-                if (code == ShareType.TYPE_MUTIPLE_OCCUPANCY_JOINT)
-                    relationshipLayout.setVisibility(View.VISIBLE);
-                else
-                    relationshipLayout.setVisibility(View.GONE);
+//                if (code == ShareType.TYPE_MUTIPLE_OCCUPANCY_JOINT)
+//                    relationshipLayout.setVisibility(View.VISIBLE);
+//                else
+//                    relationshipLayout.setVisibility(View.GONE);
                 right.setShareTypeId(code);
             }
         });
@@ -286,6 +295,7 @@ public class AddSocialTenureActivity extends ActionBarActivity {
         try {
             DbController db = DbController.getInstance(context);
             boolean saveResult = db.saveRight(right);
+            int IsNatural=db.getpersonType(featureId);
 
             if (!saveResult) {
                 Toast.makeText(context, R.string.unable_to_save_data, Toast.LENGTH_SHORT).show();
@@ -294,77 +304,120 @@ public class AddSocialTenureActivity extends ActionBarActivity {
 
             final int shareTypeId = right.getShareTypeId();
 
-            if (shareTypeId == ShareType.TYPE_SINGLE_OCCUPANT ||
-                    shareTypeId == ShareType.TYPE_MUTIPLE_OCCUPANCY_IN_COMMON ||
-                    shareTypeId == ShareType.TYPE_MUTIPLE_OCCUPANCY_JOINT ||
-                    shareTypeId == ShareType.TYPE_GUARDIAN ||
-                    shareTypeId == ShareType.TYPE_TENANCY_IN_PROBATE) {
+            if ( IsNatural==1 || IsNatural==3) {
+                if (shareTypeId == ShareType.TYPE_SINGLE_OCCUPANT ||
+                        shareTypeId == ShareType.TYPE_MUTIPLE_OCCUPANCY_IN_COMMON ||
+                        shareTypeId == ShareType.TYPE_MUTIPLE_OCCUPANCY_JOINT ||
+                        shareTypeId == ShareType.TYPE_GUARDIAN ||
+                        shareTypeId == ShareType.TYPE_TENANCY_IN_PROBATE ||
+                        shareTypeId == ShareType.TYPE_Customary_Individual ||
+                        shareTypeId == ShareType.TYPE_Customary_Collective ||
+                        shareTypeId == ShareType.TYPE_Single_Tenancy ||
+                        shareTypeId == ShareType.TYPE_Joint_Tenency ||
+                        shareTypeId == ShareType.TYPE_Common_Tenancy ||
+                        shareTypeId == ShareType.TYPE_Collective_Tenancy) {
 
-                String infoMsg = "No msg";
-                if (shareTypeId == ShareType.TYPE_MUTIPLE_OCCUPANCY_IN_COMMON) {
-                    //cf.showMessage(context,"Info","You can add only one adult owner & multiple person of interests");
-                    infoMsg = infoMultipleTeneancyStr; //for live
-                } else if (shareTypeId == ShareType.TYPE_SINGLE_OCCUPANT) {
-                    //cf.showMessage(context,"Info","You can add two adult owners & multiple person of interests");
-                    infoMsg = infoSingleOccupantStr; //for live
-                } else if (shareTypeId == ShareType.TYPE_MUTIPLE_OCCUPANCY_JOINT) {
-                    //cf.showMessage(context,"Info","You can add two or more adult owners & multiple person of interests");
-                    infoMsg = infoMultipleJointStr; //for live
-                } else if (shareTypeId == ShareType.TYPE_TENANCY_IN_PROBATE) {
-                    //cf.showMessage(context,"Info","You can add multiple minor owners & two guardian");
-                    infoMsg = infoTenancyInProbateStr;
-                } else if (shareTypeId == ShareType.TYPE_GUARDIAN) {
-                    //cf.showMessage(context,"Info","You can add multiple minor owners & two guardian");
-                    infoMsg = infoGuardianMinorStr;
-                } else if (shareTypeId == ShareType.TYPE_NON_NATURAL) {
-                    Intent myIntent = new Intent(context, AddNonNaturalPersonActivity.class);
-                    myIntent.putExtra("featureid", featureId);
-                    startActivity(myIntent);
-                }
 
-                final Dialog dialog = new Dialog(context, R.style.DialogTheme);
-                dialog.setContentView(R.layout.dialog_for_info);
-                dialog.setTitle(getResources().getString(R.string.info));
-                dialog.getWindow().getAttributes().width = LayoutParams.MATCH_PARENT;
-                Button proceed = (Button) dialog.findViewById(R.id.btn_proceed);
-                Button cancel = (Button) dialog.findViewById(R.id.btn_cancel);
-                final TextView txtTenureType = (TextView) dialog.findViewById(R.id.textView_tenure_type);
-                final TextView txtInfoMsg = (TextView) dialog.findViewById(R.id.textView_infoMsg);
-                final TextView cnfrmMsg = (TextView) dialog.findViewById(R.id.textView_cnfrm_msg);
-                cnfrmMsg.setVisibility(View.VISIBLE);
-                txtTenureType.setText(db.getShareType(shareTypeId).toString());
-                txtInfoMsg.setText(infoMsg);
-                proceed.setText(getResources().getText(R.string.yes));
-                cancel.setText(getResources().getText(R.string.no));
+                    String infoMsg = "No msg";
+                    if (shareTypeId == ShareType.TYPE_MUTIPLE_OCCUPANCY_IN_COMMON) {
+                        //cf.showMessage(context,"Info","You can add only one adult owner & multiple person of interests");
+                        infoMsg = infoMultipleTeneancyStr; //for live
+                    } else if (shareTypeId == ShareType.TYPE_SINGLE_OCCUPANT) {
+                        //cf.showMessage(context,"Info","You can add two adult owners & multiple person of interests");
+                        infoMsg = infoSingleOccupantStr; //for live
+                    } else if (shareTypeId == ShareType.TYPE_MUTIPLE_OCCUPANCY_JOINT) {
+                        //cf.showMessage(context,"Info","You can add two or more adult owners & multiple person of interests");
+                        infoMsg = infoMultipleJointStr; //for live
+                    } else if (shareTypeId == ShareType.TYPE_TENANCY_IN_PROBATE) {
+                        //cf.showMessage(context,"Info","You can add multiple minor owners & two guardian");
+                        infoMsg = infoTenancyInProbateStr;
+                    } else if (shareTypeId == ShareType.TYPE_GUARDIAN) {
+                        //cf.showMessage(context,"Info","You can add multiple minor owners & two guardian");
+                        infoMsg = infoGuardianMinorStr;
+                    } else if (shareTypeId == ShareType.TYPE_NON_NATURAL) {
+                        Intent myIntent = new Intent(context, AddNonNaturalPersonActivity.class);
+                        myIntent.putExtra("featureid", featureId);
+                        startActivity(myIntent);
+                    } else if (shareTypeId == ShareType.TYPE_Customary_Individual) {
+                        //cf.showMessage(context,"Info","You can add two adult owners & multiple person of interests");
+                        infoMsg = "You must add one or more occupants/owners and add one or more persons of interest"; //for live
+                    } else if (shareTypeId == ShareType.TYPE_Customary_Collective) {
+                        //cf.showMessage(context,"Info","You can add two adult owners & multiple person of interests");
+                        infoMsg = "You must add one or more occupants/owners and add one or more persons of interest"; //for live
+                    } else if (shareTypeId == ShareType.TYPE_Single_Tenancy) {
+                        //cf.showMessage(context,"Info","You can add two adult owners & multiple person of interests");
+                        infoMsg = infoSingleOccupantStr; //for live
+                    } else if (shareTypeId == ShareType.TYPE_Joint_Tenency) {
+                        //cf.showMessage(context,"Info","You can add two adult owners & multiple person of interests");
+                        infoMsg = infoMultipleJointStr; //for live
+                    } else if (shareTypeId == ShareType.TYPE_Common_Tenancy) {
+                        //cf.showMessage(context,"Info","You can add two adult owners & multiple person of interests");
+                        infoMsg = "You must add two or more occupants/owners and add one or more persons of interest"; //for live
+                    } else if (shareTypeId == ShareType.TYPE_Collective_Tenancy) {
+                        //cf.showMessage(context,"Info","You can add two adult owners & multiple person of interests");
+                        infoMsg = "You must add one or more occupants/owners and add one or more persons of interest";  //for live
+                    }
 
-                proceed.setOnClickListener(new OnClickListener() {
-                    //Run when button is clicked
-                    @Override
-                    public void onClick(View v) {
-                        Intent nextScreen;
-                        if (right.getShareTypeId() == ShareType.TYPE_TENANCY_IN_PROBATE) {
-                            nextScreen = new Intent(context, PersonListWithDPActivity.class);
-                        } else {
-                            nextScreen = new Intent(context, PersonListActivity.class);
+
+                    final Dialog dialog = new Dialog(context, R.style.DialogTheme);
+                    dialog.setContentView(R.layout.dialog_for_info);
+                    dialog.setTitle(getResources().getString(R.string.info));
+                    dialog.getWindow().getAttributes().width = LayoutParams.MATCH_PARENT;
+                    Button proceed = (Button) dialog.findViewById(R.id.btn_proceed);
+                    Button cancel = (Button) dialog.findViewById(R.id.btn_cancel);
+                    final TextView txtTenureType = (TextView) dialog.findViewById(R.id.textView_tenure_type);
+                    final TextView txtInfoMsg = (TextView) dialog.findViewById(R.id.textView_infoMsg);
+                    final TextView cnfrmMsg = (TextView) dialog.findViewById(R.id.textView_cnfrm_msg);
+                    cnfrmMsg.setVisibility(View.VISIBLE);
+                    txtTenureType.setText(db.getShareType(shareTypeId).toString());
+                    txtInfoMsg.setText(infoMsg);
+                    proceed.setText(getResources().getText(R.string.yes));
+                    cancel.setText(getResources().getText(R.string.no));
+
+                    proceed.setOnClickListener(new OnClickListener() {
+                        //Run when button is clicked
+                        @Override
+                        public void onClick(View v) {
+                            Intent nextScreen;
+                            if (right.getShareTypeId() == ShareType.TYPE_TENANCY_IN_PROBATE) {
+                                nextScreen = new Intent(context, PersonListWithDPActivity.class);
+                            } else {
+//                            DbController db = DbController.getInstance(context);
+//                            int IsNatural=db.getpersonType(featureId);
+//
+//                            if (IsNatural==0) {
+//                                nextScreen = new Intent(context, AddNonNaturalPersonActivity.class);
+//                            }else if (IsNatural ==1 || IsNatural==3){
+//                                nextScreen = new Intent(context, PersonListActivity.class);
+//                            }
+                                nextScreen = new Intent(context, PersonListActivity.class);//
+                            }
+                            nextScreen.putExtra("featureid", featureId);
+                            nextScreen.putExtra("rightId", right.getId());
+                            startActivity(nextScreen);
+
+                            dialog.dismiss();
                         }
-                        nextScreen.putExtra("featureid", featureId);
-                        nextScreen.putExtra("rightId", right.getId());
-                        startActivity(nextScreen);
+                    });
 
-                        dialog.dismiss();
-                    }
-                });
+                    cancel.setOnClickListener(new OnClickListener() {
+                        //Run when button is clicked
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
 
-                cancel.setOnClickListener(new OnClickListener() {
-                    //Run when button is clicked
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
-                dialog.show();
-            } else if (shareTypeId == ShareType.TYPE_NON_NATURAL) {
+                    dialog.show();
+                }
+            }
+//            else if (shareTypeId == ShareType.TYPE_NON_NATURAL) {
+//                Intent nextScreen = new Intent(context, AddNonNaturalPersonActivity.class);
+//                nextScreen.putExtra("featureid", featureId);
+//                nextScreen.putExtra("rightId", right.getId());
+//                startActivity(nextScreen);
+//            }
+            else {
                 Intent nextScreen = new Intent(context, AddNonNaturalPersonActivity.class);
                 nextScreen.putExtra("featureid", featureId);
                 nextScreen.putExtra("rightId", right.getId());

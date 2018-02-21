@@ -2,13 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rmsi.android.mast.activity"
     android:versionCode="4"
-    android:versionName="@string/app_ver">
+    android:versionName="2.3.5">
 
     <uses-sdk
         android:minSdkVersion="16"
-        android:targetSdkVersion="22" />
+        android:targetSdkVersion="25" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -16,13 +17,14 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.RECORD_VIDEO" />
+
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <!-- Required to show current location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
-
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <permission
         android:name="com.rmsi.android.cloudburst.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
@@ -32,12 +34,24 @@
         android:glEsVersion="0x00020000"
         android:required="true" />
 
+
     <application
         android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/appname"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        >
+        <!--<provider-->
+            <!--android:name="android.support.v4.content.FileProvider"-->
+            <!--android:authorities="${applicationId}.provider"-->
+            <!--android:exported="false"-->
+            <!--android:grantUriPermissions="true">-->
+            <!--<meta-data-->
+                <!--android:name="android.support.FILE_PROVIDER_PATHS"-->
+                <!--android:resource="@xml/provider_paths"/>-->
+        <!--</provider>-->
+
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
@@ -58,22 +72,74 @@
         <!-- Google API Key -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCmkRouv10DRPsaoGglEJYPhq6P8rrXWQo" />
+            android:value="AIzaSyBz9fJ_ZsBRJCiMzhg-rIfNSP4WOg-ZvuI" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+        <!--<meta-data-->
+        <!--android:name="com.google.android.gms.version"-->
+        <!--android:value="@integer/google_play_services_version" />-->
 
         <activity
             android:name=".CaptureDataMapActivity"
             android:label="@string/title_activity_capture_spatial_data"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".CaptureResourceAttributes"
+            android:label="@string/title_activity_capture_spatial_data"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".CaptureTenureInfo"
+            android:label="@string/title_activity_capture_spatial_data"
+            android:screenOrientation="portrait"
+
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity
+            android:name=".Owner"
+            android:label="@string/title_activity_capture_spatial_data"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity
+            android:name=".Owner2"
+            android:label="@string/title_activity_capture_spatial_data"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity
+            android:name=".CustomAttributeChange"
+            android:label="@string/title_activity_capture_spatial_data"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity
+            android:name=".CoustomAttribute"
+            android:label="@string/title_activity_capture_spatial_data"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity
+            android:name=".CollectedResourceDataSummary"
+            android:label="@string/title_activity_capture_spatial_data"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name=".CapturePareclData"
+            android:label="@string/title_activity_capture_parcel_data"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ReviewDataActivity"
             android:label="@string/reviewdata"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ResourcePOI"
+            android:label="RESOURCEPOI"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".UserPreferences"
             android:label="@string/userpref"

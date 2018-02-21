@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -43,6 +45,7 @@ import com.rmsi.android.mast.domain.User;
 import com.rmsi.android.mast.util.CommonFunctions;
 import com.rmsi.android.mast.util.DateUtility;
 import com.rmsi.android.mast.util.GuiUtility;
+import com.rmsi.android.mast.util.KeyboardUtil;
 import com.rmsi.android.mast.util.StringUtility;
 
 public class AddPersonActivity extends ActionBarActivity {
@@ -59,6 +62,11 @@ public class AddPersonActivity extends ActionBarActivity {
     private Person person = null;
     private ShareType shareType;
     private boolean readOnly = false;
+
+    private static boolean keyboardHidden = true;
+    private static int reduceHeight = 0;
+
+    private KeyboardUtil keyboardUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,15 +95,23 @@ public class AddPersonActivity extends ActionBarActivity {
         Button btnSave = (Button) findViewById(R.id.btn_savePerson);
         Button btnCancel = (Button) findViewById(R.id.btn_cancelPerson);
         spinnerResident = (Spinner) findViewById(R.id.spinnerResident);
-        LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
+        final LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
         LinearLayout shareSizeLayout = (LinearLayout) findViewById(R.id.shareSizeLayout);
         LinearLayout acquisitionLayout = (LinearLayout) findViewById(R.id.acquisitionLayout);
         final Spinner spinnerAcquisition = (Spinner) findViewById(R.id.spinnerAcquisition);
         final EditText txtShareSize = (EditText) findViewById(R.id.txtShareSize);
 
-        GridView gridView = (GridView) findViewById(R.id.gridView_image);
+        final GridView gridView = (GridView) findViewById(R.id.gridView_image);
         adapter = new myImageAdapter(context);
         gridView.setAdapter(adapter);
+
+
+        keyboardUtil=new KeyboardUtil(AddPersonActivity.this,gridView);
+
+
+
+
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.AddPerson);
@@ -181,6 +197,8 @@ public class AddPersonActivity extends ActionBarActivity {
             // Move photo to the end
             mainLayout.removeView(gridView);
             mainLayout.addView(gridView);
+
+
 
             // Disable age attribute if dob exists. Set age value based on dob field
             final Attribute dob = person.getAttribute(Person.ATTRIBUTE_DOB);

@@ -9,13 +9,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.UUID;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,11 +40,17 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.rmsi.android.mast.activity.R;
 import com.rmsi.android.mast.db.DbController;
+import com.rmsi.android.mast.domain.AOI;
 import com.rmsi.android.mast.domain.Attribute;
 import com.rmsi.android.mast.domain.Feature;
 import com.rmsi.android.mast.domain.Property;
@@ -47,6 +60,7 @@ import com.vividsolutions.jts.io.WKTReader;
 public class CommonFunctions {
     private static CommonFunctions mInstance;
     private static Context mContext;
+    Activity activity;
     private SharedPreferences mMyPreferences;
     public static final String parentFolderName = "MAST";
     public static final String dataFolderName = "spatialdata";
@@ -55,6 +69,7 @@ public class CommonFunctions {
     String appLogFileName = Environment.getExternalStorageDirectory() + "/MAST/MASTApp_LOG.txt";
     String syncLogFileName = Environment.getExternalStorageDirectory() + "/MAST/MASTSync_LOG.txt";
     List<LatLng> points;
+
     int MAP_MODE = 0;
     private WKTReader wktReader;
 
@@ -80,13 +95,34 @@ public class CommonFunctions {
     private static String roleStr;
     private static int roleId = -1;
 
+//    // Point in Tanzania
+//    public static double latitude = -7.8595;
+//    public static double longitude = 35.77981;
+
     // Point in Tanzania
-    public static double latitude = -7.8595;
-    public static double longitude = 35.77981;
+    public static double latitude =7.068730451336813;
+    public static double longitude =-9.812164306640625;
 
     // Default zooms
     public static float labelZoom = 16.5F;
     public static float vertexZoom = 17.5F;
+
+
+    BluetoothAdapter mBluetoothAdapter;
+    public static BluetoothSocket bluetoothSocket;
+    List<String> media_options=new ArrayList<String>();
+    private String mbluetoothname="";
+    Set<BluetoothDevice> mDevices;
+
+
+    public CommonFunctions(Activity activity){
+        this.activity=activity;
+
+    }
+
+    public CommonFunctions() {
+
+    }
 
     public static CommonFunctions getInstance() {
         if (mInstance == null)
@@ -96,6 +132,7 @@ public class CommonFunctions {
 
     public void Initialize(Context ctxt) {
         mContext = ctxt;
+
         mMyPreferences = mContext.getSharedPreferences("MASTMobilePref", Activity.MODE_PRIVATE);
         lineColor = getFeatureColor(getLineColor(), "line");
         pointColor = getFeatureColor(getPointColor(), "point");
@@ -575,8 +612,13 @@ public class CommonFunctions {
     }
 
     public static boolean isFeatureReadOnly (long featureId){
-        if(getRoleID() == User.ROLE_ADJUDICATOR)
+        if(getRoleID() == User.ROLE_ADJUDICATOR){
             return true;
+        }
+//        else if (getRoleID() == User.ROLE_TRUSTED_INTERMEDIARY){
+//            return true;
+//        }
+
 
         Feature feature = DbController.getInstance(mContext).fetchFeaturebyID(featureId);
         if(feature != null && !StringUtility.empty(feature.getStatus()).equalsIgnoreCase(Property.CLIENT_STATUS_DRAFT))
@@ -674,4 +716,210 @@ public class CommonFunctions {
         }
         return sb.toString();
     }
+
+
+    //Ambar
+    public boolean IsEditResourceAttribute(long featurID,String tenureType){
+         DbController db = DbController.getInstance(getApplicationContext());
+
+        int iGrpID=db.getOwnerCount(featurID);
+        boolean isAddCase=false;
+        if (tenureType.equalsIgnoreCase("Private (jointly)")) {
+            if(iGrpID==2) {
+                isAddCase = false;
+            }
+            else {
+                isAddCase = true;
+            }
+
+        }
+        else  if ((tenureType.equalsIgnoreCase("Private (individual)")) || (tenureType.equalsIgnoreCase("Organization (formal)")) || (tenureType.equalsIgnoreCase("Organization (informal)"))||(tenureType.equalsIgnoreCase("Public"))) {
+            if(iGrpID==1) {
+                isAddCase = false;
+            }
+            else {
+                isAddCase = true;
+            }
+        }
+        else if ((tenureType.equalsIgnoreCase("Collective")) || (tenureType.equalsIgnoreCase("Community"))) {
+//            if(iGrpID>0) {
+//                isAddCase = false;
+//            }
+//            else {
+//                isAddCase = true;
+//            }
+            isAddCase = true;
+        }
+
+        else if ((tenureType.equalsIgnoreCase("Open")) || (tenureType.equalsIgnoreCase("Other"))) {
+//            if(iGrpID==1) {
+//                isAddCase = false;
+//            }
+//            else {
+//                isAddCase = true;
+//            }
+            isAddCase = true;
+        }
+        db.close();
+        return isAddCase;
+    }
+
+    public int getResourcePoiCount(long featurID){
+        DbController db = DbController.getInstance(getApplicationContext());
+        int iCount=0;
+        iCount = db.getPOICount(featurID);
+        db.close();
+        return  iCount;
+    }
+
+    public List<AOI> getAOIList(){
+        List<AOI> aoiList=new ArrayList<>();
+        DbController db = DbController.getInstance(getApplicationContext());
+        aoiList=db.getAOIList();
+
+
+        return aoiList;
+
+    }
+    public void saveAOI(String coOrdinates) {
+        String syncPref = "Coordiantaes";
+        SharedPreferences.Editor editor = getmMyPreferences().edit();
+        editor.putString(syncPref, coOrdinates);
+        editor.commit();
+    }
+
+    public String getAOICoordinates() {
+        String Sync = getmMyPreferences().getString("Coordiantaes",null);
+        return Sync;
+    }
+
+    public void getConnectToGpsDevice(boolean isReview,String drawFeatureByFlagGPS){
+
+        if (drawFeatureByFlagGPS!=null)
+        if (!isReview) {
+            try {
+                mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                boolean isEnabled = mBluetoothAdapter.isEnabled();
+                if (!isEnabled) {
+                    Intent enableBtIntent = new Intent(
+                            BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                   activity.startActivityForResult(enableBtIntent, 1);
+                } else {
+                    discoverDevice();
+                }
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+
+
+
+
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+//    {
+//        if(requestCode==1) //bluetooth enable
+//        {
+//            discoverDevice();
+//        }
+//    }
+
+    public void discoverDevice(){
+
+        mDevices = mBluetoothAdapter.getBondedDevices();
+        if(mDevices.size()>0)
+        {
+
+
+            for (BluetoothDevice device : mDevices) {
+                media_options.add(device.getName());
+            }
+
+
+            final Dialog dialog = new Dialog(activity,R.style.DialogTheme);
+            dialog.setContentView(R.layout.dialog_show_list);
+            dialog.setTitle("Select Device");
+            dialog.getWindow().getAttributes().width = ViewGroup.LayoutParams.MATCH_PARENT;
+            ListView listViewForLanguage = (ListView) dialog.findViewById(R.id.commonlistview);
+            Button btn_ok =(Button)dialog.findViewById(R.id.btn_ok);
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext,
+                    R.layout.item_list_single_choice,media_options);
+
+            listViewForLanguage.setAdapter(adapter);
+
+
+            btn_ok.setOnClickListener(new View.OnClickListener()
+            {
+                //Run when button is clicked
+                @Override
+                public void onClick(View v)
+                {
+                    dialog.dismiss();
+                    connectBluetoothDevice(mbluetoothname);
+                }
+            });
+
+
+
+            listViewForLanguage.setOnItemClickListener(new AdapterView.OnItemClickListener()
+            {
+                @Override
+                public void onItemClick(AdapterView<?> parent,
+                                        View view, int position, long id)
+                {
+                    int itemPosition = position;
+
+                    mbluetoothname=media_options.get(itemPosition);
+
+
+                }});
+
+
+
+
+            dialog.show();
+        }
+
+    }
+
+    private void connectBluetoothDevice(String devicename){
+
+        Iterator<BluetoothDevice> itr = mDevices.iterator();
+        while(itr.hasNext()){
+            BluetoothDevice bluetoothDevice = itr.next();
+
+            if(bluetoothDevice.getName().contains(devicename)){
+                UUID uuid = UUID
+                        .fromString("00001101-0000-1000-8000-00805F9B34FB");
+
+
+                try {
+                    if(bluetoothSocket==null)
+                        bluetoothSocket  = bluetoothDevice.createRfcommSocketToServiceRecord(uuid);
+                    if(!bluetoothSocket.isConnected()){
+                        bluetoothSocket.connect();
+                        Toast.makeText(getApplicationContext(), devicename +" is Connected", Toast.LENGTH_LONG).show();
+                        break;
+
+                    }
+                    else if(bluetoothSocket.isConnected()){
+
+                        Toast.makeText(getApplicationContext(), devicename +" is Connected", Toast.LENGTH_LONG).show();
+                    }
+
+
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), devicename+ " is not Connected", Toast.LENGTH_LONG).show();
+                    break;
+                }
+            }
+
+        }
+
+    }
+
+
 }

@@ -6,7 +6,7 @@ import com.rmsi.android.mast.util.OfflineTileProvider;
 public class ProjectSpatialDataDto {
 
 	private Integer server_Pk;
-	private String project_Name;
+	private Integer project_Name;
 	private String file_Name;
 	private String file_Ext;
 	private String alias;
@@ -19,10 +19,10 @@ public class ProjectSpatialDataDto {
 	public void setServer_Pk(Integer server_Pk) {
 		this.server_Pk = server_Pk;
 	}
-	public String getProject_Name() {
+	public Integer getProject_Name_Id() {
 		return project_Name;
 	}
-	public void setProject_Name(String project_Name) {
+	public void setProject_Name_Id(Integer project_Name) {
 		this.project_Name = project_Name;
 	}
 	public String getFile_Name() {

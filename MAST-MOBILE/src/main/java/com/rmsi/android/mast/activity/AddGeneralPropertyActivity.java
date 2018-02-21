@@ -4,13 +4,17 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,135 +25,185 @@ import com.rmsi.android.mast.domain.Attribute;
 import com.rmsi.android.mast.domain.User;
 import com.rmsi.android.mast.util.CommonFunctions;
 import com.rmsi.android.mast.util.GuiUtility;
+import com.rmsi.android.mast.util.KeyboardUtil;
 
 public class AddGeneralPropertyActivity extends ActionBarActivity {
 
-	private Long featureId = 0L;
-	private boolean isDispute = false;
-	private List<Attribute> attributes;
-	private ListView listView;
-	private final Context context = this;
-	private AttributeAdapter adapterList;
-	private Button btnSave,btnBack;
-	private CommonFunctions cf = CommonFunctions.getInstance();
-	private boolean readOnly = false;
+    private Long featureId = 0L;
+    private boolean isDispute = false;
+    private List<Attribute> attributes;
+    private ListView listView;
+    private final Context context = this;
+    private AttributeAdapter adapterList;
+    private Button btnSave, btnBack;
+    private CommonFunctions cf = CommonFunctions.getInstance();
+    private boolean readOnly = false;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) 
-	{
-		super.onCreate(savedInstanceState);
-		
-		//Initializing context in common functions in case of a crash
-		try{CommonFunctions.getInstance().Initialize(getApplicationContext());}catch(Exception e){}
-		cf.loadLocale(getApplicationContext());
+    private static boolean keyboardHidden = true;
+    private static int reduceHeight = 0;
+    private KeyboardUtil keyboardUtil;
+    private String personType=null;
 
-		DbController db = DbController.getInstance(context);
-		Bundle extras = getIntent().getExtras();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		if (extras != null) 
-		{
-			featureId = extras.getLong("featureid");
-			isDispute = extras.getBoolean("isDispute");
+        //Initializing context in common functions in case of a crash
+        try {
+            CommonFunctions.getInstance().Initialize(getApplicationContext());
+        } catch (Exception e) {
+        }
+        cf.loadLocale(getApplicationContext());
 
-			attributes = db.getPropAttributesByType(featureId, Attribute.TYPE_GENERAL_PROPERTY);
-			if(attributes.size()<1) {
-				// Try to get list of attributes of general type
-				attributes = db.getAttributesByType(Attribute.TYPE_GENERAL_PROPERTY);
-			}
-		}
+        DbController db = DbController.getInstance(context);
+        Bundle extras = getIntent().getExtras();
 
-		readOnly = CommonFunctions.isFeatureReadOnly(featureId);
+        if (extras != null) {
+            featureId = extras.getLong("featureid");
+            isDispute = extras.getBoolean("isDispute");
+            personType=extras.getString("PERSONTYPE");
 
-		setContentView(R.layout.activity_add_property_info);
 
-		btnSave=(Button) findViewById(R.id.btn_save);
-		btnBack=(Button) findViewById(R.id.btn_cancel);
+            attributes = db.getPropAttributesByType(featureId, Attribute.TYPE_GENERAL_PROPERTY);
+            if (attributes.size() < 1) {
+                // Try to get list of attributes of general type
+                attributes = db.getAttributesByType(Attribute.TYPE_GENERAL_PROPERTY);
+            }
+        }
 
-		listView = (ListView)findViewById(android.R.id.list);
-		TextView emptyText = (TextView)findViewById(android.R.id.empty);
-		listView.setEmptyView(emptyText);
+        readOnly = CommonFunctions.isFeatureReadOnly(featureId);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		toolbar.setTitle(R.string.AddNewProperty);
-		if(toolbar!=null)
-			setSupportActionBar(toolbar);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setContentView(R.layout.activity_add_property_info);
 
-		try {
-			adapterList = new AttributeAdapter(context, attributes, readOnly);
-		} 
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+        btnSave = (Button) findViewById(R.id.btn_save);
+        btnBack = (Button) findViewById(R.id.btn_cancel);
 
-		listView.setAdapter(adapterList);
+        listView = (ListView) findViewById(android.R.id.list);
+        TextView emptyText = (TextView) findViewById(android.R.id.empty);
+        listView.setEmptyView(emptyText);
 
-		if(readOnly) {
-			btnSave.setVisibility(View.GONE);
-		}
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.AddNewProperty);
+        if (toolbar != null)
+            setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		btnSave.setOnClickListener(new OnClickListener() 
-		{
-			@Override
-			public void onClick(View v) 
-			{             
-				saveData();
-			}			
-		});
-		btnBack.setOnClickListener(new OnClickListener()
-		{			
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});
+        try {
+            adapterList = new AttributeAdapter(context, attributes, readOnly);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-	}
-	public void saveData() 
-	{
-		if(validate())
-		{
-			try {
-				boolean saveResult = DbController.getInstance(context).savePropAttributes(attributes, featureId);
+        View footerView =  ((LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.footerlayout, null, false);
+        listView.addFooterView(footerView);
+        listView.setAdapter(adapterList);
 
-				if(saveResult){
-					cf.showToast(context, R.string.data_saved, Toast.LENGTH_SHORT);
+        keyboardUtil=new KeyboardUtil(AddGeneralPropertyActivity.this,footerView);
 
-					if(isDispute){
-						Intent myIntent = new Intent(context, AddDisputeActivity.class);
-						myIntent.putExtra("featureid", featureId);
-						startActivity(myIntent);
-					} else {
-						Intent myIntent = new Intent(context, AddSocialTenureActivity.class);
-						myIntent.putExtra("featureid", featureId);
-						startActivity(myIntent);
-					}
-				}else{
-					cf.showToast(context, R.string.unable_to_save_data, Toast.LENGTH_SHORT);
-				}
-			} catch (Exception e) {
-				cf.appLog("", e);e.printStackTrace();
-				cf.showToast(context, R.string.unable_to_save_data, Toast.LENGTH_SHORT);
-			}
-		}
-		else{
-			cf.showToast(context, R.string.fill_mandatory, Toast.LENGTH_SHORT);
-		}
-	}
+        //I resize my listView according to the height of the displayed softKeyboard and resize it back once the keyboard is gone.
+//        final View decorView = this.getWindow().getDecorView();
+//        decorView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                Rect rect = new Rect();
+//                decorView.getWindowVisibleDisplayFrame(rect);
+//
+//                int displayHeight = rect.bottom - rect.top;
+//                int height = decorView.getHeight();
+//                boolean keyboardHiddenTemp = (double)displayHeight / height > 0.8 ;
+//                int mylistviewHeight = listView.getMeasuredHeight();
+//
+//                if (keyboardHiddenTemp != keyboardHidden) {
+//                    keyboardHidden = keyboardHiddenTemp;
+//
+//                    if (!keyboardHidden) {
+//
+//                        reduceHeight = height - displayHeight;
+//
+//                        LinearLayout.LayoutParams mParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,mylistviewHeight - reduceHeight);
+//                        listView.setLayoutParams(mParam);
+//                        listView.requestLayout();
+//
+//                    } else {
+//
+//                        LinearLayout.LayoutParams mParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,mylistviewHeight + reduceHeight);
+//                        listView.setLayoutParams(mParam);
+//                        listView.requestLayout();
+//
+//
+//                    }
+//                }
+//
+//            }
+//        });
 
-	public boolean validate()
-	{
-		return GuiUtility.validateAttributes(attributes, true);
-	}
+        if (readOnly) {
+            btnSave.setVisibility(View.GONE);
+        }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) 
-	{
-		int id = item.getItemId();
-		if(id == android.R.id.home)
-		{
-			finish();
-		}
-		return super.onOptionsItemSelected(item);
-	}
+        btnSave.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveData();
+            }
+        });
+        btnBack.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+    }
+
+    public void saveData() {
+        if (validate()) {
+            try {
+                boolean saveResult = DbController.getInstance(context).savePropAttributes(attributes, featureId);
+
+                if (saveResult) {
+                    cf.showToast(context, R.string.data_saved, Toast.LENGTH_SHORT);
+
+                    if (personType==null) {
+                        if (isDispute) {
+                            Intent myIntent = new Intent(context, AddDisputeActivity.class);
+                            myIntent.putExtra("featureid", featureId);
+                            startActivity(myIntent);
+                        } else {
+                            Intent myIntent = new Intent(context, AddSocialTenureActivity.class);
+                            myIntent.putExtra("featureid", featureId);
+
+                            startActivity(myIntent);
+                        }
+                    }else {
+                        Intent myIntent = new Intent(context, AddNonNaturalPersonActivity.class);
+                        myIntent.putExtra("featureid", featureId);
+
+                        startActivity(myIntent);
+                    }
+                } else {
+                    cf.showToast(context, R.string.unable_to_save_data, Toast.LENGTH_SHORT);
+                }
+            } catch (Exception e) {
+                cf.appLog("", e);
+                e.printStackTrace();
+                cf.showToast(context, R.string.unable_to_save_data, Toast.LENGTH_SHORT);
+            }
+        } else {
+            cf.showToast(context, R.string.fill_mandatory, Toast.LENGTH_SHORT);
+        }
+    }
+
+    public boolean validate() {
+        return GuiUtility.validateAttributes(attributes, true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

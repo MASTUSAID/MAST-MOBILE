@@ -10,26 +10,51 @@
         layout="@layout/layout_toolbar" />
 
     <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9">
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="9">
+
+    <TableRow
+        android:id="@+id/tableRowClaimNumber"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/lblClaimNumber"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:padding="5dip"
+            android:text="@string/Claim"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtClaimNumber"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="10dip"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+    </TableRow>
+
+
 
         <TableRow
-            android:id="@+id/tableRowClaimNumber"
+
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/lblClaimNumber"
+                android:id="@+id/ClaimNumber"
                 android:layout_weight="1"
                 android:gravity="left"
                 android:padding="5dip"
-                android:text="@string/Claim"
+                android:text="Claim Number"
                 android:textColor="#000000"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/txtClaimNumber"
+                android:id="@+id/ClaimNumberText"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:padding="10dip"
@@ -223,6 +248,7 @@
         <TableRow
             android:id="@+id/rowAdministrators"
             android:layout_width="fill_parent"
+            android:visibility="gone"
             android:layout_height="wrap_content">
 
             <TextView
@@ -245,6 +271,7 @@
         <TableRow
             android:id="@+id/rowGuardians"
             android:layout_width="fill_parent"
+            android:visibility="gone"
             android:layout_height="wrap_content">
 
             <TextView

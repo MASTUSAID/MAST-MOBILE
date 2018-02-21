@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 
 import com.rmsi.android.mast.domain.Attribute;
 import com.rmsi.android.mast.util.GuiUtility;
+import com.rmsi.android.mast.util.ResOwnGuiUtility;
 
 public class AttributeAdapter extends BaseAdapter {
     private List<Attribute> attrList;

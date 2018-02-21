@@ -15,6 +15,7 @@
     <string name="btn_ok">OK</string>
     <string name="change_language">Change Language</string>
     <string name="capture_new_data">Capture Data</string>
+    <string name="Select_Geometry">Select Geometry</string>
     <string name="configure_data">Configure Data Collection Tools</string>
     <string name="auto_sync">Configure Auto Sync</string>
     <string name="server_address"><u>Server Address</u></string>
@@ -31,15 +32,16 @@
         <!--item>Configure Data Collection Tools</item-->
         <item>Configure Auto Sync </item>
         <item>Configure Map Settings</item>
+        <item>Choose AOI</item>
     </string-array>
     <string-array name="Language_arrays">
         <item>English</item>
         <item>Swahili</item>
     </string-array>
     <string-array name="add_options_arrays">
-        <item>Capture Point</item>
-        <item>Capture Line</item>
         <item>Capture Polygon</item>
+        <item>Capture Line</item>
+        <item>Capture Point</item>
     </string-array>
     <string-array name="Sync_arrays">
         <item>Auto Sync</item>
@@ -80,6 +82,7 @@
 
     <string name="title_activity_capture_attributes">Capture Attributes</string>
     <string name="projectname">Project Name</string>
+    <string name="Dashboard">DashBoard</string>
     <string name="attribButtons">Attrib Buttons</string>
     <string name="mapOptions">Map Options</string>
     <string name="attribCount">0</string>
@@ -164,7 +167,8 @@
         <item>Rejected</item>
     </string-array>
 
-    <string name="title_activity_capture_spatial_data">Capture Data</string>
+    <string name="title_activity_capture_spatial_data">Capture Resource Data</string>
+    <string name="title_activity_capture_parcel_data">Capture Parcel Data</string>
     <string name="plot_by_gps">Plot point by gps</string>
     <string name="spatialunit_lbl">Spatial unit Id</string>
     <string name="undo">Undo</string>
@@ -399,22 +403,33 @@
     <string name="poi_isMandatory">Person sub-type is "Administrator" so It is mandatory to add "Person of Ineterest" for this feature</string>
     <string name="guardian_cant_be_minor">Guardian should be above 18. Guardian can not be minor</string>
     <string-array name="person_sub_type">
-        <item>Owner</item>
-        <item>Administrator</item>
-        <item>Guardian</item>
+        <item>Occupant</item>
+        <!--<item>Administrator</item>-->
+        <!--<item>Guardian</item>-->
     </string-array>
+
+
+    <string-array name="person_natural_non">
+        <item>Natural</item>
+        <item>Non-Natural</item>
+        <!--<item>Administrator</item>-->
+        <!--<item>Guardian</item>-->
+    </string-array>
+
+
     <string name="select_person_subtype">Select Person Sub-type</string>
     <string name="edit">Edit</string>
     <string name="btn_proceed">Proceed</string>
     <string name="enter_details">Please enter Details</string>
     <string name="tenureType">Tenure Type</string>
+    <string name="selectAOI">Select Work Allocation Unit</string>
 
     <!-- added String on 03/Nov/15- -->
     <string name="minorNotAllowed">Minor not allowed.Age should not be less than 18.</string>
     <string name="ownerShouldBeMinor">Owner should be minor in case of "Guardian(Minor)" tenure type</string>
     <string name="guardianShudBeAdult">Guardian should be Adult.</string>
-    <string name="infoSingleOccupantStr">You must add only one "Owner" and can add one or more "Person(s) of Interest"</string>
-    <string name="infoMultipleJointStr">You must add two Owners and can add one or more "Person(s) of Interest"</string>
+    <string name="infoSingleOccupantStr">You must add only one "occupant/Owner" and can add one or more "Person(s) of Interest"</string>
+    <string name="infoMultipleJointStr">You must add two Occupants/Owners and can add one or more "Person(s) of Interest"</string>
     <string name="infoMultipleTeneancyStr">You must add two or more Owners and can add one or more "Person(s) of Interest"</string>
     <string name="infoTenancyInProbateStr">You can add one or two "Administrators", you must indicated the name of the "Deceased Person", and can add one or more "Person(s) of Interest"</string>
     <string name="infoGuardianMinorStr">You must add one or more "Minor(s)" and up to two "Guardian"</string>
@@ -497,7 +512,8 @@
     <string name="SelectRelationshipType">Select relationship type</string>
     <string name="AddNonNaturalPerson">Add Non-Natural person</string>
     <string name="RepresentativePerson">Representative Person</string>
-    <string name="Claim">Claim</string>
+    <string name="Claim">Transaction Number</string>
+    <string name="ParcelClaim">Parcel</string>
     <string name="Dob">Date of birth</string>
     <string name="FillGeneralProperties">Fill in general properties of the claim</string>
     <string name="FillRequiredFieldsOngeneralProp">Fill in required fields on the General properties</string>
@@ -516,7 +532,9 @@
     <string name="FillShareSize">Fill in share size field</string>
     <string name="ShareSize">Share size</string>
     <string name="Next">Next</string>
+    <string name="OK">OK</string>
     <string name="Close">Close</string>
+    <string name="SAVEClose">Save and Close</string>
     <string name="Finish">Finish</string>
     <string name="AddDisputeDetails">Add dispute details</string>
     <string name="Dispute">Dispute</string>
@@ -539,4 +557,23 @@
     <string name="DataDownloadFailed">Failed to download data</string>
     <string name="ukaNumber">UKA/Farm/Plot Number</string>
     <string name="EnterUkaNumber">Enter UKA/Farm/Plot Number</string>
+    <string name="SelectClassificationType">Select Classification type</string>
+    <string name="SelectSubClassificationType">Select SubClassification type</string>
+    <string name="SelectTENUREType">Select Tenure type</string>
+    <string name="SelectFirstName">Enter First Name</string>
+    <string name="SelectMiddleName">Enter Middle Name</string>
+    <string name="SelectLastName">Enter Last Name</string>
+    <string name="SelectGender">Select Gender </string>
+    <string name="SelectAge">Enter Age </string>
+    <string name="SelectMarital">Select Marital Status </string>
+    <string name="SelectCitizenship">Enter CitizenShip </string>
+    <string name="SelectEthinicity">Enter Ethinicity </string>
+    <string name="SelectResidential">Select Residential </string>
+    <string name="SelectAddress">Enter Addresss </string>
+    <string name="SelectCommunity">Enter Community </string>
+    <string name="SelectRegion">Enter Region </string>
+    <string name="SelectCountry">Enter Country </string>
+    <string name="SelectMobileNumber">Enter Mobile Number </string>
+
+
 </resources>
