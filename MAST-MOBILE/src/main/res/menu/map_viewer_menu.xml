@@ -1,0 +1,42 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" >
+
+    <item
+        android:id="@+id/action_gps"
+        android:icon="@drawable/current_location"
+        android:orderInCategory="100"
+        android:title="@string/menu_gps"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_xy"
+        android:icon="@drawable/zoom_xy"
+        android:orderInCategory="100"
+        android:title="@string/menu_xy"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_measure"
+        android:icon="@drawable/measure"
+        android:orderInCategory="100"
+        android:title="@string/menu_measure"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_map_info"
+        android:icon="@drawable/info"
+        android:orderInCategory="100"
+        android:title="@string/menu_map_info"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_add_bookmark"
+        android:icon="@drawable/action_new_bookmark"
+        android:orderInCategory="100"
+        android:title="@string/add_bookmark"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_show_bookmark"
+        android:icon="@drawable/action_show_bookmarks"
+        android:orderInCategory="100"
+        android:title="@string/show_bookmarks"
+        app:showAsAction="ifRoom"/>
+
+</menu>

@@ -1,0 +1,222 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="0dp">
+
+    <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:padding="0dp">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar" />
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9">
+
+        <TableRow
+            android:id="@+id/tableRowClaimNumber"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/lblClaimNumber"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:padding="10dip"
+                android:text="Resource Class"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/Type"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dip"
+                android:text="abc"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <TableRow
+            android:id="@+id/tableRowClaimType"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/lblClaimType"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:padding="5dip"
+                android:text="Resource SubClassification"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/subType"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dip"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+        </TableRow>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+
+        <TableRow
+            android:id="@+id/tableRowClaimDate"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/lblClaimDate"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:padding="5dip"
+                android:text="Resource Tenure Type"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/resourceTenureType"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dip"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+
+
+    </TableLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:background="@color/color_theme_light"
+                android:text="Tenure Information"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textSize" />
+
+            <ListView
+                android:id="@+id/tenureInfo"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_150sdp">
+
+            </ListView>
+
+            <TextView
+                android:id="@+id/count_poi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:background="@color/color_theme_light"
+                android:text=""
+                android:textColor="@color/black"
+                android:layout_marginBottom="@dimen/_2sdp"
+                android:textSize="@dimen/textSize" />
+
+            <TextView
+                android:id="@+id/cutom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:background="@color/color_theme_light"
+
+                android:text="Custom Attributes"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textSize" />
+
+            <ListView
+                android:id="@+id/customInfo"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_100sdp">
+
+            </ListView>
+
+
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+
+
+        <Button
+            android:id="@+id/edit_attributes"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@color/color_accent"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/edit_attributes"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btnClose"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@color/color_accent"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/SAVEClose"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
+    </ScrollView>

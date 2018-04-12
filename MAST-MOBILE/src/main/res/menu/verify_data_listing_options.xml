@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.ex.pn.cloudburst.TestActivity" >
+
+    <item
+        android:id="@+id/view_map"
+        android:orderInCategory="100"
+        android:title="@string/view_map"
+        app:showAsAction="never"/>
+     <item
+        android:id="@+id/view_attributes"
+        android:orderInCategory="100"
+        android:title="@string/view_attributes"
+        app:showAsAction="never"/>
+    <!--   <item
+        android:id="@+id/add_witness"
+        android:orderInCategory="100"
+        android:title="@string/add_witness"
+        app:showAsAction="never"/> -->
+       <item
+        android:id="@+id/mark_as_verified"
+        android:orderInCategory="100"
+        android:title="@string/mark_as_verified"
+        app:showAsAction="never"/>
+
+</menu>

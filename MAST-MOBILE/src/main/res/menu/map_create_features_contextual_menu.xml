@@ -1,0 +1,31 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <item
+        android:id="@+id/plot_by_gps"
+        android:icon="@drawable/action_gps"
+        android:title="@string/plot_by_gps"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/undo"
+        android:icon="@drawable/action_undo"
+        app:showAsAction="always"
+        android:title="@string/undo"/>
+    <item
+        android:id="@+id/clear_features"
+        android:icon="@drawable/abc"
+        app:showAsAction="always"
+        android:title="@string/clear_feature"/>
+    <item
+        android:id="@+id/save_features"
+        android:icon="@drawable/action_save"
+        app:showAsAction="always"
+        android:title="@string/save_feature"/>
+
+
+
+
+</menu>

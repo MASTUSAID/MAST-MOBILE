@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <CheckBox
+        android:text="@string/snapToVertex"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/chbxSnapToVertex"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="16sp"
+        android:theme="@style/AppTheme" />
+    <CheckBox
+        android:text="@string/snapToSegment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/chbxSnapToSegment"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="16sp"
+        android:checked="false"
+        android:theme="@style/AppTheme" />
+
+    <TextView
+        android:text="@string/snapTolerance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lblSnappingTolerance"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:paddingLeft="15dp"
+        android:layout_marginTop="5dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:inputType="number"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/editext_border"
+        android:textColor="@color/black"
+        android:ems="10"
+        android:id="@+id/txtSnapTolerance"
+        android:layout_marginTop="5dp"
+        android:maxLength="3"
+        android:paddingLeft="5dp" />
+    <Button
+        android:id="@+id/btn_ok"
+        android:layout_width="104dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="@string/btn_ok"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:background="@drawable/dialog_button_style"/>
+</LinearLayout>
