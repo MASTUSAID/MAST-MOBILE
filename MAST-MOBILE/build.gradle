@@ -59,4 +59,5 @@ dependencies {
     compile 'org.jetbrains:annotations:7.0.2'
     compile 'pub.devrel:easypermissions:1.0.1'
 
+
 }

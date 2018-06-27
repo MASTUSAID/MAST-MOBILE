@@ -163,7 +163,8 @@ public class AddSocialTenureActivity extends ActionBarActivity {
         int IsNatural=db.getpersonTypefromFeature(featureId);
         if (IsNatural==2){
             for (int i=0;i<shareTypes.size();i++) {
-                if(shareTypes.get(i).getName().equalsIgnoreCase("Collective Tenancy")){
+//                if(shareTypes.get(i).getName().equalsIgnoreCase("Collective Tenancy")){
+                if(shareTypes.get(i).getName().equalsIgnoreCase("Common/Collective Tenancy")){
                     spinnerShareType.setSelection(i);
 
 
@@ -447,7 +448,7 @@ public class AddSocialTenureActivity extends ActionBarActivity {
 //                            }else if (IsNatural ==1 || IsNatural==3){
 //                                nextScreen = new Intent(context, PersonListActivity.class);
 //                            }
-                                    nextScreen = new Intent(context, PersonListActivity.class);//
+                               nextScreen = new Intent(context, PersonListActivity.class);//
                                 }
                                 nextScreen.putExtra("featureid", featureId);
                                 nextScreen.putExtra("rightId", right.getId());

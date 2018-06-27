@@ -1,20 +1,15 @@
 package com.rmsi.android.mast.activity;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Criteria;
@@ -24,12 +19,13 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -65,7 +61,6 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.drive.query.internal.InFilter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
@@ -76,7 +71,6 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -88,9 +82,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.PolyUtil;
-import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.geojson.GeoJsonLineStringStyle;
-import com.google.maps.android.geometry.Bounds;
 import com.rmsi.android.mast.adapter.AddFeaturesOptionsAdapter;
 import com.rmsi.android.mast.db.DbController;
 import com.rmsi.android.mast.domain.AOI;
@@ -110,6 +101,15 @@ import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.io.WKTReader;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by ambar.srivastava on 12/14/2017.
@@ -184,7 +184,19 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
     BluetoothSocket bluetoothSocket;
     InputStream in;
     InputStreamReader isr;
-    boolean isEditspatial=false;
+    boolean isEditspatial = false;
+
+    boolean isBTActive = false;
+
+    double latitude = 0.0;
+    double longitude = 0.0;
+    String hdop = "";
+    String nbsat = "";
+    Handler handler = new Handler();
+    Handler handler1 = new Handler();
+    double accValue;
+    String nmeaMessage = "";
+    BluetoothAdapter mBluetoothAdapter;
 
 
     /**
@@ -198,6 +210,8 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         //Initializing context in common functions in case of a crash
+
+
         try {
             CommonFunctions.getInstance().Initialize(getApplicationContext());
         } catch (Exception e) {
@@ -217,6 +231,20 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
             drawFeatureByFlagGPS = extras.getString("drawFeatureByFlag");
             //CorordinatesDisplay=extras.getString("Corordinates");
         }
+
+
+//        BroadcastReceiverBT BTReceiver =new BroadcastReceiverBT(context);
+        //The BroadcastReceiver that listens for bluetooth broadcasts
+        try {
+            IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+
+
+            this.registerReceiver(BTReceiver, filter2);
+        }catch (Exception e){
+            cf.appLog("",e);
+        }
+
+
 
         Intent intent = getIntent();
 
@@ -472,6 +500,11 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
 //        commonFunctions.getConnectToGpsDevice(isReview,drawFeatureByFlagGPS);
     }
 
+    //ambar
+
+
+    //amabar
+
     @Override
     public void onMapReady(GoogleMap map) {
         googleMap = map;
@@ -583,7 +616,25 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
+        locationManager.removeUpdates(locationListener);
+        try {
+            this.unregisterReceiver(BTReceiver);
+        }catch (Exception e){
+            e.getMessage();
+        }
+
+        try {
+            handler.removeCallbacksAndMessages(null);
+            handler1.removeCallbacksAndMessages(null);
+        }catch (Exception e){
+            e.getMessage();
+            cf.appLog("",e);
+        }
+//        handler.removeCallbacks((Runnable) CapturePareclData.this);
+
     }
+
+
 
 
     private class mapLoadedCallBackListener implements OnMapLoadedCallback {
@@ -836,7 +887,7 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
             } else {
 
                 //isValidInPolygon:  point is in given polygon or not
-                if (latLngs.size()!=0 ){
+                if (latLngs.size() != 0) {
                     boolean isValidInPolygon = PolyUtil.containsLocation(pointFromMap, latLngs, true);
 
                     if (isValidInPolygon) {
@@ -844,7 +895,7 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
                     } else {
                         Toast.makeText(context, "Please Draw Point in assigned work allocation unit.", Toast.LENGTH_SHORT).show();
                     }
-                }else {
+                } else {
                     handleMapClick(pointFromMap);
                 }
 
@@ -1055,7 +1106,7 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
             }
 
             lastKnowPosition = marker.getPosition();
-            if (latLngs.size()!=0 ) {
+            if (latLngs.size() != 0) {
                 boolean isValidInPolygon = PolyUtil.containsLocation(lastKnowPosition, latLngs, true);
                 if (isValidInPolygon) {
                     boolean changed = false;
@@ -1117,7 +1168,7 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
 //                    drawnFeature = newpoly;
                         //remove all marker from current feature after create point outside the aoi
                         for (Marker m : currMarkers) {
-                           m.remove();
+                            m.remove();
 
                         }
                         marker.remove();
@@ -1147,7 +1198,7 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
                         loadFeatureforEdit();
                     }
                 }
-            }else {
+            } else {
                 boolean changed = false;
 
                 for (int i = 0; i < currMarkers.size(); i++) {
@@ -1453,7 +1504,20 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
                     mode.finish();
                     return true;
                 case R.id.plot_by_gps:
-                    drawFeatureByGPS();
+
+                    try {
+                        handler1.postDelayed(new Runnable() {
+                            public void run() {
+                                //   getAccuracyfromExternalDevice();
+                                new AddTask().execute();
+                                handler1.postDelayed(this, 5000);
+                            }
+                        }, 5000);
+                        drawFeatureByGPS();
+                    }catch (Exception e){
+                        cf.appLog("",e);
+                    }
+
                     return true;
                 case R.id.undo:
                     undoLastpointDraw();
@@ -1469,6 +1533,79 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
             return false;
         }
     };
+
+    private void getAccuracyfromExternalDevice() {
+
+        try {
+
+            in = commonFunctions.bluetoothSocket.getInputStream();
+            isr = new InputStreamReader(in);
+            BufferedReader br = new BufferedReader(isr);
+
+
+            nmeaMessage = "";
+            while (true) {
+
+                nmeaMessage = br.readLine();
+
+                if (nmeaMessage.contains("GPGGA")) {
+
+                    break;                             // parse NMEA messages
+                }
+
+            }
+
+            //in.close();
+            //isr.clo se();
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+
+
+        if (nmeaMessage != "") {
+
+            String[] splitter = nmeaMessage.split(",");
+
+            String lat = splitter[2];
+            // direction (N/S)
+            String latDir = splitter[3];
+            // longitude dddmm.M
+            String lon = splitter[4];
+            // direction (E/W)
+            String lonDir = splitter[5];
+
+            // Number of satellites being tracked
+            nbsat = splitter[7];
+
+            // Horizontal dilution of position (float)
+            hdop = splitter[8];
+
+            latitude = parseNmeaLatitude(lat, latDir);
+            longitude = parseNmeaLongitude(lon, lonDir);
+
+        }
+
+        if (latitude != 0.0 && longitude != 0.0) {
+
+
+            //int accuracy = (int) locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getAccuracy();
+            double acc = Double.parseDouble(hdop);
+                    /*float accuracy=(float) (Float.parseFloat(hdop)*2.5);*/
+            //	Toast.makeText(getApplicationContext(), "Hdop is "+hdop, Toast.LENGTH_LONG).show();
+            accValue = acc * 3.6;
+//            actionMode.setTitle(df.format(accValue) + getResources().getString(R.string.gps_accuracy));
+//            actionMode.setSubtitle(nbsat + " " + getResources().getString(R.string.sats_use_msg));
+//            this.runOnUiThread(new Runnable() {
+//                public void run() {
+//                    actionMode.setTitle(df.format(accValue) + getResources().getString(R.string.gps_accuracy));
+//                    actionMode.setSubtitle(nbsat + " " + getResources().getString(R.string.sats_use_msg));
+//                }
+//            });
+        }
+
+    }
 
     private void clearDrawnFeaturesFromMap() {
         try {
@@ -1500,15 +1637,15 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void resetMapMode() {
-        if (isEditspatial==true){
+        if (isEditspatial == true) {
             finish();
-        }else {
+        } else {
             contextualMenuShown = false;
-        clearDrawnFeaturesFromMap();
+            clearDrawnFeaturesFromMap();
 
-        MAP_MODE = CLEAR_MODE;
-        dataCaptureMode = "";
-        featureId = 0L;
+            MAP_MODE = CLEAR_MODE;
+            dataCaptureMode = "";
+            featureId = 0L;
         }
 
 
@@ -1875,11 +2012,11 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void loadFeaturesFromDB(String strFeatureType) {
-        Feature featureCurrentEdit=null;
+        Feature featureCurrentEdit = null;
         try {
-            if (featureId!=0){
+            if (featureId != 0) {
 
-              featureCurrentEdit = DbController.getInstance(context).fetchFeaturebyID(featureId);
+                featureCurrentEdit = DbController.getInstance(context).fetchFeaturebyID(featureId);
             }
             clearMapFeatures();
             List<Feature> features = DbController.getInstance(context).fetchFeatures(strFeatureType);
@@ -1891,13 +2028,13 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
 
             for (Feature feature : features) {
                 if (!StringUtility.isEmpty(feature.getCoordinates())) {
-                    if (featureCurrentEdit!=null){
-                        if (featureCurrentEdit.getCoordinates().equalsIgnoreCase(feature.getCoordinates())){
+                    if (featureCurrentEdit != null) {
+                        if (featureCurrentEdit.getCoordinates().equalsIgnoreCase(feature.getCoordinates())) {
 
-                        }else {
+                        } else {
                             mapFeatures.add(new MapFeature(feature));
                         }
-                    }else {
+                    } else {
                         mapFeatures.add(new MapFeature(feature));
                     }
 
@@ -2265,7 +2402,7 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
                     if (mapPoint != null) {
                         GisUtility.zoomToPolygon(googleMap, rectOptions);
                     }
-                    isEditspatial=true;
+                    isEditspatial = true;
                 } else if (feature.getGeomType().equalsIgnoreCase(Feature.GEOM_LINE)) {
                     String coordinates = feature.getCoordinates();
 
@@ -2292,7 +2429,7 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
                     if (mapPoint != null) {
                         GisUtility.zoomToPolyline(googleMap, rectOptions);
                     }
-                    isEditspatial=true;
+                    isEditspatial = true;
                 } else if (feature.getGeomType().equalsIgnoreCase(Feature.GEOM_POINT)) {
                     String coordinates = feature.getCoordinates();
                     //googleMap.clear();
@@ -2306,12 +2443,13 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
                     currMarkers.add(mark);
                     googleMap.animateCamera(CameraUpdateFactory.newLatLng(mapPoint));
                     drawnFeature = mark;
-                    isEditspatial=true;
+                    isEditspatial = true;
                 }
 
             }
         }
     }
+
 
     private void drawFeatureByGPS() {
         //Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -2326,14 +2464,17 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
 
 
         String nmeaMessage = "";
+
         try {
 
             in = commonFunctions.bluetoothSocket.getInputStream();
             isr = new InputStreamReader(in);
             BufferedReader br = new BufferedReader(isr);
 
+
             nmeaMessage = "";
             while (true) {
+
                 nmeaMessage = br.readLine();
 
                 if (nmeaMessage.contains("GPGGA")) {
@@ -2344,11 +2485,13 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
             }
 
             //in.close();
-            //isr.close();
+            //isr.clo se();
         } catch (Exception e) {
 
             e.printStackTrace();
+
         }
+
 
         if (nmeaMessage != "") {
 
@@ -2370,7 +2513,9 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
 
             latitude = parseNmeaLatitude(lat, latDir);
             longitude = parseNmeaLongitude(lon, lonDir);
+
         }
+
 
         //LatLng  pointFromGps = new LatLng(location.getLatitude(),location.getLongitude());
 
@@ -2400,9 +2545,18 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
             double acc = Double.parseDouble(hdop);
                     /*float accuracy=(float) (Float.parseFloat(hdop)*2.5);*/
             //	Toast.makeText(getApplicationContext(), "Hdop is "+hdop, Toast.LENGTH_LONG).show();
-            actionMode.setTitle(acc * 3.5 + getResources().getString(R.string.gps_accuracy));
-            actionMode.setSubtitle(nbsat + " " + getResources().getString(R.string.sats_use_msg));
+//            actionMode.setTitle(acc * 3.5 + getResources().getString(R.string.gps_accuracy));
+            final double accValue = acc * 3.6;
+            final String finalNbsat = nbsat;
+            this.runOnUiThread(new Runnable() {
+                public void run() {
+                    actionMode.setTitle(df.format(accValue) + getResources().getString(R.string.gps_accuracy));
+                    actionMode.setSubtitle(finalNbsat + " " + getResources().getString(R.string.sats_use_msg));
+                }
+            });
+
         } else if (commonFunctions.bluetoothSocket == null || !commonFunctions.bluetoothSocket.isConnected()) {
+
 
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -2410,7 +2564,8 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
                 cf.showGPSSettingsAlert(context);
             } else if (location != null) {
 
-
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
                 pointFromGps = new LatLng(location.getLatitude(), location.getLongitude());
 
                 float currzoom = googleMap.getCameraPosition().zoom;
@@ -2429,8 +2584,8 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
                 currMarkers.add(mark);
             } else {
                 Toast.makeText(context, R.string.noLocationFound, Toast.LENGTH_SHORT).show();
-            }
 
+            }
 
 
 			/*		int accuracy = (int) locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getAccuracy();
@@ -2440,6 +2595,8 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
 				    	actionMode.setSubtitle(nbsat+" "+getResources().getString(R.string.sats_use_msg));*/
         } else {
             Toast.makeText(context, R.string.noLocationFound, Toast.LENGTH_LONG).show();
+
+
         }
 
 
@@ -2481,7 +2638,7 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
                     polygon.setPoints(points);
 
 						/*//TESTING
-						if(points.size()==5)
+                        if(points.size()==5)
 						{
 							Toast.makeText(context,"RECREATING >>> GPS", Toast.LENGTH_SHORT).show();
 							recreate();
@@ -2499,12 +2656,228 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
                 }
             }
         }
-		/*}
-		else
+
+//        if (isBTActive==false){
+//            commonFunctions.bluetoothSocket=null;
+//            CommonFunctions  commonFunctions=new CommonFunctions(CapturePareclData.this);
+//            commonFunctions.getConnectToGpsDevice(false);
+//        }
+        /*}
+        else
 		{
 			Toast.makeText(context,R.string.noLocationFound, Toast.LENGTH_SHORT).show();
 		}*/
     }
+
+//    private void drawFeatureByGPS() {
+//        //Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//
+//		/*if (location != null)
+//        {*/
+//
+//        double latitude = 0.0;
+//        double longitude = 0.0;
+//        String hdop = "";
+//        String nbsat = "";
+//
+//
+//        String nmeaMessage = "";
+//
+//        try {
+//
+//            in = commonFunctions.bluetoothSocket.getInputStream();
+//            isr = new InputStreamReader(in);
+//            BufferedReader br = new BufferedReader(isr);
+//
+//
+//            nmeaMessage = "";
+//            while (true) {
+//
+//                nmeaMessage = br.readLine();
+//
+//                if (nmeaMessage.contains("GPGGA")) {
+//
+//                    break;                             // parse NMEA messages
+//                }
+//
+//            }
+//
+//            //in.close();
+//            //isr.clo se();
+//        } catch (Exception e) {
+//
+//            e.printStackTrace();
+//
+//        }
+//
+//
+//        if (nmeaMessage != "") {
+//
+//            String[] splitter = nmeaMessage.split(",");
+//
+//            String lat = splitter[2];
+//            // direction (N/S)
+//            String latDir = splitter[3];
+//            // longitude dddmm.M
+//            String lon = splitter[4];
+//            // direction (E/W)
+//            String lonDir = splitter[5];
+//
+//            // Number of satellites being tracked
+//            nbsat = splitter[7];
+//
+//            // Horizontal dilution of position (float)
+//            hdop = splitter[8];
+//
+//            latitude = parseNmeaLatitude(lat, latDir);
+//            longitude = parseNmeaLongitude(lon, lonDir);
+//
+//        }
+//
+//        //LatLng  pointFromGps = new LatLng(location.getLatitude(),location.getLongitude());
+//
+//        LatLng pointFromGps = null;
+//        MarkerOptions marker;
+//        Marker mark = null;
+//        if (latitude != 0.0 && longitude != 0.0) {
+//
+//            pointFromGps = new LatLng(latitude, longitude);
+//            float currzoom = googleMap.getCameraPosition().zoom;
+//            float zoom = 19;
+//            if (currzoom > zoom) {
+//                zoom = currzoom;
+//            }
+//            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pointFromGps, zoom));
+//
+//            points.add(pointFromGps);
+//            marker = new MarkerOptions().position(pointFromGps);
+//            marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+//            marker.draggable(true);
+//            marker.snippet(pointFromGps.latitude + "," + pointFromGps.longitude);
+//            mark = googleMap.addMarker(marker);
+//            currMarkers.add(mark);
+//
+//
+//            //int accuracy = (int) locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getAccuracy();
+//            double acc = Double.parseDouble(hdop);
+//                    /*float accuracy=(float) (Float.parseFloat(hdop)*2.5);*/
+//            //	Toast.makeText(getApplicationContext(), "Hdop is "+hdop, Toast.LENGTH_LONG).show();
+//            actionMode.setTitle(acc * 3.5 + getResources().getString(R.string.gps_accuracy));
+//            actionMode.setSubtitle(nbsat + " " + getResources().getString(R.string.sats_use_msg));
+//        } else if (commonFunctions.bluetoothSocket == null || !commonFunctions.bluetoothSocket.isConnected()) {
+//
+//
+//                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//                boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+//                if (!isGPSEnabled) {
+//                    cf.showGPSSettingsAlert(context);
+//                } else if (location != null) {
+//
+//                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//                    StrictMode.setThreadPolicy(policy);
+//                    pointFromGps = new LatLng(location.getLatitude(), location.getLongitude());
+//
+//                    float currzoom = googleMap.getCameraPosition().zoom;
+//                    float zoom = 19;
+//                    if (currzoom > zoom) {
+//                        zoom = currzoom;
+//                    }
+//                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pointFromGps, zoom));
+//
+//                    points.add(pointFromGps);
+//                    marker = new MarkerOptions().position(pointFromGps);
+//                    marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+//                    marker.draggable(true);
+//                    marker.snippet(pointFromGps.latitude + "," + pointFromGps.longitude);
+//                    mark = googleMap.addMarker(marker);
+//                    currMarkers.add(mark);
+//                } else {
+//                    Toast.makeText(context, R.string.noLocationFound, Toast.LENGTH_SHORT).show();
+//
+//                }
+//
+//
+//			/*		int accuracy = (int) locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getAccuracy();
+//                            //double acc = Double.parseDouble(hdop);
+//					float accuracy=(float) (Float.parseFloat(hdop)*2.5);
+//				    	actionMode.setTitle(accuracy+getResources().getString(R.string.gps_accuracy));
+//				    	actionMode.setSubtitle(nbsat+" "+getResources().getString(R.string.sats_use_msg));*/
+//        } else {
+//            Toast.makeText(context, R.string.noLocationFound, Toast.LENGTH_LONG).show();
+//
+//
+//
+//        }
+//
+//
+//        if (MAP_MODE == FEATURE_DRAW_POINT_GPS_MODE) {
+//            if (points.size() > 1) {
+//                points.clear();
+//                currMarkers.clear();
+//
+//                points.add(pointFromGps);
+//                currMarkers.add(mark);
+//
+//                Marker tmp = (Marker) drawnFeature;
+//                tmp.remove();
+//            }
+//            drawnFeature = mark;
+//        } else if (MAP_MODE == FEATURE_DRAW_LINE_GPS_MODE) {
+//            if (points.size() > 1) {
+//                if (points.size() > 2) {
+//                    Polyline polyline = (Polyline) drawnFeature;
+//                    polyline.setPoints(points);
+//                } else {
+//                    //for polyline
+//                    PolylineOptions rectOptions = new PolylineOptions();
+//
+//                    for (LatLng p : points) {
+//                        rectOptions.add(p);
+//                    }
+//                    rectOptions.zIndex(4);
+//                    rectOptions.color(colorNewBoundary);
+//                    Polyline polyline = googleMap.addPolyline(rectOptions);
+//                    drawnFeature = polyline;
+//                }
+//            }
+//        } else if (MAP_MODE == FEATURE_DRAW_POLYGON_GPS_MODE) {
+//            //for polygon
+//            if (points.size() > 2) {
+//                if (points.size() > 3) {
+//                    Polygon polygon = (Polygon) drawnFeature;
+//                    polygon.setPoints(points);
+//
+//						/*//TESTING
+//                        if(points.size()==5)
+//						{
+//							Toast.makeText(context,"RECREATING >>> GPS", Toast.LENGTH_SHORT).show();
+//							recreate();
+//						}*/
+//                } else {
+//                    PolygonOptions rectOptions = new PolygonOptions();
+//                    for (LatLng p : points) {
+//                        rectOptions.add(p);
+//                    }
+//                    rectOptions.fillColor(colorTransparent);
+//                    rectOptions.strokeColor(colorNewBoundary);
+//                    rectOptions.zIndex(4);
+//                    Polygon polygon = googleMap.addPolygon(rectOptions);
+//                    drawnFeature = polygon;
+//                }
+//            }
+//        }
+//
+////        if (isBTActive==false){
+////            commonFunctions.bluetoothSocket=null;
+////            CommonFunctions  commonFunctions=new CommonFunctions(CapturePareclData.this);
+////            commonFunctions.getConnectToGpsDevice(false);
+////        }
+//		/*}
+//		else
+//		{
+//			Toast.makeText(context,R.string.noLocationFound, Toast.LENGTH_SHORT).show();
+//		}*/
+//    }
 
 
 //    private void drawFeatureByGPS() {
@@ -2653,7 +3026,7 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
             Point ptClicked = new GeometryFactory().createPoint(new Coordinate(pointFromMap.longitude, pointFromMap.latitude));
             long featureid = 0;
 
-            if (mapFeatures != null ) {
+            if (mapFeatures != null) {
                 for (MapFeature mapFeature : mapFeatures) {
                     if (mapFeature.containsPoint(ptClicked)) {
                         featureid = mapFeature.getFeature().getId();
@@ -3284,7 +3657,9 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
         if ((MAP_MODE == FEATURE_DRAW_POLYGON_GPS_MODE || MAP_MODE == FEATURE_DRAW_POINT_GPS_MODE
                 || MAP_MODE == FEATURE_DRAW_LINE_GPS_MODE) && points.size() > 0) {
             cf.saveGPSmode(MAP_MODE, points);
+
         }
+
         super.onPause();
     }
 
@@ -3385,12 +3760,23 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
         {
             commonFunctions.discoverDevice();
         }
+            if (requestCode == 30) //bluetooth enable
+            {
+
+            }
     }
 
     private double parseNmeaLatitude(String lat, String orientation) {
         double latitude = 0.0;
+        double temp1 = 0;
         if (lat != null && orientation != null && !lat.equals("") && !orientation.equals("")) {
-            double temp1 = Double.parseDouble(lat);
+            try {
+                 temp1 = Double.parseDouble(lat);
+            }catch (NumberFormatException n){
+                n.getMessage();
+                cf.appLog("", n);
+            }
+            
             double temp2 = Math.floor(temp1 / 100);
             double temp3 = (temp1 / 100 - temp2) / 0.6;
             if (orientation.equals("S")) {
@@ -3404,8 +3790,15 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
 
     private double parseNmeaLongitude(String lon, String orientation) {
         double longitude = 0.0;
+        double temp1=0.0;
         if (lon != null && orientation != null && !lon.equals("") && !orientation.equals("")) {
-            double temp1 = Double.parseDouble(lon);
+            try {
+                temp1 = Double.parseDouble(lon);
+            }catch (NumberFormatException n){
+                n.getMessage();
+                cf.appLog("", n);
+            }
+         //   double temp1 = Double.parseDouble(lon);
             double temp2 = Math.floor(temp1 / 100);
             double temp3 = (temp1 / 100 - temp2) / 0.6;
             if (orientation.equals("W")) {
@@ -3418,5 +3811,152 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
     }
 
 
+    //The BroadcastReceiver that listens for bluetooth broadcasts
+    private final BroadcastReceiver BTReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
 
+
+            if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+                //Do something if connected
+                // Get the BluetoothDevice object from the Intent
+                new ConnectingDevice(intent).execute();
+
+
+//
+
+            }
+        }
+    };
+
+    public class AddTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            // TODO Auto-generated method stub
+            try {
+                getAccuracyfromExternalDevice();
+
+            }catch (NumberFormatException e){
+                e.getMessage();
+                cf.appLog("",e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
+            try{
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        actionMode.setTitle(df.format(accValue) + getResources().getString(R.string.gps_accuracy));
+                        actionMode.setSubtitle(nbsat + " " + getResources().getString(R.string.sats_use_msg));
+                    }
+                });
+            }catch (Exception e){
+                cf.appLog("",e);
+            }
+
+        }
+    }
+
+    private class ConnectingDevice extends AsyncTask<String, Integer, String> {
+
+        Intent intent;
+        public ConnectingDevice(Intent intent) {
+            this.intent=intent;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            // TODO Auto-generated method stub
+            final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+            try {
+
+                handler1.removeCallbacksAndMessages(null);
+                CommonFunctions.bluetoothSocket = null;
+                if ( CommonFunctions.bluetoothSocket==null) {
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                            boolean isEnabled = mBluetoothAdapter.isEnabled();
+                            if (!isEnabled) {
+                                Intent enableBtIntent = new Intent(
+                                        BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                                startActivityForResult(enableBtIntent, 30);
+                                handler.postDelayed(this, 5000);
+                            } else {
+                                //   getAccuracyfromExternalDevice();
+                                CommonFunctions.connectBluetoothDevice(device.getName());
+                                if (CommonFunctions.bluetoothSocket.isConnected()) {
+                                    isBTActive = true;
+
+
+                                } else {
+                                    try{
+                                        CommonFunctions.bluetoothSocket = null;
+                                    }catch (Exception e){
+                                        cf.appLog("",e);
+                                    }
+
+                                }
+
+                                if (isBTActive == true) {
+                                    try{
+                                        handler.removeCallbacks(this);
+                                        isBTActive = false;
+                                    }catch (Exception e){
+                                        cf.appLog("",e);
+                                    }
+
+                                } else {
+
+                                    try{
+                                        handler.postDelayed(this, 5000);
+                                       // handler1.removeCallbacks(this);
+                                    }catch (Exception e){
+                                        cf.appLog("",e);
+                                    }
+
+                                }
+                            }
+                        }
+                    }, 5000);
+
+                }
+
+            }catch (Exception e){
+                cf.appLog("",e);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
+//            runOnUiThread(new Runnable() {
+//                public void run() {
+//                    actionMode.setTitle(df.format(accValue) + getResources().getString(R.string.gps_accuracy));
+//                    actionMode.setSubtitle(nbsat + " " + getResources().getString(R.string.sats_use_msg));
+//                }
+//            });
+        }
+    }
 }

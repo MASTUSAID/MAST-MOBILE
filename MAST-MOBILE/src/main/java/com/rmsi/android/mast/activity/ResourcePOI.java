@@ -305,6 +305,16 @@ public class ResourcePOI extends ActionBarActivity {
             public void onClick(View v) {
 
                 //Case to find whether it's an Add event or Edit event
+
+                int tenureTypeID= DbController.getInstance(context).getTenureByFeatureID(featureId);
+                if (tenureTypeID!=10 && tenureTypeID!=18  && tenureTypeID!=14 && tenureTypeID!=13){
+                    int checkPrimaryOccupant= DbController.getInstance(context).getPrimaryOccupant(featureId);
+                    if (checkPrimaryOccupant==0){
+                        Toast.makeText(context, "You should add atleast One Primary Occupant", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+
                 boolean isAddCase=false;
                 isAddCase=cf.IsEditResourceAttribute(featureId,tenureType);
 

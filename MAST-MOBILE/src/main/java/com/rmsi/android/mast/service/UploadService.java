@@ -391,7 +391,6 @@ public class UploadService extends IntentService {
         boolean mediaAvailable = false;
         boolean isMultimediaUploaded=false;
 
-
             do {
                 try {
                     JSONArray syncDataObj = DbController.getInstance(getApplicationContext()).getMultimediaforUpload();
@@ -426,6 +425,45 @@ public class UploadService extends IntentService {
         return isMultimediaUploaded;
         //return true;
     }
+//    private boolean startMultimediaUpload() {
+//        boolean mediaAvailable = false;
+//        boolean isMultimediaUploaded=false;
+//
+//
+//            do {
+//                try {
+//                    JSONArray syncDataObj = DbController.getInstance(getApplicationContext()).getMultimediaforUpload();
+//                    if (syncDataObj.length() > 0) {
+//                        mediaAvailable = true;
+//                        String filepath = syncDataObj.getJSONArray(0).getString(3);
+//                        String attribData = syncDataObj.toString();
+//
+//                        int mediaId = syncDataObj.getJSONArray(0).getInt(2);
+//                        boolean uploadResult = uploadMultimedia(filepath, attribData);
+//
+//                        if (!uploadResult) {
+//                            DbController.getInstance(getApplicationContext()).updateMediaSyncedStatus(mediaId + "", CommonFunctions.MEDIA_SYNC_ERROR);
+//
+//                        }
+//                        else
+//                        {
+//                            isMultimediaUploaded=true;
+//                        }
+//                    } else {
+//                        if (mediaAvailable)
+//                            DbController.getInstance(getApplicationContext()).resetMediaStatus();
+//                        mediaAvailable = false;
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    cf.syncLog("", e);
+//                    return false;
+//                }
+//            }
+//            while (mediaAvailable);
+//        return isMultimediaUploaded;
+//        //return true;
+//    }
 
     private void fetchRejectedFeatures() {
         InputStream is = null;

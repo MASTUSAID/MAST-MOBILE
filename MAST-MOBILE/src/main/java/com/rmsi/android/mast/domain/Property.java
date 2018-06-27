@@ -705,6 +705,16 @@ public class Property extends Feature implements Serializable {
             }
         }
 
+        int shareTypeId=DbController.getInstance(context).getShareIdByFeatureID(attributes.get(0).getFeatureId());
+
+        if (shareTypeId!=6) {
+            DbController db = DbController.getInstance(context);
+            if (db.getPrimaryCount(attributes.get(0).getFeatureId()) == 0) {
+                return handleError(context, R.string.PrimaryOwner, showMessage);
+
+            }
+        }
+
         return true;
     }
 
@@ -757,9 +767,25 @@ public class Property extends Feature implements Serializable {
         }
 
         // Check multiple occupancy common Tenancy ownership
+//        if ( shareId==ShareType.TYPE_Common_Tenancy) {
+//            if(getRight().getOwnersCount() < 2  || getRight().getOwnersCount() != getRight().getNaturalPersons().size()){
+//                return handleError(context, R.string.MultiCommonShareError, showMessage);
+//            }
+//        }
+
+
         if ( shareId==ShareType.TYPE_Common_Tenancy) {
-            if(getRight().getOwnersCount() < 2  || getRight().getOwnersCount() != getRight().getNaturalPersons().size()){
-                return handleError(context, R.string.MultiCommonShareError, showMessage);
+            DbController db = DbController.getInstance(context);
+            int Natural=db.getpersonTypefromFeature(featureId);
+            if (Natural==1) {
+                if (getRight().getOwnersCount() < 2 || getRight().getOwnersCount() != getRight().getNaturalPersons().size()) {
+                    return handleError(context, R.string.MultiCommonShareError, showMessage);
+                }
+            }
+            else if (Natural==2){
+                if(db.getNONNaturalPersonsByRight(featureId).size() < 1 ){
+                    return handleError(context, R.string.Collective, showMessage);
+                }
             }
         }
 

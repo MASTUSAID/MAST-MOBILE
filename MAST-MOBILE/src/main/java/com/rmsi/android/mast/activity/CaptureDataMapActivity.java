@@ -11,10 +11,14 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Criteria;
@@ -24,8 +28,10 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -175,7 +181,8 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
     String cordinates,CorordinatesDisplay = null;
 //    private ArrayList<LatLng> latLngs=new ArrayList<>();
 
-
+    BluetoothAdapter mBluetoothAdapter;
+    boolean isBTActive = false;
     boolean isReview=false;
     private String drawFeatureByFlagGPS;
     CommonFunctions commonFunctions;
@@ -185,6 +192,16 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
 
     boolean isEditspatial=false;
 
+
+    double latitude = 0.0;
+    double longitude = 0.0;
+    String hdop = "";
+    String nbsat = "";
+    Handler handler = new Handler();
+    Handler handler1 = new Handler();
+
+    String nmeaMessage = "";
+    double accValue;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -216,6 +233,18 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             drawFeatureByFlagGPS=extras.getString("drawFeatureByFlag");
 
         }
+
+        //The BroadcastReceiver that listens for bluetooth broadcasts
+
+        try {
+            IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+
+
+            this.registerReceiver(BTReceiver, filter2);
+        }catch (Exception e){
+            cf.appLog("",e);
+        }
+
 
         Intent intent = getIntent();
         geoType = intent.getStringExtra("GEOTYPE");
@@ -546,35 +575,7 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             //Toast.makeText(context, msg + ": " + offlineSpatialData.get(pos).getAlias(), Toast.LENGTH_SHORT).show();
         }
     }
-//    private void loadOfflineData(int pos) {
-//        try {
-//            String extPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-//            String filepath = extPath + "/" + CommonFunctions.parentFolderName + "/" + CommonFunctions.dataFolderName
-//                    + "/" + offlineSpatialData.get(pos).getFile_Name();
-//            OfflineTileProvider provider = offlineSpatialData.get(pos).getProvider();
-//            File mbtileFile = new File(filepath);
-//
-//            TileOverlayOptions opts = new TileOverlayOptions();
-//            if (provider == null) {
-//                // Create an instance of OfflineTileProvider.
-//                provider = new OfflineTileProvider(mbtileFile);
-//                offlineSpatialData.get(pos).setProvider(provider);
-//            }
-//            // Set the tile provider on the TileOverlayOptions.
-//            opts.tileProvider(provider);
-//            // Add the tile overlay to the map.
-//            TileOverlay overlay = googleMap.addTileOverlay(opts);
-//            offlineSpatialData.get(pos).setOverlay(overlay);
-//
-//            // Sometime later when the map view is destroyed, close the provider.
-//            // This is important to prevent a leak of the backing SQLiteDatabase.
-//            provider.close();
-//        } catch (Exception e) {
-//            cf.appLog("", e);
-//            String msg = getResources().getString(R.string.unableToLoadOfflineData);
-//           // Toast.makeText(context, msg + ": " + offlineSpatialData.get(pos).getAlias(), Toast.LENGTH_SHORT).show();
-//        }
-//    }
+
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -610,6 +611,21 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
+        locationManager.removeUpdates(locationListener);
+        try {
+            this.unregisterReceiver(BTReceiver);
+        }catch (Exception e){
+            e.getMessage();
+        }
+//        handler.removeCallbacks((Runnable) CapturePareclData.this);
+      //  handler.removeCallbacksAndMessages(null);
+        try {
+            handler.removeCallbacksAndMessages(null);
+            handler1.removeCallbacksAndMessages(null);
+        }catch (Exception e){
+            e.getMessage();
+            cf.appLog("",e);
+        }
     }
 
     private class mapLoadedCallBackListener implements OnMapLoadedCallback {
@@ -1508,7 +1524,29 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                     mode.finish();
                     return true;
                 case R.id.plot_by_gps:
-                    drawFeatureByGPS();
+
+//                    handler.postDelayed(new Runnable(){
+//                        public void run(){
+//                            new  AddTask().execute();
+//                            //getAccuracyfromExternalDevice();
+//                            handler.postDelayed(this, 5000);
+//                        }
+//                    }, 5000);
+//                    drawFeatureByGPS();
+
+                    try {
+                        handler1.postDelayed(new Runnable() {
+                            public void run() {
+                                //   getAccuracyfromExternalDevice();
+                                new AddTask().execute();
+                                handler1.postDelayed(this, 5000);
+                            }
+                        }, 5000);
+                        drawFeatureByGPS();
+                    }catch (Exception e){
+                        cf.appLog("",e);
+                    }
+
                     return true;
                 case R.id.undo:
                     undoLastpointDraw();
@@ -1524,6 +1562,80 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             return false;
         }
     };
+
+    private void getAccuracyfromExternalDevice() {
+
+        try {
+
+            in = commonFunctions.bluetoothSocket.getInputStream();
+            isr = new InputStreamReader(in);
+            BufferedReader br = new BufferedReader(isr);
+
+
+            nmeaMessage = "";
+            while (true) {
+
+                nmeaMessage = br.readLine();
+
+                if (nmeaMessage.contains("GPGGA")) {
+
+                    break;                             // parse NMEA messages
+                }
+
+            }
+
+            //in.close();
+            //isr.clo se();
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+
+
+        if (nmeaMessage != "") {
+
+            String[] splitter = nmeaMessage.split(",");
+
+            String lat = splitter[2];
+            // direction (N/S)
+            String latDir = splitter[3];
+            // longitude dddmm.M
+            String lon = splitter[4];
+            // direction (E/W)
+            String lonDir = splitter[5];
+
+            // Number of satellites being tracked
+            nbsat = splitter[7];
+
+            // Horizontal dilution of position (float)
+            hdop = splitter[8];
+
+            latitude = parseNmeaLatitude(lat, latDir);
+            longitude = parseNmeaLongitude(lon, lonDir);
+
+        }
+
+        if (latitude != 0.0 && longitude != 0.0) {
+
+
+
+            //int accuracy = (int) locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getAccuracy();
+            double acc = Double.parseDouble(hdop);
+                    /*float accuracy=(float) (Float.parseFloat(hdop)*2.5);*/
+            //	Toast.makeText(getApplicationContext(), "Hdop is "+hdop, Toast.LENGTH_LONG).show();
+             accValue=acc * 3.6;
+//            actionMode.setTitle(df.format(accValue) + getResources().getString(R.string.gps_accuracy));
+//            actionMode.setSubtitle(nbsat + " " + getResources().getString(R.string.sats_use_msg));
+
+//            this.runOnUiThread(new Runnable() {
+//                public void run() {
+//                    actionMode.setTitle(df.format(accValue) + getResources().getString(R.string.gps_accuracy));
+//                    actionMode.setSubtitle(nbsat + " " + getResources().getString(R.string.sats_use_msg));
+//                }
+//            });
+        }
+    }
 
     private void clearDrawnFeaturesFromMap() {
         try {
@@ -2453,9 +2565,19 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             double acc = Double.parseDouble(hdop);
 					/*float accuracy=(float) (Float.parseFloat(hdop)*2.5);*/
             //	Toast.makeText(getApplicationContext(), "Hdop is "+hdop, Toast.LENGTH_LONG).show();
-            actionMode.setTitle(acc*3.5+getResources().getString(R.string.gps_accuracy));
-            actionMode.setSubtitle(nbsat+" "+getResources().getString(R.string.sats_use_msg));
+//            actionMode.setTitle(acc*3.5+getResources().getString(R.string.gps_accuracy));
+            final double accValue=acc * 3.6;
+//            actionMode.setTitle(df.format(accValue) + getResources().getString(R.string.gps_accuracy));
+//            actionMode.setSubtitle(nbsat+" "+getResources().getString(R.string.sats_use_msg));
+            final String finalNbsat = nbsat;
+            this.runOnUiThread(new Runnable() {
+                public void run() {
+                    actionMode.setTitle(df.format(accValue) + getResources().getString(R.string.gps_accuracy));
+                    actionMode.setSubtitle(finalNbsat + " " + getResources().getString(R.string.sats_use_msg));
+                }
+            });
         }
+
 
         else if(commonFunctions.bluetoothSocket==null || !commonFunctions.bluetoothSocket.isConnected()){
 
@@ -3362,34 +3484,50 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         super.onPause();
     }
 
-    private double parseNmeaLatitude(String lat,String orientation){
+    private double parseNmeaLatitude(String lat, String orientation) {
         double latitude = 0.0;
-        if (lat != null && orientation != null && !lat.equals("") && !orientation.equals("")){
-            double temp1 = Double.parseDouble(lat);
-            double temp2 = Math.floor(temp1/100);
-            double temp3 = (temp1/100 - temp2)/0.6;
-            if (orientation.equals("S")){
-                latitude = -(temp2+temp3);
-            } else if (orientation.equals("N")){
-                latitude = (temp2+temp3);
+        double temp1 = 0;
+        if (lat != null && orientation != null && !lat.equals("") && !orientation.equals("")) {
+            try {
+                temp1 = Double.parseDouble(lat);
+            }catch (NumberFormatException n){
+                n.getMessage();
+                cf.appLog("", n);
+            }
+
+            double temp2 = Math.floor(temp1 / 100);
+            double temp3 = (temp1 / 100 - temp2) / 0.6;
+            if (orientation.equals("S")) {
+                latitude = -(temp2 + temp3);
+            } else if (orientation.equals("N")) {
+                latitude = (temp2 + temp3);
             }
         }
         return latitude;
     }
-    private double parseNmeaLongitude(String lon,String orientation){
+
+    private double parseNmeaLongitude(String lon, String orientation) {
         double longitude = 0.0;
-        if (lon != null && orientation != null && !lon.equals("") && !orientation.equals("")){
-            double temp1 = Double.parseDouble(lon);
-            double temp2 = Math.floor(temp1/100);
-            double temp3 = (temp1/100 - temp2)/0.6;
-            if (orientation.equals("W")){
-                longitude = -(temp2+temp3);
-            } else if (orientation.equals("E")){
-                longitude = (temp2+temp3);
+        double temp1=0.0;
+        if (lon != null && orientation != null && !lon.equals("") && !orientation.equals("")) {
+            try {
+                temp1 = Double.parseDouble(lon);
+            }catch (NumberFormatException n){
+                n.getMessage();
+                cf.appLog("", n);
+            }
+            //   double temp1 = Double.parseDouble(lon);
+            double temp2 = Math.floor(temp1 / 100);
+            double temp3 = (temp1 / 100 - temp2) / 0.6;
+            if (orientation.equals("W")) {
+                longitude = -(temp2 + temp3);
+            } else if (orientation.equals("E")) {
+                longitude = (temp2 + temp3);
             }
         }
         return longitude;
     }
+
 
     private void loadUpdatedFeatureforEdit() {
         if (featureId != 0) {
@@ -3564,6 +3702,196 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             }
         }
     }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) //bluetooth enable
+        {
+            commonFunctions.discoverDevice();
+        }
+        if (requestCode == 30) //bluetooth enable
+        {
+
+        }
+    }
+
+    //The BroadcastReceiver that listens for bluetooth broadcasts
+    private final BroadcastReceiver BTReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
 
 
+            if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+                //Do something if connected
+                // Get the BluetoothDevice object from the Intent
+                new ConnectingDevice(intent).execute();
+
+
+//                final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+//                CommonFunctions.bluetoothSocket = null;
+//                if (CommonFunctions.bluetoothSocket == null) {
+//                    handler.postDelayed(new Runnable() {
+//                        public void run() {
+//                            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//                            boolean isEnabled = mBluetoothAdapter.isEnabled();
+//                            if (!isEnabled) {
+//                                Intent enableBtIntent = new Intent(
+//                                        BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//                                startActivityForResult(enableBtIntent, 30);
+//                                handler.postDelayed(this, 5000);
+//                            } else {
+//                                //   getAccuracyfromExternalDevice();
+//                                CommonFunctions.connectBluetoothDevice(device.getName());
+//                                if (CommonFunctions.bluetoothSocket.isConnected()) {
+//                                    isBTActive = true;
+//
+//
+//                                } else {
+//                                    CommonFunctions.bluetoothSocket = null;
+//                                }
+//
+//                                if (isBTActive == true) {
+//                                    handler.removeCallbacks(this);
+//                                    isBTActive = false;
+//                                } else {
+//                                    handler.postDelayed(this, 5000);
+//                                }
+//                            }
+//                        }
+//                    }, 5000);
+//
+//                }
+            }
+        }
+            };
+
+
+    public class AddTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            // TODO Auto-generated method stub
+            try {
+                getAccuracyfromExternalDevice();
+
+            }catch (NumberFormatException e){
+                e.getMessage();
+                cf.appLog("",e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
+            try{
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        actionMode.setTitle(df.format(accValue) + getResources().getString(R.string.gps_accuracy));
+                        actionMode.setSubtitle(nbsat + " " + getResources().getString(R.string.sats_use_msg));
+                    }
+                });
+            }catch (Exception e){
+                cf.appLog("",e);
+            }
+
+        }
+    }
+
+    private class ConnectingDevice extends AsyncTask<String, Integer, String> {
+
+        Intent intent;
+        public ConnectingDevice(Intent intent) {
+            this.intent=intent;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            // TODO Auto-generated method stub
+            final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+            try {
+
+                handler1.removeCallbacksAndMessages(null);
+                CommonFunctions.bluetoothSocket = null;
+                if ( CommonFunctions.bluetoothSocket==null) {
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                            boolean isEnabled = mBluetoothAdapter.isEnabled();
+                            if (!isEnabled) {
+                                Intent enableBtIntent = new Intent(
+                                        BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                                startActivityForResult(enableBtIntent, 30);
+                                handler.postDelayed(this, 5000);
+                            } else {
+                                //   getAccuracyfromExternalDevice();
+                                CommonFunctions.connectBluetoothDevice(device.getName());
+                                if (CommonFunctions.bluetoothSocket.isConnected()) {
+                                    isBTActive = true;
+
+
+                                } else {
+                                    try{
+                                        CommonFunctions.bluetoothSocket = null;
+                                    }catch (Exception e){
+                                        cf.appLog("",e);
+                                    }
+
+                                }
+
+                                if (isBTActive == true) {
+                                    try{
+                                        handler.removeCallbacks(this);
+                                        isBTActive = false;
+                                    }catch (Exception e){
+                                        cf.appLog("",e);
+                                    }
+
+                                } else {
+
+                                    try{
+                                        handler.postDelayed(this, 5000);
+                                        // handler1.removeCallbacks(this);
+                                    }catch (Exception e){
+                                        cf.appLog("",e);
+                                    }
+
+                                }
+                            }
+                        }
+                    }, 5000);
+
+                }
+
+            }catch (Exception e){
+                cf.appLog("",e);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
+//            runOnUiThread(new Runnable() {
+//                public void run() {
+//                    actionMode.setTitle(df.format(accValue) + getResources().getString(R.string.gps_accuracy));
+//                    actionMode.setSubtitle(nbsat + " " + getResources().getString(R.string.sats_use_msg));
+//                }
+//            });
+        }
+    }
 }

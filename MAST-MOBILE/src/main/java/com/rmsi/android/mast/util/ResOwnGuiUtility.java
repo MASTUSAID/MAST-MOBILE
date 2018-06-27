@@ -282,6 +282,8 @@ public class ResOwnGuiUtility  {
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
 
+//        int tenureTypeID=db.getTenureByFeatureID(featureId);
+
         if (readOnly) {
             spinner.setEnabled(false);
         }
@@ -409,7 +411,7 @@ public class ResOwnGuiUtility  {
                 isValid = false;
             }
         } else if (attribute.getControlType() == Attribute.CONTROL_TYPE_SPINNER) {
-            if (hasValidation.equalsIgnoreCase("true") && (StringUtility.isEmpty(value) || value.equals("0"))) {
+            if (hasValidation.equalsIgnoreCase("true") && (value.equalsIgnoreCase("Select an option") || value.equals("0"))) {
                 isValid = false;
             }
         }

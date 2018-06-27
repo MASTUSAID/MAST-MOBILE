@@ -67,6 +67,10 @@ public class CaptureResourceAttributes extends ActionBarActivity {
     private String classi,subClassi,tenureType,tenureID,subID;
     Property property=null;
 
+    ClassificationAttribute classificationData=new ClassificationAttribute();
+    ClassificationAttribute subClassificationData=new ClassificationAttribute();
+    ClassificationAttribute tenureTypenData=new ClassificationAttribute();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,20 +129,21 @@ public class CaptureResourceAttributes extends ActionBarActivity {
         spinnerClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Property property=new Property();
-                List<ClassificationAttribute> classificationsList=new ArrayList<>();
-                ClassificationAttribute classification=new ClassificationAttribute();
-                classification.setAttribValue(((ClassificationAttribute) parent.getItemAtPosition(position)).getAttribValue());
-                classification.setAttribID(((ClassificationAttribute) parent.getItemAtPosition(position)).getAttribID());
-                classificationsList.add(classification);
-                property.setClassificationAttributes(classificationsList);
-                propertyList.add(property);
+
+
+               classificationData=new ClassificationAttribute();
+                classificationData.setAttribValue(((ClassificationAttribute) parent.getItemAtPosition(position)).getAttribValue());
+                classificationData.setAttribID(((ClassificationAttribute) parent.getItemAtPosition(position)).getAttribID());
+
+
 
                 classi=((ClassificationAttribute) parent.getItemAtPosition(position)).getAttribValue();
                 propertyValidate.setClassificationValue(classi);
                 propertyValidate.setClassificationId(((ClassificationAttribute) parent.getItemAtPosition(position)).getAttribID());
 
-                getSubClassificationList(classification.getAttribID());
+                getSubClassificationList(classificationData.getAttribID());
+
+
             }
 
             @Override
@@ -152,20 +157,17 @@ public class CaptureResourceAttributes extends ActionBarActivity {
         spinnerSubClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-             //   property.setClaimTypeCode(((ClaimType) parent.getItemAtPosition(position)).getCode());
-                Property property=new Property();
-                List<ClassificationAttribute> classificationsList=new ArrayList<>();
-                ClassificationAttribute classification=new ClassificationAttribute();
-                classification.setAttribValue(((SubClassificationAttribute) parent.getItemAtPosition(position)).getAttribValue());
-                classification.setAttribID(((SubClassificationAttribute) parent.getItemAtPosition(position)).getAttribID());
-                classificationsList.add(classification);
-                property.setClassificationAttributes(classificationsList);
-                propertyList.add(property);
+
+                subClassificationData=new ClassificationAttribute();
+                subClassificationData.setAttribValue(((SubClassificationAttribute) parent.getItemAtPosition(position)).getAttribValue());
+                subClassificationData.setAttribID(((SubClassificationAttribute) parent.getItemAtPosition(position)).getAttribID());
+
 
                 subClassi=((SubClassificationAttribute) parent.getItemAtPosition(position)).getAttribValue();
                 propertyValidate.setSubClassificationValue(subClassi);
                 propertyValidate.setSubClassificationId(((SubClassificationAttribute) parent.getItemAtPosition(position)).getAttribID());
                 subID=((SubClassificationAttribute) parent.getItemAtPosition(position)).getAttribID();
+
             }
 
             @Override
@@ -178,19 +180,17 @@ public class CaptureResourceAttributes extends ActionBarActivity {
         spinnertenureType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Property property=new Property();
-                List<ClassificationAttribute> classificationsList=new ArrayList<>();
-                ClassificationAttribute classification=new ClassificationAttribute();
-             //   property.setClaimTypeCode(((ClaimType) parent.getItemAtPosition(position)).getCode());
-                classification.setAttribValue(((TenureType) parent.getItemAtPosition(position)).getAttribValue());
-                classification.setAttribID(((TenureType) parent.getItemAtPosition(position)).getAttribID().toString());
+
+                 tenureTypenData=new ClassificationAttribute();
+
+                tenureTypenData.setAttribValue(((TenureType) parent.getItemAtPosition(position)).getAttribValue());
+                tenureTypenData.setAttribID(((TenureType) parent.getItemAtPosition(position)).getAttribID().toString());
                 propertyValidate.setTenureTypeValue(((TenureType) parent.getItemAtPosition(position)).getAttribValue());
-                classificationsList.add(classification);
-                property.setClassificationAttributes(classificationsList);
-                propertyList.add(property);
+
                 tenureID=((TenureType) parent.getItemAtPosition(position)).getAttribID().toString();
                 tenureType=((TenureType) parent.getItemAtPosition(position)).getAttribValue();
                 propertyValidate.setTenureTypeID(((TenureType) parent.getItemAtPosition(position)).getAttribID());
+
 
                // tenureList.add(property);
 //                tenureType=(String) parent.getItemAtPosition(position);
@@ -235,6 +235,7 @@ public class CaptureResourceAttributes extends ActionBarActivity {
         if (SubclassificationsList!=null) {
             spinnerSubClass.setAdapter(new ArrayAdapter(context, android.R.layout.simple_spinner_item, SubclassificationsList));
             ((ArrayAdapter) spinnerSubClass.getAdapter()).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         }
 
         for (int i = 0; i < SubclassificationsList.size(); i++) {
@@ -282,7 +283,13 @@ public class CaptureResourceAttributes extends ActionBarActivity {
         //.add(property);
         if (validateBasicInfo(context, true)) {
 
-            boolean saveResult = DbController.getInstance(context).insertResourceAtrr(propertyList, featureId);
+
+            boolean deleteData=DbController.getInstance(context).deleteResource(featureId);
+
+//            boolean saveResult = DbController.getInstance(context).insertResourceAtrr(propertyList, featureId);
+            boolean saveResult = DbController.getInstance(context).insertResourceAtrrValue(classificationData, featureId);
+            boolean saveResultsub = DbController.getInstance(context).insertResourceAtrrValue(subClassificationData, featureId);
+            boolean saveResultTenure = DbController.getInstance(context).insertResourceAtrrValue(tenureTypenData, featureId);
             boolean saveResult1 = DbController.getInstance(context).updatePropertyBasic(propertyValidate);
             boolean saveResult3 = DbController.getInstance(context).insertFeature(featureId);
             boolean saveResult2 = DbController.getInstance(context).updateTenureBasic(propertyValidate, featureId);

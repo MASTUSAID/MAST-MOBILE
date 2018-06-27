@@ -20,7 +20,7 @@ public class ResourcePoiSync implements Serializable {
     transient private String name;
     transient private View view;
     private String value;
-    transient private Long groupId;
+    private Long groupId;
     transient private int listing;
     transient private List<Option> OptionsList = new ArrayList<>();
     transient private Long featureId;

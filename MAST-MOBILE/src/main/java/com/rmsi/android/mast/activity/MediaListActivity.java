@@ -379,6 +379,7 @@ public class MediaListActivity extends ActionBarActivity implements ListActivity
                         media.setFeatureId(featureId);
                         media.setDisputeId(disputeId);
                         media.setType(Media.TYPE_PHOTO);
+                        media.setFlag("M");
                         DbController.getInstance(context).saveMedia(media);
 
                         Intent myIntent = new Intent(context, AddMediaActivity.class);
@@ -404,6 +405,7 @@ public class MediaListActivity extends ActionBarActivity implements ListActivity
                     media.setFeatureId(featureId);
                     media.setType(Media.TYPE_VIDEO);
                     media.setDisputeId(disputeId);
+                    media.setFlag("M");
                     DbController.getInstance(context).saveMedia(media);
 
                     Intent myIntent = new Intent(context, AddMediaActivity.class);

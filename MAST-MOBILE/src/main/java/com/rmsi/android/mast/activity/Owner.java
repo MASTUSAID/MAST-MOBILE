@@ -14,12 +14,14 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.rmsi.android.mast.adapter.ResourceAttributeAdapter;
 import com.rmsi.android.mast.db.DbController;
 import com.rmsi.android.mast.domain.Attribute;
 import com.rmsi.android.mast.util.CommonFunctions;
 import com.rmsi.android.mast.util.GuiUtility;
 import com.rmsi.android.mast.util.KeyboardUtil;
+import com.rmsi.android.mast.util.ResOwnGuiUtility;
 
 import java.util.List;
 
@@ -94,17 +96,34 @@ public class Owner extends ActionBarActivity {
             //Case for Add Attribute
             if (isAddCase) {
                 if (tenureType.equalsIgnoreCase("Private (jointly)")) {
-                    if (groupId==0){
-                        attributes = db.getJointAttributesByFlag(tenureID);
-                    }else {
+                    if (groupId == 0) {
+                        attributes = db.getJointAttributesByFlag(tenureID, featureId);
+                    } else {
                         attributes = db.getOwnerPropAttributesByGroupId(featureId, tenureID, groupId);
                     }
 
                 } else {
-                    attributes = db.getAttributesByFlag(tenureID);
+                    int tenureTypeID = db.getTenureByFeatureID(featureId);
+                    if (tenureTypeID == 10 || tenureTypeID == 18 || tenureTypeID == 14 || tenureTypeID == 13) {
+
+                        attributes = db.getAttributesByFlagPrivateIndvidual(tenureID);
+
+                    } else {
+                        attributes = db.getAttributesOthersByFlag(tenureID, featureId);
+                        //attributes = db.getAttributesByFlag(tenureID);
+                    }
+//                    attributes = db.getAttributesByFlag(tenureID);
                 }
             } else {
-                attributes = db.getOwnerPropAttributesByGroupId(featureId, tenureID, groupId);
+
+                int tenureTypeID = db.getTenureByFeatureID(featureId);
+                if (tenureTypeID == 10 || tenureTypeID == 18 || tenureTypeID == 14 || tenureTypeID == 13) {
+
+                    attributes = db.getOwnerPropAttributesSingleByGroupId(featureId, tenureID, groupId);
+                } else {
+                    attributes = db.getOwnerPropAttributesByGroupIdResource(featureId, tenureID, groupId);
+                    //attributes = db.getOwnerPropAttributesByGroupId(featureId, tenureID, groupId);
+                }
             }
 
         }
@@ -139,8 +158,7 @@ public class Owner extends ActionBarActivity {
         listView.setAdapter(adapterList);
 
 
-       keyboardUtil = new KeyboardUtil(Owner.this, footerView);
-
+        keyboardUtil = new KeyboardUtil(Owner.this, footerView);
 
 
     }
@@ -168,12 +186,54 @@ public class Owner extends ActionBarActivity {
     private void saveData() {
         if (validate()) {
             try {
-                boolean saveResult = DbController.getInstance(context).savePropAttributes(attributes, featureId);
 
+                int tenureTypeID = DbController.getInstance(context).getTenureByFeatureID(featureId);
+                if (tenureTypeID == 10) {
+                    Attribute attribute = new Attribute();
+                    attribute.setId(1158L);
+                    attribute.setName("Owner Type");
+                    attribute.setFeatureId(featureId);
+                    attribute.setValue("Primary occupant /Point of contact");
+//
+                    attributes.add(attribute);
+                } else if (tenureTypeID == 18) {
+
+                    Attribute attribute = new Attribute();
+                    attribute.setId(1162L);
+                    attribute.setName("Owner Type");
+                    attribute.setFeatureId(featureId);
+                    attribute.setValue("Primary occupant /Point of contact");
+//
+                    attributes.add(attribute);
+
+                } else if (tenureTypeID == 14) {
+
+                    Attribute attribute = new Attribute();
+                    attribute.setId(1161L);
+                    attribute.setName("Owner Type");
+                    attribute.setFeatureId(featureId);
+                    attribute.setValue("Primary occupant /Point of contact");
+//
+                    attributes.add(attribute);
+
+                } else if (tenureTypeID == 13) {
+
+                    Attribute attribute = new Attribute();
+                    attribute.setId(1165L);
+                    attribute.setName("Owner Type");
+                    attribute.setFeatureId(featureId);
+                    attribute.setValue("Primary occupant /Point of contact");
+//
+                    attributes.add(attribute);
+
+                }
+
+                boolean saveResult = DbController.getInstance(context).savePropAttributes(attributes, featureId);
 
                 if (saveResult) {
                     cf.showToast(context, R.string.data_saved, Toast.LENGTH_SHORT);
                     finish();
+                    attributes.clear();
 
                 } else {
                     cf.showToast(context, R.string.unable_to_save_data, Toast.LENGTH_SHORT);
@@ -187,7 +247,6 @@ public class Owner extends ActionBarActivity {
             cf.showToast(context, R.string.fill_mandatory, Toast.LENGTH_SHORT);
         }
     }
-
 
 
 //    private void saveData() {
@@ -250,7 +309,7 @@ public class Owner extends ActionBarActivity {
 //    }
 
     public boolean validate() {
-        return GuiUtility.validateAttributes(attributes, true);
+        return ResOwnGuiUtility.validateAttributes(attributes, true);
     }
 
     //

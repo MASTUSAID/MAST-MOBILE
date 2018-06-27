@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -22,6 +23,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothHeadset;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -115,7 +117,8 @@ public class CommonFunctions {
     public static BluetoothSocket bluetoothSocket;
     List<String> media_options=new ArrayList<String>();
     private String mbluetoothname="";
-    Set<BluetoothDevice> mDevices;
+    private static Set<BluetoothDevice> mDevices;
+    boolean isConnected=true;
 
 
     public CommonFunctions(Activity activity){
@@ -203,6 +206,7 @@ public class CommonFunctions {
 
     public void createLogfolder() {
         try {
+
             String extPath = Environment.getExternalStorageDirectory().getAbsolutePath();
             File parentdir = new File(extPath + "/" + parentFolderName);
             File datadir = new File(extPath + "/" + parentFolderName + "/" + dataFolderName);
@@ -799,7 +803,6 @@ public class CommonFunctions {
 
     public void getConnectToGpsDevice(boolean isReview){
 
-
         if (!isReview) {
             try {
                 mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -830,7 +833,9 @@ public class CommonFunctions {
 
     public void discoverDevice(){
 
-        mDevices = mBluetoothAdapter.getBondedDevices();
+
+            mDevices = mBluetoothAdapter.getBondedDevices();
+
         if(mDevices.size()>0)
         {
 
@@ -861,6 +866,7 @@ public class CommonFunctions {
                 {
                     dialog.dismiss();
                     connectBluetoothDevice(mbluetoothname);
+//
                 }
             });
 
@@ -887,7 +893,17 @@ public class CommonFunctions {
 
     }
 
-    private void connectBluetoothDevice(String devicename){
+    public static boolean createBond(String btDevice)
+            throws Exception
+    {
+        Class class1 = Class.forName("android.bluetooth.BluetoothDevice");
+        Method createBondMethod = class1.getMethod("createBond");
+        Boolean returnValue = (Boolean) createBondMethod.invoke(btDevice);
+        return returnValue.booleanValue();
+    }
+
+
+    public static void connectBluetoothDevice(String devicename){
 
         Iterator<BluetoothDevice> itr = mDevices.iterator();
         while(itr.hasNext()){
@@ -899,9 +915,14 @@ public class CommonFunctions {
 
 
                 try {
+
+
                     if(bluetoothSocket==null)
-                        bluetoothSocket  = bluetoothDevice.createRfcommSocketToServiceRecord(uuid);
+
+                        //bluetoothSocket  = bluetoothDevice.createRfcommSocketToServiceRecord(uuid);
+                    bluetoothSocket  = bluetoothDevice.createInsecureRfcommSocketToServiceRecord(uuid);
                     if(!bluetoothSocket.isConnected()){
+
                         bluetoothSocket.connect();
                         Toast.makeText(getApplicationContext(), devicename +" is Connected", Toast.LENGTH_LONG).show();
                         break;
@@ -924,6 +945,12 @@ public class CommonFunctions {
         }
 
     }
-
+//    public static boolean isBluetoothHeadsetConnected() {
+//        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+////        return mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()
+////                && mBluetoothAdapter.getProfileConnectionState(BluetoothHeadset.HEADSET) == BluetoothHeadset.STATE_CONNECTED;
+//
+//        return  mBluetoothAdapter.getProfileConnectionState(BluetoothHeadset.HEADSET) == BluetoothHeadset.STATE_CONNECTED;
+//    }
 
 }

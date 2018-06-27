@@ -460,6 +460,7 @@ public class GuiUtility {
         }
 
         for (Attribute attribute : attributeList) {
+
             if (!validateAttribute(attribute, highlightErrors)) {
                 isValid = false;
             }

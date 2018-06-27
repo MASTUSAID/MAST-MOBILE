@@ -256,6 +256,7 @@ public class ResourcePersonListFragment extends ListFragment implements ListActi
                         media.setFeatureId(listOwner.get(position).getFeatureID());
                         media.setType(Media.TYPE_PHOTO);
                         media.setPersonId((long) listOwner.get(position).getGroupId());
+                        media.setFlag("R");
                         boolean result = DbController.getInstance(context).saveMedia(media);
 
                         if (result){
