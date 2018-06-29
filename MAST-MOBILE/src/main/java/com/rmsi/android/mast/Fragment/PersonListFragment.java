@@ -263,7 +263,6 @@ public class PersonListFragment extends ListFragment implements ListActivity {
                         media.setFeatureId(persons.get(position).getFeatureId());
                         media.setType(Media.TYPE_PHOTO);
                         media.setPersonId(persons.get(position).getId());
-                        media.setFlag("P");
                         boolean result = DbController.getInstance(context).saveMedia(media);
 
                         if (result){

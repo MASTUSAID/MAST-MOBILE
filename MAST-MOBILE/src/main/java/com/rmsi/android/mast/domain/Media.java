@@ -21,8 +21,6 @@ public class Media implements Serializable {
     private String type;
     transient private int synced = 0;
     transient private Long disputeId;
-
-    transient private String flag;
     private List<Attribute> attributes = new ArrayList<>();
 
     public static String TABLE_NAME = "MEDIA";
@@ -33,7 +31,6 @@ public class Media implements Serializable {
     public static String COL_PATH = "PATH";
     public static String COL_SYNCED = "SYNCED";
     public static String COL_DISPUTE_ID = "DISPUTE_ID";
-    public static String COL_FLAG = "FLAG";
 
     public static int TYPE_PHOTO_CODE = 1;
     public static int TYPE_VIDEO_CODE = 2;
@@ -104,14 +101,6 @@ public class Media implements Serializable {
 
     public void setDisputeId(Long disputeId) {
         this.disputeId = disputeId;
-    }
-
-    public String getFlag() {
-        return flag;
-    }
-
-    public void setFlag(String flag) {
-        this.flag = flag;
     }
 
     /**

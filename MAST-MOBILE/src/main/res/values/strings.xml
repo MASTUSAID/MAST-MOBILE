@@ -219,7 +219,7 @@
     </string-array>
     <string-array name="media">
         <item>Image</item>
-        <!--<item>Video</item>-->
+        <item>Video</item>
     </string-array>
 
     <string name="title_activity_add_image">AddImageActivity</string>
@@ -531,7 +531,7 @@
     <string name="FillRequiredFieldsOnPerson">Fill in required fields for person</string>
     <string name="FillRequiredFieldsOnNonPerson">Fill in required fields for non-natural person</string>
     <string name="AgeMustBe18or100">Person age must be between 18 and 110 years</string>
-    <string name="AgeLessThan18" translatable="false">Owner age must be less than 18 years</string>
+    <string name="AgeLessThan18">Owner age must be less than 18 years</string>
     <string name="SingleShareCheck">Single ownership must have only 1 owner</string>
     <string name="Collective">You must have add 1 owner</string>
     <string name="MultiJointShareError">Multiple joint occupancy must have at least 2 owners</string>

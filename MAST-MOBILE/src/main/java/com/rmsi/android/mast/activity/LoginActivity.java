@@ -50,7 +50,7 @@ import static pub.devrel.easypermissions.EasyPermissions.hasPermissions;
 /**
  * A login screen that offers login via email/password.
  */
-public   class LoginActivity extends ActionBarActivity {
+public   class  LoginActivity extends ActionBarActivity {
     Context context = this;
     // UI references.
     private EditText mUsernameView;

@@ -5,6 +5,7 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import com.rmsi.android.mast.activity.R;
+import com.rmsi.android.mast.db.DbController;
 import com.rmsi.android.mast.util.CommonFunctions;
 
 import java.io.Serializable;
@@ -104,6 +105,12 @@ public class Dispute implements Serializable {
 
         if(getDisputingPersons() == null || getDisputingPersons().size() < 2)
             return handleError(context, R.string.AddDisputingPersons, showMessage);
+
+//        DbController db = DbController.getInstance(context);
+//        if (db.getPrimaryCount(disputingPersons.get(0).getFeatureId())>1){
+//            return handleError(context, R.string.PrimaryOwner, showMessage);
+//
+//        }
 
         for(Person person : getDisputingPersons()){
             if(!person.validate(context, 0, true, showMessage))

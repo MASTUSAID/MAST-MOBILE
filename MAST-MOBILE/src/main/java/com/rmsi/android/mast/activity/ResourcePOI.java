@@ -18,9 +18,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.rmsi.android.mast.Fragment.PersonListFragment;
-import com.rmsi.android.mast.Fragment.ResourcePoiListFragment;
 import com.rmsi.android.mast.Fragment.ResourcePersonListFragment;
+import com.rmsi.android.mast.Fragment.ResourcePoiListFragment;
 import com.rmsi.android.mast.db.DbController;
 import com.rmsi.android.mast.domain.Gender;
 import com.rmsi.android.mast.domain.Person;

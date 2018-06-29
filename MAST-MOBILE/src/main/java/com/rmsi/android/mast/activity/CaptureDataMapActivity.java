@@ -1,14 +1,5 @@
 package com.rmsi.android.mast.activity;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
@@ -34,9 +25,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -82,7 +71,6 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -93,10 +81,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.google.maps.android.PolyUtil;
-import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.geojson.GeoJsonLineStringStyle;
-import com.google.maps.android.geometry.Bounds;
 import com.rmsi.android.mast.adapter.AddFeaturesOptionsAdapter;
 import com.rmsi.android.mast.db.DbController;
 import com.rmsi.android.mast.domain.AOI;
@@ -116,6 +100,15 @@ import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.io.WKTReader;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class CaptureDataMapActivity extends AppCompatActivity implements OnMapReadyCallback {
     Context context = this;
@@ -2609,7 +2602,7 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                 currMarkers.add(mark);
             }
             else {
-                Toast.makeText(context,R.string.noLocationFound, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.noLocationFound, Toast.LENGTH_SHORT).show();
             }
 
 
@@ -2622,7 +2615,7 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         }
 
         else{
-            Toast.makeText(context,R.string.noLocationFound, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.noLocationFound, Toast.LENGTH_LONG).show();
         }
 
 

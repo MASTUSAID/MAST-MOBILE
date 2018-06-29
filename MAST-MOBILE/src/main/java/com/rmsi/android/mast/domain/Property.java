@@ -705,15 +705,21 @@ public class Property extends Feature implements Serializable {
             }
         }
 
-        int shareTypeId=DbController.getInstance(context).getShareIdByFeatureID(attributes.get(0).getFeatureId());
 
+        int shareTypeId=DbController.getInstance(context).getShareIdByFeatureID(attributes.get(0).getFeatureId());
+//db.getPrimaryCount(attributes.get(0).getFeatureId()) > 1
         if (shareTypeId!=6) {
             DbController db = DbController.getInstance(context);
-            if (db.getPrimaryCount(attributes.get(0).getFeatureId()) == 0) {
+            if ( db.getPrimaryCount(attributes.get(0).getFeatureId())==0) {
                 return handleError(context, R.string.PrimaryOwner, showMessage);
 
             }
         }
+
+
+
+
+
 
         return true;
     }
@@ -804,6 +810,12 @@ public class Property extends Feature implements Serializable {
                 return handleError(context, R.string.ProbateShareError, showMessage);
             }
         }
+
+//        DbController db = DbController.getInstance(context);
+//        if (db.getPrimaryCount(attributes.get(0).getFeatureId())>1){
+//            return handleError(context, R.string.PrimaryOwner, showMessage);
+//
+//        }
 
         return true;
     }

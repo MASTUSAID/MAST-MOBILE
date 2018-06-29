@@ -282,8 +282,6 @@ public class ResOwnGuiUtility  {
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
 
-//        int tenureTypeID=db.getTenureByFeatureID(featureId);
-
         if (readOnly) {
             spinner.setEnabled(false);
         }

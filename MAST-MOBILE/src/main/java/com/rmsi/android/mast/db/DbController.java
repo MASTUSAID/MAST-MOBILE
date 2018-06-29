@@ -68,7 +68,6 @@ public class DbController extends SQLiteOpenHelper {
     SQLiteDatabase db;
 
     static String DBPATH = "/" + CommonFunctions.parentFolderName + "/" + CommonFunctions.dbFolderName + "/mast_mobile.db";
-    //    static String DB_FULL_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + DBPATH;
     static String DB_FULL_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + DBPATH;
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.ENGLISH);
 
@@ -213,8 +212,7 @@ public class DbController extends SQLiteOpenHelper {
                 "DISPUTE_ID INTEGER," +
                 "TYPE TEXT," +
                 "PATH TEXT," +
-                "SYNCED INTEGER DEFAULT 0," +
-                "FLAG TEXT" +
+                "SYNCED INTEGER DEFAULT 0" +
                 ")";
 
         // Attributes
@@ -385,6 +383,7 @@ public class DbController extends SQLiteOpenHelper {
                 ")";
 
 
+
         try {
             dropTable(db, "SPATIAL_FEATURES");
             db.execSQL(query_table1);
@@ -540,11 +539,11 @@ public class DbController extends SQLiteOpenHelper {
     }
 
     public List<Feature> fetchFeatures(String strFeatureType) {
-        String q = "SELECT * FROM SPATIAL_FEATURES WHERE FLAG='" + strFeatureType + "'";
+        String q = "SELECT * FROM SPATIAL_FEATURES WHERE FLAG='"+strFeatureType+"'";
         return getFeatures(q);
     }
 
-    public Long createFeature(String geomtype, String wKTStr, String imei, String flag, int iIndex) {
+    public Long createFeature(String geomtype, String wKTStr, String imei, String flag,int iIndex) {
         Long featureId = 0L;
         try {
             // Inserting into Features
@@ -933,7 +932,7 @@ public class DbController extends SQLiteOpenHelper {
 
 
                 //for non-natural persons in every case of collective which means list type
-                // right.setNonNaturalPersons(getNonNaturalPersonsByRight(right.getId()));
+               // right.setNonNaturalPersons(getNonNaturalPersonsByRight(right.getId()));
 
 
                 right.setAttributes(getAttributesByGroupId(right.getId()));
@@ -1079,6 +1078,7 @@ public class DbController extends SQLiteOpenHelper {
     }
 
 
+
     private List<Person> createPersonsListBySingleTenancy(String sql) {
         Cursor cur = null;
         List<Person> persons = new ArrayList<Person>();
@@ -1128,6 +1128,8 @@ public class DbController extends SQLiteOpenHelper {
             }
         }
     }
+
+
 
 
     private List<Person> createPersonsList(String sql) {
@@ -1181,6 +1183,7 @@ public class DbController extends SQLiteOpenHelper {
     }
 
 
+
     private List<Person> createPersonsListOtherCases(String sql, Long featureID) {
         Cursor cur = null;
         List<Person> persons = new ArrayList<Person>();
@@ -1212,7 +1215,7 @@ public class DbController extends SQLiteOpenHelper {
                     person.setDisputeId(cur.getLong(indxDisputeId));
                     person.setAcquisitionTypeId(cur.getInt(indxAcquisitionTypeId));
 
-                    person.setAttributes(getAttributesByGroupIdOtherCase(person.getId(), featureID));
+                    person.setAttributes(getAttributesByGroupIdOtherCase(person.getId(),featureID));
                     person.setMedia(getMediaByPerson(person.getId()));
                     persons.add(person);
                 } while (cur.moveToNext());
@@ -1243,10 +1246,9 @@ public class DbController extends SQLiteOpenHelper {
         else
             return null;
     }
-
     public Person getPerson(Long personId, Long featureId) {
         String sql = "SELECT * FROM " + Person.TABLE_NAME + " WHERE " + Person.COL_ID + " = " + personId.toString();
-        List<Person> persons = createPersonsListOtherCases(sql, featureId);
+        List<Person> persons = createPersonsListOtherCases(sql,featureId);
         if (persons != null && persons.size() > 0)
             return persons.get(0);
         else
@@ -1339,7 +1341,7 @@ public class DbController extends SQLiteOpenHelper {
         try {
             //getDb().delete(Attribute.TABLE_ATTRIBUTE_VALUE_NAME, Attribute.COL_VALUE_GROUP_ID + "=" + id, null);
 
-            int deletedCount = getDb().delete(Attribute.TABLE_ATTRIBUTE_VALUE_NAME, Attribute.COL_VALUE_GROUP_ID + "=" + id, null);
+            int deletedCount =  getDb().delete(Attribute.TABLE_ATTRIBUTE_VALUE_NAME, Attribute.COL_VALUE_GROUP_ID + "=" + id, null);
             return deletedCount > 0;
         } catch (Exception e) {
             cf.appLog("", e);
@@ -1679,7 +1681,6 @@ public class DbController extends SQLiteOpenHelper {
                 int indxPersonId = cur.getColumnIndex(Media.COL_PERSON_ID);
                 int indxSynced = cur.getColumnIndex(Media.COL_SYNCED);
                 int indxDisputeId = cur.getColumnIndex(Media.COL_DISPUTE_ID);
-                int indxFlag = cur.getColumnIndex(Media.COL_FLAG);
 
                 do {
                     Media media = new Media();
@@ -1692,11 +1693,6 @@ public class DbController extends SQLiteOpenHelper {
                     if (!cur.isNull(indxDisputeId))
                         media.setDisputeId(cur.getLong(indxDisputeId));
                     media.setSynced(cur.getInt(indxSynced));
-
-                    //media flag
-                    media.setFlag(cur.getString(indxFlag));
-
-
                     media.setAttributes(getAttributesByGroupId(media.getId()));
 
                     mediaList.add(media);
@@ -1887,19 +1883,19 @@ public class DbController extends SQLiteOpenHelper {
                                     option.setNameOtherLang(multiLnagText.toString());
                                 }
 
-                                int iGID = 0;
-                                int ifeatureCount = 0;
+                                int iGID=0;
+                                int ifeatureCount=0;
 
 
-                                String selectGID = "SELECT COUNT(*) FROM FORM_VALUES" + " WHERE GROUP_ID =" + groudId + " AND ATTRIB_ID=1156 AND ATTRIB_VALUE=1186";
-                                String selectGIDfeature = "SELECT COUNT(*) FROM FORM_VALUES" + " WHERE FEATURE_ID =" + featureId + " AND ATTRIB_ID=1156 AND ATTRIB_VALUE=1186";
+                                String selectGID = "SELECT COUNT(*) FROM FORM_VALUES"  + " WHERE GROUP_ID ="+ groudId +" AND ATTRIB_ID=1156 AND ATTRIB_VALUE=1186";
+                                String selectGIDfeature = "SELECT COUNT(*) FROM FORM_VALUES"  + " WHERE FEATURE_ID ="+ featureId +" AND ATTRIB_ID=1156 AND ATTRIB_VALUE=1186";
                                 Cursor cursorgid = getDb().rawQuery(selectGID, null);
                                 Cursor cursorfeature = getDb().rawQuery(selectGIDfeature, null);
                                 if (cursorgid.moveToFirst() && cursorfeature.moveToFirst()) {
                                     try {
                                         do {
                                             iGID = cursorgid.getInt(0);
-                                            ifeatureCount = cursorfeature.getInt(0);
+                                            ifeatureCount=cursorfeature.getInt(0);
 
                                         } while (cursorgid.moveToNext());
                                     } catch (Exception e) {
@@ -1908,9 +1904,9 @@ public class DbController extends SQLiteOpenHelper {
                                     }
                                 }
                                 cursorgid.close();
-                                if (attribute.getId() == 1156) {
+                                if (attribute.getId()==1156){
 
-                                    if (ifeatureCount == 1) {
+                                    if (ifeatureCount==1) {
                                         if (iGID == 1) {
 
                                             optionList.add(option);
@@ -1922,11 +1918,11 @@ public class DbController extends SQLiteOpenHelper {
                                             }
 
                                         }
-                                    } else {
+                                    }else {
                                         optionList.add(option);
                                     }
 
-                                } else {
+                                }else {
                                     optionList.add(option);
                                 }
 
@@ -1956,6 +1952,7 @@ public class DbController extends SQLiteOpenHelper {
 
         return attributes;
     }
+
 
 
     private List<Attribute> createAttributeListOtherCases(String sql, Long featurID) {
@@ -2047,10 +2044,10 @@ public class DbController extends SQLiteOpenHelper {
                                     option.setNameOtherLang(multiLnagText.toString());
                                 }
 
-                                int iGID = 0;
+                                int iGID=0;
 
 
-                                String selectGID = "SELECT COUNT(*) FROM FORM_VALUES" + " WHERE FEATURE_ID =" + featurID + " AND ATTRIB_ID=1156 AND ATTRIB_VALUE=1186";
+                                String selectGID = "SELECT COUNT(*) FROM FORM_VALUES"  + " WHERE FEATURE_ID ="+ featurID +" AND ATTRIB_ID=1156 AND ATTRIB_VALUE=1186";
                                 Cursor cursorgid = getDb().rawQuery(selectGID, null);
                                 if (cursorgid.moveToFirst()) {
                                     try {
@@ -2064,19 +2061,21 @@ public class DbController extends SQLiteOpenHelper {
                                     }
                                 }
                                 cursorgid.close();
-                                if (attribute.getId() == 1156) {
+                                if (attribute.getId()==1156){
 
-                                    if (iGID == 1) {
-                                        if (option.getId() == 1187) {
+                                    if (iGID==1){
+                                        if (option.getId()==1187) {
                                             optionList.add(option);
                                         }
-                                    } else {
+                                    }else {
                                         optionList.add(option);
                                     }
 
-                                } else {
+                                }else {
                                     optionList.add(option);
                                 }
+
+
 
 
                             } while (cur2.moveToNext());
@@ -2202,11 +2201,12 @@ public class DbController extends SQLiteOpenHelper {
                     }
 
 
-                    if (attribute.getId() != 1156) {
+
+                    if (attribute.getId()!=1156){
                         attributes.add(attribute);
                     }
 
-                    //  attributes.add(attribute);
+                  //  attributes.add(attribute);
 
 
                 } while (cur.moveToNext());
@@ -2323,7 +2323,7 @@ public class DbController extends SQLiteOpenHelper {
 
                     }
 
-                    if (attribute.getId() != 1158 && attribute.getId() != 1162 && attribute.getId() != 1161 && attribute.getId() != 1165) {
+                    if (attribute.getId()!=1158 && attribute.getId()!=1162 && attribute.getId()!=1161 && attribute.getId()!=1165){
                         attributes.add(attribute);
                     }
 //                    attributes.add(attribute);
@@ -2434,11 +2434,11 @@ public class DbController extends SQLiteOpenHelper {
                                     option.setNameOtherLang(multiLnagText.toString());
                                 }
 
-                                int iGID = 0;
+                                int iGID=0;
 
 
 //                                String selectGID = "SELECT COUNT(*) FROM FORM_VALUES"  + " WHERE FEATURE_ID ="+ featureID +" AND ATTRIB_ID= "+attribute.getId()+" AND ATTRIB_VALUE in (1191,1193,1199,1201)";
-                                String selectGID = "SELECT COUNT(*) FROM FORM_VALUES" + " WHERE FEATURE_ID =" + featureID + " AND ATTRIB_ID= " + attribute.getId() + " AND ATTRIB_VALUE='Primary occupant /Point of contact'";
+                                String selectGID = "SELECT COUNT(*) FROM FORM_VALUES"  + " WHERE FEATURE_ID ="+ featureID +" AND ATTRIB_ID= "+attribute.getId()+" AND ATTRIB_VALUE='Primary occupant /Point of contact'";
                                 Cursor cursorgid = getDb().rawQuery(selectGID, null);
                                 if (cursorgid.moveToFirst()) {
                                     try {
@@ -2452,19 +2452,20 @@ public class DbController extends SQLiteOpenHelper {
                                     }
                                 }
                                 cursorgid.close();
-                                if (attribute.getId() == 1163 || attribute.getId() == 1164 || attribute.getId() == 1159 || attribute.getId() == 1160) {
+                                if (attribute.getId()==1163 || attribute.getId()==1164 || attribute.getId()==1159 || attribute.getId()==1160){
 
-                                    if (iGID == 1) {
-                                        if (option.getId() == 1199 || option.getId() == 1201 || option.getId() == 1191 || option.getId() == 1193) {
+                                    if (iGID==1){
+                                        if (option.getId()==1199 || option.getId()==1201 || option.getId()==1191 || option.getId()==1193) {
                                             optionList.add(option);
                                         }
-                                    } else {
+                                    }else {
                                         optionList.add(option);
                                     }
 
-                                } else {
+                                }else {
                                     optionList.add(option);
                                 }
+
 
 
 //                                optionList.add(option);
@@ -2583,19 +2584,19 @@ public class DbController extends SQLiteOpenHelper {
                                     option.setNameOtherLang(multiLnagText.toString());
                                 }
 
-                                int iGID = 0;
-                                int ifeatureCount = 0;
+                                int iGID=0;
+                                int ifeatureCount=0;
 
 
-                                String selectGID = "SELECT COUNT(*) FROM FORM_VALUES" + " WHERE GROUP_ID =" + orderID + " AND ATTRIB_ID= " + attribute.getId() + " AND ATTRIB_VALUE='Primary occupant /Point of contact'";
-                                String selectGIDfeature = "SELECT COUNT(*) FROM FORM_VALUES" + " WHERE FEATURE_ID =" + featureID + " AND ATTRIB_ID= " + attribute.getId() + " AND ATTRIB_VALUE='Primary occupant /Point of contact'";
+                                String selectGID = "SELECT COUNT(*) FROM FORM_VALUES"  + " WHERE GROUP_ID ="+ orderID +" AND ATTRIB_ID= "+attribute.getId()+" AND ATTRIB_VALUE='Primary occupant /Point of contact'";
+                                String selectGIDfeature = "SELECT COUNT(*) FROM FORM_VALUES"  + " WHERE FEATURE_ID ="+ featureID +" AND ATTRIB_ID= "+attribute.getId()+" AND ATTRIB_VALUE='Primary occupant /Point of contact'";
                                 Cursor cursorgid = getDb().rawQuery(selectGID, null);
                                 Cursor cursorfeature = getDb().rawQuery(selectGIDfeature, null);
                                 if (cursorgid.moveToFirst() && cursorfeature.moveToFirst()) {
                                     try {
                                         do {
                                             iGID = cursorgid.getInt(0);
-                                            ifeatureCount = cursorfeature.getInt(0);
+                                            ifeatureCount=cursorfeature.getInt(0);
 
                                         } while (cursorgid.moveToNext());
                                     } catch (Exception e) {
@@ -2604,25 +2605,25 @@ public class DbController extends SQLiteOpenHelper {
                                     }
                                 }
                                 cursorgid.close();
-                                if (attribute.getId() == 1163 || attribute.getId() == 1164 || attribute.getId() == 1159 || attribute.getId() == 1160) {
+                                if (attribute.getId()==1163 || attribute.getId()==1164 || attribute.getId()==1159 || attribute.getId()==1160){
 
-                                    if (ifeatureCount == 1) {
+                                    if (ifeatureCount==1) {
                                         if (iGID == 1) {
 
                                             optionList.add(option);
 
                                         } else {
 
-                                            if (option.getId() == 1199 || option.getId() == 1201 || option.getId() == 1191 || option.getId() == 1193) {
+                                            if (option.getId()==1199 || option.getId()==1201 || option.getId()==1191 || option.getId()==1193) {
                                                 optionList.add(option);
                                             }
 
                                         }
-                                    } else {
+                                    }else {
                                         optionList.add(option);
                                     }
 
-                                } else {
+                                }else {
                                     optionList.add(option);
                                 }
 
@@ -2772,6 +2773,7 @@ public class DbController extends SQLiteOpenHelper {
 
         return attributes;
     }
+
 
 
     private List<Attribute> createAttributeNonPersonList(String sql) {
@@ -3519,7 +3521,7 @@ public class DbController extends SQLiteOpenHelper {
                 int indxOptionId = -1;
                 int indxOptionName = -1;
                 int indxOptionNameOtherLang = -1;
-                int a = -1;
+                int a=-1;
 
                 do {
                     ResourceCustomAttribute attribute = new ResourceCustomAttribute();
@@ -3607,14 +3609,14 @@ public class DbController extends SQLiteOpenHelper {
                         option.setName("Select custom attribute");
                         optionList.add(option);
                         String selectQueryOptions = "SELECT  * FROM " + Option.TABLE_NAME +
-                                " WHERE " + Option.COL_ATTRIBUTE_ID + "=" + attribute.getId() + " ORDER BY OPTION_ID";
+                                " WHERE " + Option.COL_ATTRIBUTE_ID + "=" + attribute.getId() +" ORDER BY OPTION_ID";
 
                         Cursor cur2 = getDb().rawQuery(selectQueryOptions, null);
 
                         if (cur2.moveToFirst()) {
                             if (indxOptionId < 0) {
                                 //indxOptionId = cur2.getColumnIndex(Option.COL_ID);
-                                a = cur2.getColumnIndex(Option.COL_ATTRIBUTE_ID);
+                                a=cur2.getColumnIndex(Option.COL_ATTRIBUTE_ID);
                                 indxOptionId = cur2.getColumnIndex(Option.COL_ID);
                                 indxOptionName = cur2.getColumnIndex(Option.COL_NAME);
                                 indxOptionNameOtherLang = cur2.getColumnIndex(Option.COL_NAME_OTHER_LANG);
@@ -3687,7 +3689,7 @@ public class DbController extends SQLiteOpenHelper {
                 int indxOptionId = -1;
                 int indxOptionName = -1;
                 int indxOptionNameOtherLang = -1;
-                int a = -1;
+                int a=-1;
 
                 do {
                     ResourceCustomAttribute attribute = new ResourceCustomAttribute();
@@ -3782,7 +3784,7 @@ public class DbController extends SQLiteOpenHelper {
                         if (cur2.moveToFirst()) {
                             if (indxOptionId < 0) {
                                 //indxOptionId = cur2.getColumnIndex(Option.COL_ID);
-                                a = cur2.getColumnIndex(Option.COL_ATTRIBUTE_ID);
+                                a=cur2.getColumnIndex(Option.COL_ATTRIBUTE_ID);
                                 indxOptionId = cur2.getColumnIndex(Option.COL_ID);
                                 indxOptionName = cur2.getColumnIndex(Option.COL_NAME);
                                 indxOptionNameOtherLang = cur2.getColumnIndex(Option.COL_NAME_OTHER_LANG);
@@ -3988,7 +3990,7 @@ public class DbController extends SQLiteOpenHelper {
                 ", 0 AS " + ResourceCustomAttribute.COL_VALUE_GROUP_ID +
                 ", '' AS " + ResourceCustomAttribute.COL_VALUE_VALUE +
                 " FROM " + ResourceCustomAttribute.TABLE_NAME +
-                " WHERE " + ResourceCustomAttribute.COL_SUBCLASSIFICATION + "='" + subid + "'" + " AND ATTRIBUTE_TYPE " + "='" + typeId + "'" +
+                " WHERE " + ResourceCustomAttribute.COL_SUBCLASSIFICATION + "='" + subid + "'" + " AND ATTRIBUTE_TYPE "+ "='" + typeId + "'"+
                 " ORDER BY " + ResourceCustomAttribute.COL_LISTING + ", " + ResourceCustomAttribute.COL_NAME;
         return sql;
     }
@@ -4008,7 +4010,7 @@ public class DbController extends SQLiteOpenHelper {
                 ", 0 AS " + ResourceCustomAttribute.COL_VALUE_GROUP_ID +
                 ", '' AS " + ResourceCustomAttribute.COL_VALUE_VALUE +
                 " FROM " + ResourceCustomAttribute.TABLE_NAME +
-                " WHERE " + ResourceCustomAttribute.COL_SUBCLASSIFICATION + "='" + subid + "'" +
+                " WHERE " + ResourceCustomAttribute.COL_SUBCLASSIFICATION + "='" + subid + "'"+
                 " ORDER BY " + ResourceCustomAttribute.COL_LISTING + ", " + ResourceCustomAttribute.COL_NAME;
         return sql;
     }
@@ -4053,23 +4055,23 @@ public class DbController extends SQLiteOpenHelper {
     }
 
     // Nitin
-    private String getJointAttributeSelectQueryByType(String typeId) {
-        String sql = "SELECT " +
-                Attribute.COL_ID +
-                ", " + Attribute.COL_TYPE +
-                ", " + Attribute.COL_CONTROL_TYPE +
-                ", " + Attribute.COL_NAME +
-                ", " + Attribute.COL_NAME_OTHER_LANG +
-                ", " + Attribute.COL_LISTING +
-                ", " + Attribute.COL_VALIDATE +
-                ", 0 AS " + Attribute.COL_VALUE_FEATURE_ID +
-                ", 0 AS " + Attribute.COL_VALUE_GROUP_ID +
-                ", '' AS " + Attribute.COL_VALUE_VALUE +
-                " FROM " + Attribute.TABLE_NAME +
-                " WHERE " + Attribute.COL_TYPE + "='" + typeId + "' And " + Attribute.COL_NAME_OTHER_LANG + " not like '%-Own2%'" +
-                " ORDER BY " + Attribute.COL_LISTING;
-        return sql;
-    }
+   private String getJointAttributeSelectQueryByType(String typeId) {
+       String sql = "SELECT " +
+               Attribute.COL_ID +
+               ", " + Attribute.COL_TYPE +
+               ", " + Attribute.COL_CONTROL_TYPE +
+               ", " + Attribute.COL_NAME +
+               ", " + Attribute.COL_NAME_OTHER_LANG +
+               ", " + Attribute.COL_LISTING +
+               ", " + Attribute.COL_VALIDATE +
+               ", 0 AS " + Attribute.COL_VALUE_FEATURE_ID +
+               ", 0 AS " + Attribute.COL_VALUE_GROUP_ID +
+               ", '' AS " + Attribute.COL_VALUE_VALUE +
+               " FROM " + Attribute.TABLE_NAME +
+               " WHERE " + Attribute.COL_TYPE + "='" + typeId + "' And " +  Attribute.COL_NAME_OTHER_LANG + " not like '%-Own2%'"+
+               " ORDER BY " + Attribute.COL_LISTING ;
+       return sql;
+   }
 
     // Nitin
     private String getJointOwn2AttributeSelectQueryByType(String typeId) {
@@ -4085,8 +4087,8 @@ public class DbController extends SQLiteOpenHelper {
                 ", 0 AS " + Attribute.COL_VALUE_GROUP_ID +
                 ", '' AS " + Attribute.COL_VALUE_VALUE +
                 " FROM " + Attribute.TABLE_NAME +
-                " WHERE " + Attribute.COL_TYPE + "='" + typeId + "' And " + Attribute.COL_NAME_OTHER_LANG + " like '%-Own2%'" +
-                " ORDER BY " + Attribute.COL_LISTING;
+                " WHERE " + Attribute.COL_TYPE + "='" + typeId + "' And " +  Attribute.COL_NAME_OTHER_LANG + " like '%-Own2%'"+
+                " ORDER BY " + Attribute.COL_LISTING ;
         return sql;
     }
 
@@ -4111,12 +4113,11 @@ public class DbController extends SQLiteOpenHelper {
 
     public List<Attribute> getAttributesByGroupIdOtherCase(Long groupId, Long featureId) {
         String wherePart = " AV." + Attribute.COL_VALUE_GROUP_ID + "=" + groupId;
-        return createAttributeListEditOtherCases(getAttributeSelectQuery(wherePart), groupId, featureId);
+        return createAttributeListEditOtherCases(getAttributeSelectQuery(wherePart),groupId,featureId);
     }
 
 
 //createAttributeListEditOtherCases
-
     /**
      * Returns property attributes by type. Expected types are as follows: GENERAL, GENERAL_PROPERTY, CUSTOM
      */
@@ -4134,38 +4135,37 @@ public class DbController extends SQLiteOpenHelper {
 
         //Nitin
         String wherePart = " AM." + Attribute.COL_TYPE + " = '" + attributeType + "' " +
-                "AND AV." + Attribute.COL_VALUE_FEATURE_ID + "=" + featureId + " And AM.ATTRIBUTE_NAME_OTHER not like '%-Own2%'";
+                "AND AV." + Attribute.COL_VALUE_FEATURE_ID + "=" + featureId +" And AM.ATTRIBUTE_NAME_OTHER not like '%-Own2%'";
         return createAttributeList(getAttributeSelectQuery(wherePart));
     }
 
-    //    createAttributeListPrivateIndividual
+//    createAttributeListPrivateIndividual
 //
     //Ambar
     public List<Attribute> getOwnerPropAttributesByGroupId(Long featureId, String attributeType, int groupID) {
-        //Nitin
+       //Nitin
         String wherePart = " AM." + Attribute.COL_TYPE + " = '" + attributeType + "' " +
-                "AND AV." + Attribute.COL_VALUE_FEATURE_ID + "=" + featureId + " AND AV." + Attribute.COL_VALUE_GROUP_ID + "=" + groupID;
+                "AND AV." + Attribute.COL_VALUE_FEATURE_ID + "=" + featureId +" AND AV." + Attribute.COL_VALUE_GROUP_ID + "=" + groupID;
         return createAttributeList(getAttributeSelectQuery(wherePart));
     }
 
     public List<Attribute> getOwnerPropAttributesByGroupIdResource(Long featureId, String attributeType, int groupID) {
         //Nitin
         String wherePart = " AM." + Attribute.COL_TYPE + " = '" + attributeType + "' " +
-                "AND AV." + Attribute.COL_VALUE_FEATURE_ID + "=" + featureId + " AND AV." + Attribute.COL_VALUE_GROUP_ID + "=" + groupID;
-        return createAttributeListResourceEdit(getAttributeSelectQuery(wherePart), featureId, groupID);
+                "AND AV." + Attribute.COL_VALUE_FEATURE_ID + "=" + featureId +" AND AV." + Attribute.COL_VALUE_GROUP_ID + "=" + groupID;
+        return createAttributeListResourceEdit(getAttributeSelectQuery(wherePart),featureId,groupID);
     }
 
     public List<Attribute> getOwnerPropAttributesSingleByGroupId(Long featureId, String attributeType, int groupID) {
         //Nitin
         String wherePart = " AM." + Attribute.COL_TYPE + " = '" + attributeType + "' " +
-                "AND AV." + Attribute.COL_VALUE_FEATURE_ID + "=" + featureId + " AND AV." + Attribute.COL_VALUE_GROUP_ID + "=" + groupID;
+                "AND AV." + Attribute.COL_VALUE_FEATURE_ID + "=" + featureId +" AND AV." + Attribute.COL_VALUE_GROUP_ID + "=" + groupID;
         return createAttributeListPrivateIndividual(getAttributeSelectQuery(wherePart));
     }
-
     //Ambar
     public List<Attribute> getOwner2PropAttributesByType(Long featureId, String attributeType) {
         String wherePart = " AM." + Attribute.COL_TYPE + " = '" + attributeType + "' " +
-                "AND AV." + Attribute.COL_VALUE_FEATURE_ID + "=" + featureId + " And AM.ATTRIBUTE_NAME_OTHER like '%-Own2%'";
+                "AND AV." + Attribute.COL_VALUE_FEATURE_ID + "=" + featureId  +" And AM.ATTRIBUTE_NAME_OTHER like '%-Own2%'";
         return createAttributeListOwn2(getAttributeSelectQuery(wherePart));
     }
 
@@ -4185,7 +4185,7 @@ public class DbController extends SQLiteOpenHelper {
 //                "AND AV." + ResourceCustomAttribute.COL_VALUE_FEATURE_ID + "=" + featureId;
         //Ambar
         String wherePart = " AM." + ResourceCustomAttribute.COL_TYPE + " = '" + attributeType + "' " +
-                "AND AV." + ResourceCustomAttribute.COL_VALUE_FEATURE_ID + "=" + featureId + " AND AV." + ResourceCustomAttribute.COL_VALUE_SUBID + " = '" + subID + "' " + " AND OP." + ResourceCustomAttribute.COL_VALUE_OPTION_ID + "=" + "AV." + ResourceCustomAttribute.COL_VALUE_OPTION_ID;
+                "AND AV." + ResourceCustomAttribute.COL_VALUE_FEATURE_ID + "=" + featureId+ " AND AV." + ResourceCustomAttribute.COL_VALUE_SUBID + " = '" + subID + "' " + " AND OP." + ResourceCustomAttribute.COL_VALUE_OPTION_ID + "=" + "AV." + ResourceCustomAttribute.COL_VALUE_OPTION_ID;
         return createResAttributeList(getResAttributeSelectQuery(wherePart));
     }
 
@@ -4215,7 +4215,7 @@ public class DbController extends SQLiteOpenHelper {
 //                "','" + Attribute.TYPE_GENERAL_PROPERTY + "','" + Attribute.TYPE_CUSTOM + "') " +
 //                "AND AV." + Attribute.COL_VALUE_FEATURE_ID + "=" + featureId;
         String wherePart = " AM." + Attribute.COL_TYPE + " IN ('" + Attribute.TYPE_GENERAL +
-                "','" + Attribute.TYPE_GENERAL_PROPERTY + "','" + Attribute.TYPE_CUSTOM + "','" + 18 + "','" + 17 + "','" + 10 + "','" + 11 + "','" + 12 + "','" + 9 + "','" + 13 + "','" + 14 + "','" + 15 + "','" + 16 + "') " +
+                "','" + Attribute.TYPE_GENERAL_PROPERTY + "','" + Attribute.TYPE_CUSTOM +"','" + 18 + "','" + 17 +"','" + 10 + "','" + 11 + "','" + 12  + "','" + 9 + "','" + 13 + "','" + 14 + "','" + 15 + "','" + 16 + "') " +
                 "AND AV." + Attribute.COL_VALUE_FEATURE_ID + "=" + featureId;
         return createAttributeList(getAttributeSelectQuery(wherePart));
     }
@@ -4225,7 +4225,7 @@ public class DbController extends SQLiteOpenHelper {
 //                "','" + Attribute.TYPE_GENERAL_PROPERTY + "','" + Attribute.TYPE_CUSTOM + "') " +
 //                "AND AV." + Attribute.COL_VALUE_FEATURE_ID + "=" + featureId;
         String wherePart = " AM." + Attribute.COL_TYPE + " IN ('" + Attribute.TYPE_GENERAL +
-                "','" + Attribute.TYPE_GENERAL_PROPERTY + "','" + Attribute.TYPE_CUSTOM + "','" + 18 + "','" + 17 + "','" + 10 + "','" + 11 + "','" + 12 + "','" + 9 + "','" + 13 + "','" + 14 + "','" + 15 + "','" + 16 + "') " +
+                "','" + Attribute.TYPE_GENERAL_PROPERTY + "','" + Attribute.TYPE_CUSTOM +"','" + 18 + "','" + 17 +"','" + 10 + "','" + 11 + "','" + 12  + "','" + 9 + "','" + 13 + "','" + 14 + "','" + 15 + "','" + 16 + "') " +
                 "AND AV." + Attribute.COL_VALUE_FEATURE_ID + "=" + featureId;
         return createResSyncAttributeList(getResSyncAttributeSelectQuery(wherePart));
     }
@@ -4237,7 +4237,7 @@ public class DbController extends SQLiteOpenHelper {
 //                "','" + Attribute.TYPE_GENERAL_PROPERTY + "','" + Attribute.TYPE_CUSTOM + "') " +
 //                "AND AV." + Attribute.COL_VALUE_FEATURE_ID + "=" + featureId;
         String wherePart = " AM." + Attribute.COL_TYPE + " IN ('" + Attribute.TYPE_GENERAL +
-                "','" + Attribute.TYPE_GENERAL_PROPERTY + "','" + Attribute.TYPE_CUSTOM + "','" + 18 + "','" + 17 + "','" + 10 + "','" + 11 + "','" + 12 + "','" + 9 + "','" + 13 + "','" + 14 + "','" + 15 + "','" + 16 + "') " +
+                "','" + Attribute.TYPE_GENERAL_PROPERTY + "','" + Attribute.TYPE_CUSTOM +"','" + 18 + "','" + 17 +"','" + 10 + "','" + 11 + "','" + 12  + "','" + 9 + "','" + 13 + "','" + 14 + "','" + 15 + "','" + 16 + "') " +
                 "AND AV." + Attribute.COL_VALUE_FEATURE_ID + "=" + featureId;
         return createResAttributeList(getResAttributeSelectQuery(wherePart));
     }
@@ -4248,9 +4248,8 @@ public class DbController extends SQLiteOpenHelper {
     public List<Attribute> getAttributesByType(String attributeType) {
         return createAttributeList(getAttributeSelectQueryByType(attributeType));
     }
-
     public List<Attribute> getAttributesByTypeOtherCases(String attributeType, Long featureID) {
-        return createAttributeListOtherCases(getAttributeSelectQueryByType(attributeType), featureID);
+        return createAttributeListOtherCases(getAttributeSelectQueryByType(attributeType),featureID);
     }
 
 
@@ -4267,12 +4266,12 @@ public class DbController extends SQLiteOpenHelper {
     }
 
 
+
     public List<Attribute> getAttributesByFlag(String attributeType) {
         return createAttributeList(getAttributeSelectQueryByType(attributeType));
     }
-
     public List<Attribute> getAttributesOthersByFlag(String attributeType, Long featureID) {
-        return createAttributeListResourceOwner(getAttributeSelectQueryByType(attributeType), featureID);
+        return createAttributeListResourceOwner(getAttributeSelectQueryByType(attributeType),featureID);
     }
 
     public List<Attribute> getAttributesByFlagPrivateIndvidual(String attributeType) {
@@ -4281,13 +4280,14 @@ public class DbController extends SQLiteOpenHelper {
 
     //Nitin
     public List<Attribute> getJointAttributesByFlag(String attributeType, Long featureID) {
-        return createAttributeListResourceOwner(getJointAttributeSelectQueryByType(attributeType), featureID);
+        return createAttributeListResourceOwner(getJointAttributeSelectQueryByType(attributeType),featureID);
     }
 
     //Nitin
     public List<Attribute> getJointOwn2AttributesByFlag(String attributeType) {
         return createAttributeListOwn2(getJointOwn2AttributeSelectQueryByType(attributeType));
     }
+
 
 
     /**
@@ -4428,7 +4428,7 @@ public class DbController extends SQLiteOpenHelper {
                         row.put(ResourceCustomAttribute.COL_VALUE_GROUP_ID, groupId);
                         row.put(ResourceCustomAttribute.COL_VALUE_ATTRIBUTE_ID, attribute.getId());
                         row.put(ResourceCustomAttribute.COL_VALUE_VALUE, attribute.getValue());
-                        row.put(ResourceCustomAttribute.COL_VALUE_OPTION_ID, attribute.getResID());
+                        row.put(ResourceCustomAttribute.COL_VALUE_OPTION_ID,attribute.getResID());
 //                        String subID="SELECT SUBCLASSIFICATION_ID FROM RESOURCE_ATTRIBUTE_MASTER WHERE ATTRIB_ID ="+attribute.getId().toString();
                         String subID = "SELECT SUBCLASSI_ID FROM " + ResourceCustomAttribute.TABLE_NAME + " WHERE " + ResourceCustomAttribute.COL_ID + "=" + attribute.getId();
                         cursor = getDb().rawQuery(subID, null);
@@ -4490,13 +4490,13 @@ public class DbController extends SQLiteOpenHelper {
     }
 
     public boolean checkUserExist() {
-        boolean userExist = false;
+        boolean userExist=false;
         User user = null;
         String selectSQLUser = "SELECT * FROM " + User.TABLE_NAME;
         Cursor cursor = getDb().rawQuery(selectSQLUser, null);
 
         if (cursor.moveToFirst()) {
-            userExist = true;
+            userExist=true;
         }
         cursor.close();
         return userExist;
@@ -4647,7 +4647,7 @@ public class DbController extends SQLiteOpenHelper {
                     for (int i = 0; i < project_info.length(); i++) {
 
                         JSONObject project_detail = new JSONObject(project_info.get(i).toString());
-                        projectValues.put("SERVER_PK", project_detail.getInt("id"));
+                         projectValues.put("SERVER_PK", project_detail.getInt("id"));
                         projectValues.put("PROJECT_NAME_ID", project_detail.getInt("projectnameid"));
                         projectValues.put("FILE_NAME", project_detail.getString("fileName"));
                         projectValues.put("FILE_LOCATION", project_detail.getString("fileLocation"));
@@ -4693,29 +4693,30 @@ public class DbController extends SQLiteOpenHelper {
                         claimTypes.put("NAME", claimType.getString("name"));
                         claimTypes.put("NAME_OTHER_LANG", claimType.getString("nameOtherLang"));
                         claimTypes.put("ACTIVE", claimType.getBoolean("active"));
-                        getDb().insert(ClaimType.TABLE_NAME, null, claimTypes);
+                         getDb().insert(ClaimType.TABLE_NAME, null, claimTypes);
                     }
                 }
             }
 
 
+
             if (projectdata.has("AOI")) {
                 ContentValues aoiTypes = new ContentValues();
                 JSONArray aoiTypesArray = projectdata.getJSONArray("AOI");
-                int iCount = 1;
+                int iCount=1;
                 if (aoiTypesArray.length() > 0) {
                     for (int i = 0; i < aoiTypesArray.length(); i++) {
                         JSONObject aoi = new JSONObject(aoiTypesArray.get(i).toString());
                         aoiTypes.put("AOIID", aoi.getString("aoiid"));
-                        // aoiTypes.put("AOINAME", aoi.getString("name"));
-                        aoiTypes.put("AOINAME", "AOI - " + "" + iCount);
+                       // aoiTypes.put("AOINAME", aoi.getString("name"));
+                        aoiTypes.put("AOINAME", "AOI - "+""+iCount);
                         aoiTypes.put("USERID", aoi.getInt("userid"));
                         aoiTypes.put("PROJECTNAME_ID", aoi.getInt("projectnameid"));
 //                        aoiTypes.put("COORDINATES", aoi.getString("geomStr").replace("POLYGON","").replace("(","").replace(")",""));
                         aoiTypes.put("COORDINATES", aoi.getString("geomStr"));
                         aoiTypes.put("ISACTIVE", aoi.getString("isactive"));
                         getDb().insert(AOI.TABLE_NAME, null, aoiTypes);
-                        iCount = iCount + 1;
+                        iCount=iCount+1;
                     }
                 }
 
@@ -4837,7 +4838,7 @@ public class DbController extends SQLiteOpenHelper {
                         projectValues.put("ATTRIID", project_detail.getInt("attributecategoryid"));
                         projectValues.put("ATTRIVALUE", project_detail.getString("categoryName"));
                         projectValues.put("LISTING", project_detail.getString("categorydisplayorder"));
-                        if (project_detail.has("categorytype")) {
+                        if (project_detail.has("categorytype")){
                             JSONObject jsonObjectFlag = project_detail.getJSONObject("categorytype");
                             projectValues.put("FLAG", jsonObjectFlag.getString("typename"));
                         }
@@ -5161,7 +5162,7 @@ public class DbController extends SQLiteOpenHelper {
 
             getDb().insert(Person.TABLE_NAME, null, row);
 
-            List<NonNatural> nonNaturalList = getNonNaturalList(person.getFeatureId());
+            List<NonNatural> nonNaturalList=getNonNaturalList(person.getFeatureId());
             // Save attributes
 
             if (person.getAttributes() != null && person.getAttributes().size() > 0) {
@@ -5172,7 +5173,7 @@ public class DbController extends SQLiteOpenHelper {
                 saveAttributesList(person.getAttributes());
             }
 
-            if (nonNaturalList != null && nonNaturalList.size() > 0) {
+            if (nonNaturalList!= null && nonNaturalList.size() > 0) {
                 for (NonNatural attribute : nonNaturalList) {
                     attribute.setGroupId(person.getId());
                     attribute.setFeatureId(person.getFeatureId());
@@ -5221,7 +5222,6 @@ public class DbController extends SQLiteOpenHelper {
             row.put(Media.COL_PERSON_ID, media.getPersonId());
             row.put(Media.COL_DISPUTE_ID, media.getDisputeId());
             row.put(Media.COL_SYNCED, media.getSynced());
-            row.put(Media.COL_FLAG, media.getFlag());
 
             getDb().insert(Media.TABLE_NAME, null, row);
 
@@ -5267,13 +5267,13 @@ public class DbController extends SQLiteOpenHelper {
     }
 
     //Check there is any status  completed or not
-    public boolean isStatusComplete() {
-        boolean isStatus = false;
+    public boolean isStatusComplete(){
+        boolean isStatus=false;
 
 
-        String spatialFeatureSql = "SELECT * FROM " + Property.TABLE_NAME +
-                " WHERE " + Property.COL_STATUS + " = '" + Property.CLIENT_STATUS_COMPLETE + "' AND (" +
-                Property.COL_SERVER_ID + " IS NULL OR " + Property.COL_SERVER_ID + " = '')";
+        String spatialFeatureSql ="SELECT * FROM " + Property.TABLE_NAME +
+                    " WHERE " + Property.COL_STATUS + " = '" + Property.CLIENT_STATUS_COMPLETE + "' AND (" +
+                    Property.COL_SERVER_ID + " IS NULL OR " + Property.COL_SERVER_ID + " = '')";
         Cursor cursor = getDb().rawQuery(spatialFeatureSql, null);
         if (cursor.moveToFirst()) {
             isStatus = true;
@@ -5431,9 +5431,8 @@ public class DbController extends SQLiteOpenHelper {
                     "MV.DISPUTE_ID, " +
                     "MV.PATH," +
                     "SF.SERVER_FEATURE_ID," +
-                    "MV.TYPE," +
-                    "MV.FLAG " //--> media flag M,P,R
-                    + " FROM MEDIA AS MV INNER JOIN SPATIAL_FEATURES AS SF ON MV.FEATURE_ID =  SF.FEATURE_ID "
+                    "MV.TYPE "
+                    + "FROM MEDIA AS MV INNER JOIN SPATIAL_FEATURES AS SF ON MV.FEATURE_ID =  SF.FEATURE_ID "
                     + "WHERE SF.STATUS = '" + Property.CLIENT_STATUS_COMPLETE + "' and MV.SYNCED=0 Limit 1";
 
 
@@ -5464,7 +5463,6 @@ public class DbController extends SQLiteOpenHelper {
                     medias.put(5, cursor.getLong(3));//dispute id
                 }
                 medias.put(6, userId);
-                medias.put(7, cursor.getString(7));//media flag
             }
             cursor.close();
 
@@ -5862,9 +5860,11 @@ public class DbController extends SQLiteOpenHelper {
 
         try {
             T type = (T) classType.newInstance();
-            if (type.getTableName() == "RELATIONSHIP_TYPE") {
+            if (type.getTableName()=="RELATIONSHIP_TYPE")
+            {
                 cursor = getDb().rawQuery("SELECT * FROM " + type.getTableName() + " where ACTIVE=1 ORDER BY Code", null);
-            } else {
+            }
+            else {
                 cursor = getDb().rawQuery("SELECT * FROM " + type.getTableName() + " where ACTIVE=1 ORDER BY " + RefData.COL_NAME, null);
             }
 
@@ -6164,7 +6164,7 @@ public class DbController extends SQLiteOpenHelper {
         try {
 
             T type = (T) classType.newInstance();
-            String selectQueryOptions = "SELECT * FROM" + " " + type.getTableName() + " WHERE FLAG " + "=" + "'Resource'" + " ORDER BY LISTING";
+            String selectQueryOptions = "SELECT * FROM" + " " + type.getTableName() + " WHERE FLAG " + "=" + "'Resource'" +" ORDER BY LISTING";
             //String select = "SELECT * FROM " + type.getTableName() +"WHERE "+type.getTableName().FLAG+"="+ res + " GROUP BY " + Attribute.COL_TYPE_NAME;
             //cursor = getDb().rawQuery("SELECT * FROM " + type.getTableName() + " GROUP BY " + Attribute.COL_TYPE_NAME, null);
             cursor = getDb().rawQuery(selectQueryOptions, null);
@@ -6298,7 +6298,7 @@ public class DbController extends SQLiteOpenHelper {
      * Returns list of claim types.
      */
     public List<ClaimType> getClaimTypes(boolean addDummy) {
-        return createClaimTypesList("SELECT * FROM " + ClaimType.TABLE_NAME + " WHERE ACTIVE = 1 ORDER BY CODE", addDummy);
+        return createClaimTypesList("SELECT * FROM " + ClaimType.TABLE_NAME +" WHERE ACTIVE = 1 ORDER BY CODE", addDummy);
     }
 
     /**
@@ -6685,6 +6685,7 @@ public class DbController extends SQLiteOpenHelper {
             }
 
 
+
 //            for (int i=0;i<classification.size();i++) {
 //
 //
@@ -6709,15 +6710,18 @@ public class DbController extends SQLiteOpenHelper {
 //            getDb().delete("RESOURCE_BASISC_ATTRIBUTES", whereGroupId, null);
 
 
-            if (classification.getAttribValue().equalsIgnoreCase(contxt.getResources().getString(R.string.SelectOption))) {
-            } else {
 
-                ContentValues values = new ContentValues();
-                values.put("FEATURE_ID", featureId);
-                values.put("VALUE", classification.getAttribValue());
-                values.put("ID", classification.getAttribID());
-                getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
-            }
+                    if (classification.getAttribValue().equalsIgnoreCase(contxt.getResources().getString(R.string.SelectOption))) {
+                    } else {
+
+                        ContentValues values = new ContentValues();
+                        values.put("FEATURE_ID", featureId);
+                        values.put("VALUE", classification.getAttribValue());
+                        values.put("ID", classification.getAttribID());
+                        getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
+                    }
+
+
 
 
             return true;
@@ -6726,6 +6730,7 @@ public class DbController extends SQLiteOpenHelper {
             return false;
         }
     }
+
 
 
     public List<Option> getMaritalStatus(int a, boolean addDummy) {
@@ -7343,6 +7348,7 @@ public class DbController extends SQLiteOpenHelper {
     }
 
 
+
 //    public List<ProjectSpatialDataDto> getProjectSpatialData() {
 //        List<ProjectSpatialDataDto> projectSpatialList = new ArrayList<ProjectSpatialDataDto>();
 //        String selectQueryQues = "SELECT * from PROJECT_SPATIAL_DATA order by SERVER_PK";
@@ -7369,43 +7375,107 @@ public class DbController extends SQLiteOpenHelper {
 
     public List<Summary> getResourceTenureInfo(Long featureId) {
 
-        String sql = "SELECT " +
-                "ATTRIBUTE_MASTER." + Attribute.COL_NAME +
-                ", FORM_VALUES." + Attribute.COL_VALUE_VALUE +
-                " FROM " + Attribute.TABLE_NAME +
-                ", " + Attribute.TABLE_ATTRIBUTE_VALUE_NAME +
-                " WHERE " + "FORM_VALUES." + Attribute.COL_VALUE_FEATURE_ID + "=" + featureId + " AND " +
-                "ATTRIBUTE_MASTER." + Attribute.COL_ID + "=" + "FORM_VALUES." + Attribute.COL_VALUE_ATTRIBUTE_ID;
-        Cursor cur = null;
-        List<Summary> attributes = new ArrayList<Summary>();
+
+        List<Long> longs=new ArrayList<>();
+        String sql1 = "SELECT GROUP_ID FROM FORM_VALUES WHERE FEATURE_ID=" +featureId +" AND ATTRIB_VALUE='Primary occupant /Point of contact'";
+
+        Cursor cur1 = null;
 
         try {
-            cur = getDb().rawQuery(sql, null);
-            if (cur.moveToFirst()) {
-                String lang = cf.getLocale();
-
+            cur1 = getDb().rawQuery(sql1, null);
+            if (cur1.moveToFirst()) {
 
                 do {
-                    Summary attribute = new Summary();
-
-                    attribute.setnameLabel(cur.getString(0));
-                    attribute.setvalue(cur.getString(1));
-
-
-                    attributes.add(attribute);
-
-                } while (cur.moveToNext());
+                    longs.add(cur1.getLong(0));
+                } while (cur1.moveToNext());
             }
         } catch (Exception e) {
             cf.appLog("", e);
             e.printStackTrace();
         } finally {
             try {
-                cur.close();
+                cur1.close();
             } catch (Exception ex) {
             }
-            return attributes;
         }
+
+
+        String sqloccupant = "SELECT GROUP_ID FROM FORM_VALUES WHERE FEATURE_ID=" +featureId +" AND ATTRIB_VALUE='occupant'";
+
+        Cursor cur1occupant = null;
+
+        try {
+            cur1occupant = getDb().rawQuery(sqloccupant, null);
+            if (cur1occupant.moveToFirst()) {
+
+                do {
+                    longs.add(cur1occupant.getLong(0));
+
+                } while (cur1occupant.moveToNext());
+            }
+        } catch (Exception e) {
+            cf.appLog("", e);
+            e.printStackTrace();
+        } finally {
+            try {
+                cur1occupant.close();
+            } catch (Exception ex) {
+            }
+        }
+        List<Summary> attributes = new ArrayList<Summary>();
+
+        if(longs.size()!=0) {
+            for (int i = 0; i < longs.size(); i++) {
+                String sql = "SELECT " +
+                        "ATTRIBUTE_MASTER." + Attribute.COL_NAME +
+                        ", FORM_VALUES." + Attribute.COL_VALUE_VALUE +
+                        " FROM " + Attribute.TABLE_NAME +
+                        ", " + Attribute.TABLE_ATTRIBUTE_VALUE_NAME +
+                        " WHERE " + "FORM_VALUES." + "GROUP_ID" + "=" + longs.get(i) + " AND " +
+                        "ATTRIBUTE_MASTER." + Attribute.COL_ID + "=" + "FORM_VALUES." + Attribute.COL_VALUE_ATTRIBUTE_ID;
+
+
+//        String sql = "SELECT " +
+//                "ATTRIBUTE_MASTER." + Attribute.COL_NAME +
+//                ", FORM_VALUES." + Attribute.COL_VALUE_VALUE +
+//                " FROM " + Attribute.TABLE_NAME +
+//                ", " + Attribute.TABLE_ATTRIBUTE_VALUE_NAME +
+//                " WHERE " + "FORM_VALUES." +Attribute.COL_VALUE_FEATURE_ID+ "=" + featureId + " AND " +
+//                "ATTRIBUTE_MASTER." + Attribute.COL_ID + "=" + "FORM_VALUES." + Attribute.COL_VALUE_ATTRIBUTE_ID;
+                Cursor cur = null;
+
+
+                try {
+                    cur = getDb().rawQuery(sql, null);
+                    if (cur.moveToFirst()) {
+                        String lang = cf.getLocale();
+
+
+                        do {
+                            Summary attribute = new Summary();
+
+                            attribute.setnameLabel(cur.getString(0));
+                            attribute.setvalue(cur.getString(1));
+
+
+                            attributes.add(attribute);
+
+                        } while (cur.moveToNext());
+                    }
+                } catch (Exception e) {
+                    cf.appLog("", e);
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        cur.close();
+                    } catch (Exception ex) {
+                    }
+                }
+            }
+        }
+            return attributes;
+
+
     }
 
     public List<Summary> getResourceCustomInfo(Long featureId) {
@@ -7434,6 +7504,7 @@ public class DbController extends SQLiteOpenHelper {
                 String lang = cf.getLocale();
 
 
+
                 do {
                     Summary attribute = new Summary();
 
@@ -7446,7 +7517,7 @@ public class DbController extends SQLiteOpenHelper {
                             && !attribute.getnameLabel().equalsIgnoreCase("Plant Date (Secondary Crop)")
                             && !attribute.getnameLabel().equalsIgnoreCase("Duration (Secondary Crop, Months)")
                             && !attribute.getnameLabel().equalsIgnoreCase("Total Expenditures (Farmer, LRD)")
-                            && !attribute.getnameLabel().equalsIgnoreCase("Total Sales (Farmer, LRD)")) {
+                            && !attribute.getnameLabel().equalsIgnoreCase("Total Sales (Farmer, LRD)") ) {
 
                         attributes.add(attribute);
                     }
@@ -7478,12 +7549,12 @@ public class DbController extends SQLiteOpenHelper {
 
         String sql = "SELECT " +
                 "OPTIONS." + Option.COL_NAME +
-                ",OPTIONS.OPTION_ID,OPTIONS.ATTRIB_ID" +
+                ",OPTIONS.OPTION_ID,OPTIONS.ATTRIB_ID"+
                 ", RESOURCE_FORM_VALUES." + ResourceCustomAttribute.COL_VALUE_VALUE +
                 " FROM OPTIONS " +
                 ", " + ResourceCustomAttribute.TABLE_ATTRIBUTE_VALUE_NAME +
                 " WHERE " + "RESOURCE_FORM_VALUES." + ResourceCustomAttribute.COL_VALUE_FEATURE_ID + "=" + featureId + " AND " +
-                "OPTIONS." + ResourceCustomAttribute.COL_VALUE_OPTION_ID + "=" + "RESOURCE_FORM_VALUES." + ResourceCustomAttribute.COL_VALUE_OPTION_ID + " AND RESOURCE_FORM_VALUES." + ResourceCustomAttribute.COL_VALUE_SUBID + "='" + SubID + "'";
+                "OPTIONS." + ResourceCustomAttribute.COL_VALUE_OPTION_ID + "=" + "RESOURCE_FORM_VALUES." + ResourceCustomAttribute.COL_VALUE_OPTION_ID +" AND RESOURCE_FORM_VALUES."+ ResourceCustomAttribute.COL_VALUE_SUBID +"='" + SubID + "'";
         Cursor cur = null;
         List<ResourceCustomAttribute> attributes = new ArrayList<ResourceCustomAttribute>();
 
@@ -7491,6 +7562,7 @@ public class DbController extends SQLiteOpenHelper {
             cur = getDb().rawQuery(sql, null);
             if (cur.moveToFirst()) {
                 String lang = cf.getLocale();
+
 
 
                 do {
@@ -7520,7 +7592,7 @@ public class DbController extends SQLiteOpenHelper {
 
     public Property getClassi(long featureID) {
 
-        Property property = new Property();
+        Property property=new Property();
         String selectQueryQues = "SELECT * from Tenure_Information where FEATURE_ID =" + featureID;
         Cursor cursor = getDb().rawQuery(selectQueryQues, null);
         if (cursor.moveToFirst()) {
@@ -7544,13 +7616,13 @@ public class DbController extends SQLiteOpenHelper {
     }
 
     public String getTenureID(String tenureTypeValue) {
-        String tenureID = null;
-        String selectQueryOptions = "SELECT ATTRIID FROM TENURE_TYPE" + " WHERE FLAG " + "=" + "'Resource' AND ATTRIVALUE = " + "'" + tenureTypeValue + "'";
+        String tenureID=null;
+        String selectQueryOptions = "SELECT ATTRIID FROM TENURE_TYPE"  + " WHERE FLAG " + "=" + "'Resource' AND ATTRIVALUE = " +"'"+tenureTypeValue+"'";
         Cursor cursor = getDb().rawQuery(selectQueryOptions, null);
         if (cursor.moveToFirst()) {
             try {
                 do {
-                    tenureID = cursor.getString(0);
+                    tenureID=cursor.getString(0);
 
                 } while (cursor.moveToNext());
             } catch (Exception e) {
@@ -7559,7 +7631,7 @@ public class DbController extends SQLiteOpenHelper {
             }
         }
         cursor.close();
-        return tenureID;
+        return  tenureID;
     }
 
 
@@ -7643,12 +7715,12 @@ public class DbController extends SQLiteOpenHelper {
         return classificationList;
     }
 
-    public String getResorceOwner1FName(String tenureType, int ownerCount, long featureid) {
-        String ownerName = null;
-        int iGID = 0;
+    public String getResorceOwner1FName(String tenureType,int ownerCount,long featureid) {
+        String ownerName=null;
+        int iGID=0;
 
 
-        String selectGID = "SELECT DISTINCT GROUP_ID FROM FORM_VALUES" + " WHERE FEATURE_ID = " + featureid + " ORDER BY GROUP_ID DESC";
+        String selectGID = "SELECT DISTINCT GROUP_ID FROM FORM_VALUES"  + " WHERE FEATURE_ID = " +featureid +" ORDER BY GROUP_ID DESC";
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
             try {
@@ -7662,12 +7734,12 @@ public class DbController extends SQLiteOpenHelper {
         }
         cursorgid.close();
 
-        String selectQueryOptions = "SELECT ATTRIB_VALUE FROM FORM_VALUES" + " WHERE LABEL_NAME " + "=" + "'First Name' AND FEATURE_ID = " + featureid + " AND GROUP_ID =" + iGID;
+        String selectQueryOptions = "SELECT ATTRIB_VALUE FROM FORM_VALUES"  + " WHERE LABEL_NAME " + "=" + "'First Name' AND FEATURE_ID = " +featureid +" AND GROUP_ID ="+iGID;
         Cursor cursor = getDb().rawQuery(selectQueryOptions, null);
         if (cursor.moveToFirst()) {
             try {
                 do {
-                    ownerName = cursor.getString(0);
+                    ownerName=cursor.getString(0);
 
                 } while (cursor.moveToNext());
             } catch (Exception e) {
@@ -7677,15 +7749,15 @@ public class DbController extends SQLiteOpenHelper {
         }
         cursor.close();
 
-        return ownerName;
+        return  ownerName;
     }
 
-    public String getResorceOwner2FName(String tenureType, int ownerCount, long featureid) {
-        String ownerName = null;
-        int iGID = 0;
+    public String getResorceOwner2FName(String tenureType,int ownerCount,long featureid) {
+        String ownerName=null;
+        int iGID=0;
 
 
-        String selectGID = "SELECT DISTINCT GROUP_ID FROM FORM_VALUES" + " WHERE FEATURE_ID = " + featureid + " ORDER BY GROUP_ID ASC";
+        String selectGID = "SELECT DISTINCT GROUP_ID FROM FORM_VALUES"  + " WHERE FEATURE_ID = " +featureid +" ORDER BY GROUP_ID ASC";
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
             try {
@@ -7699,12 +7771,12 @@ public class DbController extends SQLiteOpenHelper {
         }
         cursorgid.close();
 
-        String selectQueryOptions = "SELECT ATTRIB_VALUE FROM FORM_VALUES" + " WHERE LABEL_NAME " + "=" + "'First Name' AND FEATURE_ID = " + featureid + " AND GROUP_ID =" + iGID;
+        String selectQueryOptions = "SELECT ATTRIB_VALUE FROM FORM_VALUES"  + " WHERE LABEL_NAME " + "=" + "'First Name' AND FEATURE_ID = " +featureid +" AND GROUP_ID ="+iGID;
         Cursor cursor = getDb().rawQuery(selectQueryOptions, null);
         if (cursor.moveToFirst()) {
             try {
                 do {
-                    ownerName = cursor.getString(0);
+                    ownerName=cursor.getString(0);
 
                 } while (cursor.moveToNext());
             } catch (Exception e) {
@@ -7714,16 +7786,16 @@ public class DbController extends SQLiteOpenHelper {
         }
         cursor.close();
 
-        return ownerName;
+        return  ownerName;
     }
 
-    public String getResorceOwner1MName(String tenureType, int ownerCount, long featureid) {
-        String ownerName = null;
+    public String getResorceOwner1MName(String tenureType,int ownerCount,long featureid) {
+        String ownerName=null;
 
-        int iGID = 0;
+        int iGID=0;
 
 
-        String selectGID = "SELECT DISTINCT GROUP_ID FROM FORM_VALUES" + " WHERE FEATURE_ID = " + featureid + " ORDER BY GROUP_ID DESC";
+        String selectGID = "SELECT DISTINCT GROUP_ID FROM FORM_VALUES"  + " WHERE FEATURE_ID = " +featureid +" ORDER BY GROUP_ID DESC";
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
             try {
@@ -7737,13 +7809,12 @@ public class DbController extends SQLiteOpenHelper {
         }
         cursorgid.close();
 
-        String selectQueryOptions = "SELECT ATTRIB_VALUE FROM FORM_VALUES" + " WHERE LABEL_NAME " + "=" + "'Middle Name' AND FEATURE_ID = " + featureid + " AND GROUP_ID =" + iGID;
-        ;
+        String selectQueryOptions = "SELECT ATTRIB_VALUE FROM FORM_VALUES"  + " WHERE LABEL_NAME " + "=" + "'Middle Name' AND FEATURE_ID = " +featureid+" AND GROUP_ID ="+iGID;;
         Cursor cursor = getDb().rawQuery(selectQueryOptions, null);
         if (cursor.moveToFirst()) {
             try {
                 do {
-                    ownerName = cursor.getString(0);
+                    ownerName=cursor.getString(0);
 
                 } while (cursor.moveToNext());
             } catch (Exception e) {
@@ -7753,15 +7824,15 @@ public class DbController extends SQLiteOpenHelper {
         }
         cursor.close();
 
-        return ownerName;
+        return  ownerName;
     }
 
-    public String getResorceOwner2MName(String tenureType, int ownerCount, long featureid) {
-        String ownerName = null;
-        int iGID = 0;
+    public String getResorceOwner2MName(String tenureType,int ownerCount,long featureid) {
+        String ownerName=null;
+        int iGID=0;
 
 
-        String selectGID = "SELECT DISTINCT GROUP_ID FROM FORM_VALUES" + " WHERE FEATURE_ID = " + featureid + " ORDER BY GROUP_ID ASC";
+        String selectGID = "SELECT DISTINCT GROUP_ID FROM FORM_VALUES"  + " WHERE FEATURE_ID = " +featureid +" ORDER BY GROUP_ID ASC";
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
             try {
@@ -7775,13 +7846,12 @@ public class DbController extends SQLiteOpenHelper {
         }
         cursorgid.close();
 
-        String selectQueryOptions = "SELECT ATTRIB_VALUE FROM FORM_VALUES" + " WHERE LABEL_NAME " + "=" + "'Middle Name' AND FEATURE_ID = " + featureid + " AND GROUP_ID =" + iGID;
-        ;
+        String selectQueryOptions = "SELECT ATTRIB_VALUE FROM FORM_VALUES"  + " WHERE LABEL_NAME " + "=" + "'Middle Name' AND FEATURE_ID = " +featureid+" AND GROUP_ID ="+iGID;;
         Cursor cursor = getDb().rawQuery(selectQueryOptions, null);
         if (cursor.moveToFirst()) {
             try {
                 do {
-                    ownerName = cursor.getString(0);
+                    ownerName=cursor.getString(0);
 
                 } while (cursor.moveToNext());
             } catch (Exception e) {
@@ -7791,15 +7861,15 @@ public class DbController extends SQLiteOpenHelper {
         }
         cursor.close();
 
-        return ownerName;
+        return  ownerName;
     }
 
-    public String getResorceOwner1LName(String tenureType, int ownerCount, long featureid) {
-        String ownerName = null;
-        int iGID = 0;
+    public String getResorceOwner1LName(String tenureType,int ownerCount,long featureid) {
+        String ownerName=null;
+        int iGID=0;
 
 
-        String selectGID = "SELECT DISTINCT GROUP_ID FROM FORM_VALUES" + " WHERE FEATURE_ID = " + featureid + " ORDER BY GROUP_ID DESC";
+        String selectGID = "SELECT DISTINCT GROUP_ID FROM FORM_VALUES"  + " WHERE FEATURE_ID = " +featureid +" ORDER BY GROUP_ID DESC";
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
             try {
@@ -7813,13 +7883,12 @@ public class DbController extends SQLiteOpenHelper {
         }
         cursorgid.close();
 
-        String selectQueryOptions = "SELECT ATTRIB_VALUE FROM FORM_VALUES" + " WHERE LABEL_NAME " + "=" + "'Last Name' AND FEATURE_ID = " + featureid + " AND GROUP_ID =" + iGID;
-        ;
+        String selectQueryOptions = "SELECT ATTRIB_VALUE FROM FORM_VALUES"  + " WHERE LABEL_NAME " + "=" + "'Last Name' AND FEATURE_ID = " +featureid+" AND GROUP_ID ="+iGID;;
         Cursor cursor = getDb().rawQuery(selectQueryOptions, null);
         if (cursor.moveToFirst()) {
             try {
                 do {
-                    ownerName = cursor.getString(0);
+                    ownerName=cursor.getString(0);
 
                 } while (cursor.moveToNext());
             } catch (Exception e) {
@@ -7829,15 +7898,14 @@ public class DbController extends SQLiteOpenHelper {
         }
         cursor.close();
 
-        return ownerName;
+        return  ownerName;
     }
+    public String getResorceOwner2LName(String tenureType,int ownerCount,long featureid) {
+        String ownerName=null;
+        int iGID=0;
 
-    public String getResorceOwner2LName(String tenureType, int ownerCount, long featureid) {
-        String ownerName = null;
-        int iGID = 0;
 
-
-        String selectGID = "SELECT DISTINCT GROUP_ID FROM FORM_VALUES" + " WHERE FEATURE_ID = " + featureid + " ORDER BY GROUP_ID ASC";
+        String selectGID = "SELECT DISTINCT GROUP_ID FROM FORM_VALUES"  + " WHERE FEATURE_ID = " +featureid +" ORDER BY GROUP_ID ASC";
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
             try {
@@ -7851,13 +7919,12 @@ public class DbController extends SQLiteOpenHelper {
         }
         cursorgid.close();
 
-        String selectQueryOptions = "SELECT ATTRIB_VALUE FROM FORM_VALUES" + " WHERE LABEL_NAME " + "=" + "'Last Name' AND FEATURE_ID = " + featureid + " AND GROUP_ID =" + iGID;
-        ;
+        String selectQueryOptions = "SELECT ATTRIB_VALUE FROM FORM_VALUES"  + " WHERE LABEL_NAME " + "=" + "'Last Name' AND FEATURE_ID = " +featureid+" AND GROUP_ID ="+iGID;;
         Cursor cursor = getDb().rawQuery(selectQueryOptions, null);
         if (cursor.moveToFirst()) {
             try {
                 do {
-                    ownerName = cursor.getString(0);
+                    ownerName=cursor.getString(0);
 
                 } while (cursor.moveToNext());
             } catch (Exception e) {
@@ -7867,21 +7934,21 @@ public class DbController extends SQLiteOpenHelper {
         }
         cursor.close();
 
-        return ownerName;
+        return  ownerName;
     }
 
 
     public List<ResourceOwner> getResorceMultipleOwnerName(long featureid) {
-        String ownerName = null;
-        String FName = null;
-        String MName = null;
-        String LName = null;
-        List<ResourceOwner> lstOwnerName = new ArrayList<ResourceOwner>();
+        String ownerName=null;
+        String FName=null;
+        String MName=null;
+        String LName=null;
+        List<ResourceOwner> lstOwnerName= new ArrayList<ResourceOwner>();
 
-        int iGID = 0;
+        int iGID=0;
 
 
-        String selectGID = "SELECT DISTINCT GROUP_ID FROM FORM_VALUES" + " WHERE FEATURE_ID = " + featureid + " ORDER BY GROUP_ID ASC";
+        String selectGID = "SELECT DISTINCT GROUP_ID FROM FORM_VALUES"  + " WHERE FEATURE_ID = " +featureid +" ORDER BY GROUP_ID ASC";
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
             try {
@@ -7890,22 +7957,22 @@ public class DbController extends SQLiteOpenHelper {
                     iGID = cursorgid.getInt(0);
 
                     //------------
-                    String selectQueryOptions = "Select (SELECT ATTRIB_VALUE FROM FORM_VALUES  WHERE LABEL_NAME ='First Name' AND FEATURE_ID = " + featureid + "  AND GROUP_ID =" + iGID + ") as FName,\n" +
-                            "(SELECT ATTRIB_VALUE FROM FORM_VALUES  WHERE LABEL_NAME ='Middle Name' AND FEATURE_ID = " + featureid + "  AND GROUP_ID =" + iGID + ") as MName,\n" +
-                            "(SELECT ATTRIB_VALUE FROM FORM_VALUES  WHERE LABEL_NAME ='Last Name' AND FEATURE_ID = " + featureid + "  AND GROUP_ID =" + iGID + ") as LName";
+                    String selectQueryOptions = "Select (SELECT ATTRIB_VALUE FROM FORM_VALUES  WHERE LABEL_NAME ='First Name' AND FEATURE_ID = " +featureid +"  AND GROUP_ID ="+iGID+") as FName,\n" +
+                            "(SELECT ATTRIB_VALUE FROM FORM_VALUES  WHERE LABEL_NAME ='Middle Name' AND FEATURE_ID = " +featureid +"  AND GROUP_ID ="+iGID+") as MName,\n" +
+                            "(SELECT ATTRIB_VALUE FROM FORM_VALUES  WHERE LABEL_NAME ='Last Name' AND FEATURE_ID = " +featureid +"  AND GROUP_ID ="+iGID+") as LName";
                     Cursor cursor = getDb().rawQuery(selectQueryOptions, null);
                     if (cursor.moveToFirst()) {
                         try {
                             do {
-                                ResourceOwner objRresourceOwner = new ResourceOwner();
+                                ResourceOwner objRresourceOwner=new ResourceOwner();
 
-                                ownerName = cursor.getString(0) + " " + cursor.getString(1) + " " + cursor.getString(2);
+                                ownerName=cursor.getString(0) +" "+cursor.getString(1)+" "+cursor.getString(2);
                                 objRresourceOwner.setOwnerName(ownerName);
                                 objRresourceOwner.setFeatureID(featureid);
                                 objRresourceOwner.setGroupId(iGID);
                                 objRresourceOwner.setMedia(getMediaByPerson((long) objRresourceOwner.getGroupId()));
                                 lstOwnerName.add(objRresourceOwner);
-                                objRresourceOwner = null;
+                                objRresourceOwner=null;
                             } while (cursor.moveToNext());
                         } catch (Exception e) {
                             cf.appLog("", e);
@@ -7922,14 +7989,14 @@ public class DbController extends SQLiteOpenHelper {
         }
         cursorgid.close();
 
-        return lstOwnerName;
+        return  lstOwnerName;
     }
 
 
     public int getOwnerCount(Long featureId) {
-        int iGID = 0;
+        int iGID=0;
 
-        String selectGID = "SELECT COUNT(DISTINCT GROUP_ID) FROM FORM_VALUES" + " WHERE FEATURE_ID = " + featureId + " ORDER BY GROUP_ID DESC";
+        String selectGID = "SELECT COUNT(DISTINCT GROUP_ID) FROM FORM_VALUES"  + " WHERE FEATURE_ID = " +featureId +" ORDER BY GROUP_ID DESC";
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
             try {
@@ -7948,9 +8015,9 @@ public class DbController extends SQLiteOpenHelper {
 
 
     public int getPOICount(Long featureId) {
-        int iGID = 0;
+        int iGID=0;
 
-        String selectGID = "SELECT COUNT(DISTINCT GROUP_ID) FROM RESOURCE_POI_VALUE_SYNC" + " WHERE FEATURE_ID = " + featureId + " ORDER BY GROUP_ID DESC";
+        String selectGID = "SELECT COUNT(DISTINCT GROUP_ID) FROM RESOURCE_POI_VALUE_SYNC"  + " WHERE FEATURE_ID = " +featureId +" ORDER BY GROUP_ID DESC";
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
             try {
@@ -7968,7 +8035,7 @@ public class DbController extends SQLiteOpenHelper {
     }
 
 
-    //    "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+//    "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
 //            "AOIID INTEGER," +
 //            "AOINAME TEXT," +
 //            "USERID INTEGER," +
@@ -7980,8 +8047,8 @@ public class DbController extends SQLiteOpenHelper {
 
         List<AOI> AOIList = new ArrayList<AOI>();
         //String selectQueryQues = "SELECT AOIID,AOINAME from AOI" ;
-        String selectQueryQues = "SELECT AOIID,COORDINATES,AOINAME from AOI WHERE ISACTIVE='true'";
-        // String selectQueryQues = "SELECT AOIID,AOINAME,COORDINATES from AOI" ;
+        String selectQueryQues = "SELECT AOIID,COORDINATES,AOINAME from AOI WHERE ISACTIVE='true'" ;
+       // String selectQueryQues = "SELECT AOIID,AOINAME,COORDINATES from AOI" ;
         Cursor cursor = getDb().rawQuery(selectQueryQues, null);
         if (cursor.moveToFirst()) {
             try {
@@ -8005,10 +8072,10 @@ public class DbController extends SQLiteOpenHelper {
     }
 
     public int getFeatureCount(String strType) {
-        int iGID = 0;
+        int iGID=0;
 
         //String selectGID = "SELECT COUNT(*) FROM SPATIAL_FEATURES"  + " WHERE STATUS ='draft' AND FLAG='" +strType +"' ORDER BY FEATURE_ID";
-        String selectGID = "SELECT COUNT(*) FROM SPATIAL_FEATURES" + " WHERE (STATUS ='draft' OR STATUS ='complete') AND FLAG='" + strType + "' ORDER BY FEATURE_ID";
+        String selectGID = "SELECT COUNT(*) FROM SPATIAL_FEATURES"  + " WHERE (STATUS ='draft' OR STATUS ='complete') AND FLAG='" +strType +"' ORDER BY FEATURE_ID";
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
             try {
@@ -8022,16 +8089,16 @@ public class DbController extends SQLiteOpenHelper {
         }
         cursorgid.close();
 
-        iGID = iGID + 1;
+        iGID=iGID+1;
 
 
         return iGID;
     }
 
-    public int getpersonType(Long featureId) {
-        int isNatural = 3;
+    public int getpersonType(Long featureId){
+        int isNatural=3;
 
-        String selectGID = "SELECT IS_NATURAL FROM PERSON" + " WHERE FEATURE_ID = " + featureId;
+        String selectGID = "SELECT IS_NATURAL FROM PERSON"  + " WHERE FEATURE_ID = "+ featureId;
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
             try {
@@ -8050,10 +8117,10 @@ public class DbController extends SQLiteOpenHelper {
     }
 
 
-    public int getpersonTypefromFeature(Long featureId) {
-        int isNatural = 3;
+    public int getpersonTypefromFeature(Long featureId){
+        int isNatural=3;
 
-        String selectGID = "SELECT IS_NATURAL FROM SPATIAL_FEATURES" + " WHERE FEATURE_ID = " + featureId;
+        String selectGID = "SELECT IS_NATURAL FROM SPATIAL_FEATURES"  + " WHERE FEATURE_ID = "+ featureId;
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
             try {
@@ -8071,10 +8138,10 @@ public class DbController extends SQLiteOpenHelper {
         return isNatural;
     }
 
-    public int getDisputpersonTypefromFeature(Long featureId) {
-        int IsDIspute = 0;
+    public int getDisputpersonTypefromFeature(Long featureId){
+        int IsDIspute=0;
 
-        String selectGID = "SELECT DISPUTE_TYPE FROM DISPUTE" + " WHERE FEATURE_ID = " + featureId;
+        String selectGID = "SELECT DISPUTE_TYPE FROM DISPUTE"  + " WHERE FEATURE_ID = "+ featureId;
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
             try {
@@ -8093,16 +8160,16 @@ public class DbController extends SQLiteOpenHelper {
     }
 
     public int getDisPuteType(long grpID) {
-        int disputeType = 0;
+        int disputeType=0;
 
 
-        String selectQueryOptions = "SELECT ATTRIB_VALUE FROM FORM_VALUES" + " WHERE LABEL_NAME " + "=" + "'Disputed PersonType' AND GROUP_ID =" + grpID;
-        ;
+
+        String selectQueryOptions = "SELECT ATTRIB_VALUE FROM FORM_VALUES"  + " WHERE LABEL_NAME " + "=" + "'Disputed PersonType' AND GROUP_ID ="+grpID;;
         Cursor cursor = getDb().rawQuery(selectQueryOptions, null);
         if (cursor.moveToFirst()) {
             try {
                 do {
-                    disputeType = cursor.getInt(0);
+                    disputeType=cursor.getInt(0);
 
                 } while (cursor.moveToNext());
             } catch (Exception e) {
@@ -8113,7 +8180,7 @@ public class DbController extends SQLiteOpenHelper {
         cursor.close();
 
 
-        return disputeType;
+        return disputeType ;
     }
 
     public boolean saveNonNaturalInstitute(List<Attribute> attributes) {
@@ -8129,7 +8196,7 @@ public class DbController extends SQLiteOpenHelper {
         }
         Long featureId = attributes.get(0).getFeatureId();
 
-        if (featureId != 0) {
+        if (featureId != 0){
 
             try {
                 String whereGroupId = NonNatural.COL_VALUE_FEATURE_ID + "=" + featureId;
@@ -8152,15 +8219,14 @@ public class DbController extends SQLiteOpenHelper {
                 return false;
             }
 
-        }
-        return false;
+    }
+    return false;
     }
 
     public List<Attribute> getDataFromNonNatural(Long groupId) {
         String wherePart = " AV." + NonNatural.COL_VALUE_FEATURE_ID + "=" + groupId;
         return createAttributeList(getAttributeNonSelectQuery(wherePart));
     }
-
     private String getAttributeNonSelectQuery(String wherePart) {
         String sql = "SELECT AM." + Attribute.COL_ID +
                 ", AM." + Attribute.COL_TYPE +
@@ -8193,8 +8259,7 @@ public class DbController extends SQLiteOpenHelper {
         return true;
 
     }
-
-    public boolean deleteCustomResource(Long featureId) {
+ public boolean deleteCustomResource(Long featureId) {
         String whereGroupId = "FEATURE_ID" + "=" + featureId;
         getDb().delete("RESOURCE_FORM_VALUES", whereGroupId, null);
         return true;
@@ -8202,10 +8267,10 @@ public class DbController extends SQLiteOpenHelper {
     }
 
     public int getPrimaryCount(Long strType) {
-        int iGID = 0;
+        int iGID=0;
 
 
-        String selectGID = "SELECT COUNT(*) FROM FORM_VALUES" + " WHERE FEATURE_ID =" + strType + " AND ATTRIB_ID=1156 AND ATTRIB_VALUE=1186";
+        String selectGID = "SELECT COUNT(*) FROM FORM_VALUES"  + " WHERE FEATURE_ID ="+ strType +" AND ATTRIB_ID=1156 AND ATTRIB_VALUE=1186";
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
             try {
@@ -8218,16 +8283,18 @@ public class DbController extends SQLiteOpenHelper {
             }
         }
         cursorgid.close();
+
+
 
 
         return iGID;
     }
 
     public int getPrimaryOWnerForYesCount(Long strType) {
-        int iGID = 0;
+        int iGID=0;
 
 
-        String selectGID = "SELECT COUNT(*) FROM FORM_VALUES" + " WHERE FEATURE_ID =" + strType + " AND ATTRIB_ID=1156 AND ATTRIB_VALUE=1186";
+        String selectGID = "SELECT COUNT(*) FROM FORM_VALUES"  + " WHERE FEATURE_ID ="+ strType +" AND ATTRIB_ID=1156 AND ATTRIB_VALUE=1186";
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
             try {
@@ -8240,6 +8307,8 @@ public class DbController extends SQLiteOpenHelper {
             }
         }
         cursorgid.close();
+
+
 
 
         return iGID;
@@ -8248,8 +8317,8 @@ public class DbController extends SQLiteOpenHelper {
 
     public int getShareIdByFeatureID(Long featureId) {
 
-        int shareID = 0;
-        String selectGID = "SELECT SHARE_TYPE FROM SOCIAL_TENURE" + " WHERE FEATURE_ID =" + featureId;
+        int shareID=0;
+        String selectGID = "SELECT SHARE_TYPE FROM SOCIAL_TENURE"  + " WHERE FEATURE_ID ="+ featureId ;
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
             try {
@@ -8263,13 +8332,13 @@ public class DbController extends SQLiteOpenHelper {
         }
         cursorgid.close();
 
-        return shareID;
+        return  shareID;
     }
 
     public int getTenureByFeatureID(Long featureId) {
 
-        int shareID = 0;
-        String selectGID = "SELECT ID FROM RESOURCE_BASISC_ATTRIBUTES" + " WHERE FEATURE_ID =" + featureId;
+        int shareID=0;
+        String selectGID = "SELECT ID FROM RESOURCE_BASISC_ATTRIBUTES"  + " WHERE FEATURE_ID ="+ featureId ;
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
             try {
@@ -8283,14 +8352,14 @@ public class DbController extends SQLiteOpenHelper {
         }
         cursorgid.close();
 
-        return shareID;
+        return  shareID;
     }
 
     public int getPrimaryOccupant(Long strType) {
-        int iGID = 0;
+        int iGID=0;
 
 
-        String selectGID = "SELECT COUNT(*) FROM FORM_VALUES" + " WHERE FEATURE_ID =" + strType + " AND ATTRIB_VALUE='Primary occupant /Point of contact'";
+        String selectGID = "SELECT COUNT(*) FROM FORM_VALUES"  + " WHERE FEATURE_ID ="+ strType +" AND ATTRIB_VALUE='Primary occupant /Point of contact'";
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
             try {
@@ -8305,7 +8374,97 @@ public class DbController extends SQLiteOpenHelper {
         cursorgid.close();
 
 
+
+
         return iGID;
     }
 
-}
+    public List<ClassificationAttribute> checkTenureInfo(Long featureId) {
+
+        List<ClassificationAttribute> classificationAttributes = new ArrayList<ClassificationAttribute>();
+        //String selectQueryQues = "SELECT AOIID,AOINAME from AOI" ;
+        String selectQueryQues = "SELECT VALUE,ID from RESOURCE_BASISC_ATTRIBUTES where FEATURE_ID ="+featureId ;
+        // String selectQueryQues = "SELECT AOIID,AOINAME,COORDINATES from AOI" ;
+        Cursor cursor = getDb().rawQuery(selectQueryQues, null);
+        if (cursor.moveToFirst()) {
+            try {
+                do {
+                    ClassificationAttribute classificationAttribute = new ClassificationAttribute();
+
+                    classificationAttribute.setAttribValue(cursor.getString(0));
+                    classificationAttribute.setAttribID(cursor.getString(1));
+
+
+                    classificationAttributes.add(classificationAttribute);
+
+                } while (cursor.moveToNext());
+            } catch (Exception e) {
+                cf.appLog("", e);
+                e.printStackTrace();
+            }
+        }
+        cursor.close();
+        return classificationAttributes;
+
+
+    }
+
+    public List<Attribute> checkOwnerInfo(Long featureId) {
+
+        List<Attribute> attributes = new ArrayList<Attribute>();
+
+        String selectQueryQues = "SELECT GROUP_ID,ATTRIB_ID,ATTRIB_VALUE from FORM_VALUES where FEATURE_ID ="+featureId ;
+
+        Cursor cursor = getDb().rawQuery(selectQueryQues, null);
+        if (cursor.moveToFirst()) {
+            try {
+                do {
+                    Attribute attribute = new Attribute();
+
+                    attribute.setGroupId(cursor.getLong(0));
+                    attribute.setId(cursor.getLong(1));
+                    attribute.setValue(cursor.getString(2));
+
+
+                    attributes.add(attribute);
+
+                } while (cursor.moveToNext());
+            } catch (Exception e) {
+                cf.appLog("", e);
+                e.printStackTrace();
+            }
+        }
+        cursor.close();
+        return attributes;
+    }
+
+    public List<ResourceCustomAttribute> checkCustomAttributesInfo(Long featureId) {
+
+
+        List<ResourceCustomAttribute> attributes = new ArrayList<ResourceCustomAttribute>();
+
+        String selectQueryQues = "SELECT GROUP_ID,ATTRIB_ID,ATTRIB_VALUE from RESOURCE_FORM_VALUES where FEATURE_ID ="+featureId ;
+
+        Cursor cursor = getDb().rawQuery(selectQueryQues, null);
+        if (cursor.moveToFirst()) {
+            try {
+                do {
+                    ResourceCustomAttribute attribute = new ResourceCustomAttribute();
+
+                    attribute.setGroupId(cursor.getLong(0));
+                    attribute.setId(cursor.getLong(1));
+                    attribute.setValue(cursor.getString(2));
+
+
+                    attributes.add(attribute);
+
+                } while (cursor.moveToNext());
+            } catch (Exception e) {
+                cf.appLog("", e);
+                e.printStackTrace();
+            }
+        }
+        cursor.close();
+        return attributes;
+    }
+    }

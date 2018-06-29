@@ -29,10 +29,12 @@ import com.rmsi.android.mast.activity.DataSummaryActivity;
 import com.rmsi.android.mast.adapter.SurveyListingAdapter;
 import com.rmsi.android.mast.db.DbController;
 import com.rmsi.android.mast.domain.Attribute;
+import com.rmsi.android.mast.domain.ClassificationAttribute;
 import com.rmsi.android.mast.domain.Feature;
 import com.rmsi.android.mast.domain.Option;
 import com.rmsi.android.mast.domain.Person;
 import com.rmsi.android.mast.domain.Property;
+import com.rmsi.android.mast.domain.ResourceCustomAttribute;
 import com.rmsi.android.mast.domain.ShareType;
 import com.rmsi.android.mast.util.CommonFunctions;
 
@@ -121,7 +123,11 @@ public class DraftSurveyFragment extends Fragment {
                         int IsNatural=DbController.getInstance(context).getpersonType(featureId);
                         Property property = DbController.getInstance(context).getProperty(featureId);
                         if(property.getFlag().equalsIgnoreCase("R")){
-                            AllowToComplete(property);
+
+                            if (ValiDateAllValues(featureId)){
+                                AllowToComplete(property);
+                            }
+
                             return true;
                         }else if (property.getFlag().equalsIgnoreCase("P")) {
                             if (IsNatural==1|IsNatural==3) {
@@ -139,6 +145,46 @@ public class DraftSurveyFragment extends Fragment {
             }
         });
         popup.show();
+    }
+
+    private boolean ValiDateAllValues(Long featureId) {
+        boolean IsValid=true;
+
+        List<ClassificationAttribute> classificationAttributes=DbController.getInstance(context).checkTenureInfo(featureId);
+        if (classificationAttributes.size()==0){
+            Toast.makeText(context,"Please fill the capture resource information",Toast.LENGTH_SHORT).show();
+            IsValid=false;
+        }
+
+        if (classificationAttributes.size()!=0){
+
+                if (classificationAttributes.get(2).getAttribID().equalsIgnoreCase("9") || classificationAttributes.get(2).getAttribID().equalsIgnoreCase("15")){
+
+                    IsValid=true;
+                }else {
+
+                    List<Attribute> attributes=DbController.getInstance(context).checkOwnerInfo(featureId);
+                    if (attributes.size()==0){
+
+                        Toast.makeText(context,"Please fill Owner information",Toast.LENGTH_SHORT).show();
+                        IsValid=false;
+                    }
+                    List<ResourceCustomAttribute> attributesres = DbController.getInstance(context).getResAttributesByAttrbuteIDNull(classificationAttributes.get(2).getAttribID(),"null");
+
+                    if (attributesres.size()!=0){
+                        List<ResourceCustomAttribute> attributeListSize=DbController.getInstance(context).checkCustomAttributesInfo(featureId);
+                        if (attributeListSize.size()==0){
+                            Toast.makeText(context,"Please fill Custom attributes information",Toast.LENGTH_SHORT).show();
+                            IsValid=false;
+                        }
+
+                    }else {
+                        IsValid=true;
+                    }
+                }
+
+        }
+        return IsValid;
     }
 
     private void deleteEntry(final Long featureId) {

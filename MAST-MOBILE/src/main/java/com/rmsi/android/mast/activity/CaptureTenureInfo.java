@@ -89,7 +89,7 @@ public class CaptureTenureInfo extends ActionBarActivity {
                 if (tenureType.equalsIgnoreCase("Private (jointly)")){
                     attributes = db.getOwner1PropAttributesByType(featureId, tenureID);
                     if (attributes.size() < 1) {
-                       // attributes = db.getJointAttributesByFlag(tenureID);
+//                        attributes = db.getJointAttributesByFlag(tenureID);
                     }
                 }else {
                     attributes = db.getPropAttributesByType(featureId, tenureID);

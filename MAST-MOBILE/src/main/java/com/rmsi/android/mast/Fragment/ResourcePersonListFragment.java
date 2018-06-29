@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -177,6 +178,8 @@ public class ResourcePersonListFragment extends ListFragment implements ListActi
                                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                                 file = new File(mediaFolderName + File.separator + "mast_" + timeStamp + ".jpg");
                                 if (file != null) {
+                                    StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                                    StrictMode.setVmPolicy(builder.build());
                                     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
 //                                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,  FileProvider.getUriForFile(getActivity(),
 //                                            BuildConfig.APPLICATION_ID + ".provider",
@@ -256,7 +259,6 @@ public class ResourcePersonListFragment extends ListFragment implements ListActi
                         media.setFeatureId(listOwner.get(position).getFeatureID());
                         media.setType(Media.TYPE_PHOTO);
                         media.setPersonId((long) listOwner.get(position).getGroupId());
-                        media.setFlag("R");
                         boolean result = DbController.getInstance(context).saveMedia(media);
 
                         if (result){

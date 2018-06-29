@@ -119,6 +119,7 @@ public class AddDisputeActivity extends AppCompatActivity {
                     return;
                 }
 
+
                 if(dispute.validate(context, true)){
                     saveData();
                     Intent myIntent = new Intent(context, MediaListActivity.class);

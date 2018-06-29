@@ -1,19 +1,27 @@
 package com.rmsi.android.mast.activity;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -21,25 +29,26 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.vision.text.Text;
+import com.rmsi.android.mast.adapter.AttributeAdapter;
 import com.rmsi.android.mast.db.DbController;
 import com.rmsi.android.mast.domain.AcquisitionType;
 import com.rmsi.android.mast.domain.Attribute;
 import com.rmsi.android.mast.domain.Media;
 import com.rmsi.android.mast.domain.Person;
 import com.rmsi.android.mast.domain.ShareType;
+import com.rmsi.android.mast.domain.User;
 import com.rmsi.android.mast.util.CommonFunctions;
 import com.rmsi.android.mast.util.DateUtility;
 import com.rmsi.android.mast.util.GuiUtility;
 import com.rmsi.android.mast.util.KeyboardUtil;
 import com.rmsi.android.mast.util.StringUtility;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AddPersonActivity extends ActionBarActivity {
     private List<Media> mediaList;
@@ -324,7 +333,7 @@ public class AddPersonActivity extends ActionBarActivity {
 
         try {
 
-            int shareTypeId= DbController.getInstance(context).getShareIdByFeatureID(featureId);
+            int shareTypeId=DbController.getInstance(context).getShareIdByFeatureID(featureId);
 
             if (shareTypeId==6){
 //                List<Attribute> attributeList=new ArrayList<>();
@@ -333,6 +342,8 @@ public class AddPersonActivity extends ActionBarActivity {
                 attribute.setName("Owner Type");
                 attribute.setFeatureId(featureId);
                 attribute.setValue("1186");
+//                attributeList.add(attribute);
+//                person.setAttributes(attributeList);
                 person.getAttributes().add(attribute);
             }
 

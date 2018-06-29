@@ -48,7 +48,6 @@ public class CustomGisUtility {
     }
 
 
-
     /**
      * Create View item based on provided attribute
      *
@@ -58,9 +57,26 @@ public class CustomGisUtility {
     public static View createViewFromAttribute(ResourceCustomAttribute attribute, LayoutInflater inflater, boolean addSeparator, boolean readOnly) {
         View container = null;
 
-            container = inflater.inflate(R.layout.item_edit_text, null, false);
-            attribute.setView(createInputRow(container, attribute, readOnly));
+//        container = inflater.inflate(R.layout.item_edit_text, null, false);
+//        attribute.setView(createInputRow(container, attribute, readOnly));
 
+
+        if (attribute.getName().equalsIgnoreCase("Primary Crop") || attribute.getName().equalsIgnoreCase("Secondary Crop")) {
+            container = inflater.inflate(R.layout.item_spinner, null, false);
+            attribute.setView(createSpinnerViewFromArray(container, attribute, readOnly));
+
+        } else if (attribute.getName().equalsIgnoreCase("Plant Date (Primary Crop)") || attribute.getName().equalsIgnoreCase("Plant Date (Secondary Crop)")) {
+
+            container = inflater.inflate(R.layout.item_date, null, false);
+            attribute.setView(createTimePickerRow(container, attribute, readOnly));
+        } else if (attribute.getName().equalsIgnoreCase("Name of Enterprise Farm") ) {
+            container = inflater.inflate(R.layout.item_spinner, null, false);
+            attribute.setView(createSpinnerViewFromArrayEnterprise(container, attribute, readOnly));
+
+        } else {
+            container = inflater.inflate(R.layout.item_edittext_numeric, null, false);
+            attribute.setView(createInputRow(container, attribute, readOnly));
+        }
 
 
 //        if (attribute.getControlType() == Attribute.CONTROL_TYPE_STIRNG) {
@@ -90,35 +106,35 @@ public class CustomGisUtility {
 
     private static View createInputRow(View container, final ResourceCustomAttribute attribute, boolean readOnly) {
 
-            TextView field = (TextView) container.findViewById(R.id.field);
-            field.setText(attribute.getName());
-            final EditText fieldValue = (EditText) container.findViewById(R.id.fieldValue);
+        TextView field = (TextView) container.findViewById(R.id.field);
+        field.setText(attribute.getName());
+        final EditText fieldValue = (EditText) container.findViewById(R.id.fieldValue);
 //
 
-            fieldValue.setTag(attribute.getId());
+        fieldValue.setTag(attribute.getId());
 
-            if (readOnly) {
-                fieldValue.setEnabled(false);
-            }
+        if (readOnly) {
+            fieldValue.setEnabled(false);
+        }
 
-            if (attribute.getValue() != null) {
-                fieldValue.setText(attribute.getValue(), TextView.BufferType.EDITABLE);
-            } else {
-                fieldValue.setEnabled(true);
-                fieldValue.setText("", TextView.BufferType.EDITABLE);
-            }
+        if (attribute.getValue() != null) {
+            fieldValue.setText(attribute.getValue(), TextView.BufferType.EDITABLE);
+        } else {
+            fieldValue.setEnabled(true);
+            fieldValue.setText("", TextView.BufferType.EDITABLE);
+        }
 
-            bindActionOnFieldChange(fieldValue, new Runnable() {
-                @Override
-                public void run() {
-                    Long attribId = (Long) fieldValue.getTag();
-                    if (attribute.getId() == attribId) {
-                        attribute.setValue(fieldValue.getText().toString());
+        bindActionOnFieldChange(fieldValue, new Runnable() {
+            @Override
+            public void run() {
+                Long attribId = (Long) fieldValue.getTag();
+                if (attribute.getId() == attribId) {
+                    attribute.setValue(fieldValue.getText().toString());
 
-                    }
                 }
-            });
-            return fieldValue;
+            }
+        });
+        return fieldValue;
 
 
     }
@@ -281,10 +297,19 @@ public class CustomGisUtility {
         spinner.setPrompt(attribute.getName());
         spinner.setTag(attribute.getId());
 
-        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(
-                container.getContext(),
-                android.R.layout.simple_spinner_item,
-                attribute.getOptionsList());
+        List<String> values = new ArrayList<>();
+        values.add("Select an option");
+        values.add("Cocoa");
+        values.add("Plantain");
+        values.add("Rice");
+        values.add("Oil Palm");
+        values.add("Pepper");
+        values.add("Ground Nuts");
+        values.add("Cassava");
+        values.add("Cow Peas");
+
+
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(container.getContext(), android.R.layout.simple_spinner_item, values);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
 
@@ -295,17 +320,62 @@ public class CustomGisUtility {
         String fieldValue = attribute.getValue();
 
         if (!StringUtility.isEmpty(fieldValue) && !fieldValue.equalsIgnoreCase("Select an option")) {
-            int currentValue = Integer.parseInt(fieldValue);
-            spinner.setSelection(spinnerAdapter.getPosition(currentValue));
+//            int currentValue = Integer.parseInt(fieldValue);
+            spinner.setSelection(spinnerAdapter.getPosition(fieldValue));
         }
 
         bindActionOnSpinnerChange(spinner, new Runnable() {
             @Override
             public void run() {
-                Option selecteditem = (Option) spinner.getSelectedItem();
-                attribute.setValue(selecteditem.getName().toString());
+                String selecteditem = (String) spinner.getSelectedItem();
+                attribute.setValue(selecteditem);
 //                attribute.setValue(selecteditem.getId().toString());
-                attribute.setSubclassificationid(attribute.getSubclassificationid());
+//                attribute.setSubclassificationid(attribute.getSubclassificationid());
+            }
+        });
+        return spinner;
+    }
+
+    private static Spinner createSpinnerViewFromArrayEnterprise(View container, final ResourceCustomAttribute attribute, boolean readOnly) {
+        TextView fieldAlias = (TextView) container.findViewById(R.id.field);
+        final Spinner spinner = (Spinner) container.findViewById(R.id.spinner1);
+        fieldAlias.setText(attribute.getName());
+        spinner.setPrompt(attribute.getName());
+        spinner.setTag(attribute.getId());
+
+        List<String> values = new ArrayList<>();
+        values.add("Select an option");
+        values.add("Gayekwado Farmers");
+        values.add("Zodoa Farmers");
+        values.add("Kwakerseh Farmers");
+        values.add("Waparlay Farmers");
+        values.add("Zlangluseh Farmers");
+        values.add("Lakwado Farmers");
+
+
+
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(container.getContext(), android.R.layout.simple_spinner_item, values);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+
+        if (readOnly) {
+            spinner.setEnabled(false);
+        }
+
+        String fieldValue = attribute.getValue();
+
+        if (!StringUtility.isEmpty(fieldValue) && !fieldValue.equalsIgnoreCase("Select an option")) {
+//            int currentValue = Integer.parseInt(fieldValue);
+            spinner.setSelection(spinnerAdapter.getPosition(fieldValue));
+        }
+
+        bindActionOnSpinnerChange(spinner, new Runnable() {
+            @Override
+            public void run() {
+                String selecteditem = (String) spinner.getSelectedItem();
+                attribute.setValue(selecteditem);
+//                attribute.setValue(selecteditem.getId().toString());
+//                attribute.setSubclassificationid(attribute.getSubclassificationid());
             }
         });
         return spinner;
@@ -350,7 +420,7 @@ public class CustomGisUtility {
     /**
      * Validates provided list of attributes and highlights underlying control in case of missing values in the mandatory fields
      *
-     * @param attributeList Attribute to validateAttributes;
+     * @param attributeList   Attribute to validateAttributes;
      * @param highlightErrors Indicates whether to highlight fields with errors or not
      */
     public static boolean validateAttributes(List<ResourceCustomAttribute> attributeList, boolean highlightErrors) {
@@ -370,7 +440,7 @@ public class CustomGisUtility {
     /**
      * Validates provided attribute and highlights underlying control in case of missing value in the mandatory field
      *
-     * @param attribute Attribute to validateAttributes;
+     * @param attribute       Attribute to validateAttributes;
      * @param highlightErrors Indicates whether to highlight fields with errors or not
      */
     public static boolean validateAttribute(ResourceCustomAttribute attribute, boolean highlightErrors) {

@@ -1,15 +1,22 @@
 package com.rmsi.android.mast.activity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -18,22 +25,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rmsi.android.mast.adapter.AttributeResAdapter;
+import com.rmsi.android.mast.adapter.CustomAttributeAdapter;
 import com.rmsi.android.mast.adapter.ResourceCustomChangeAdapter;
 import com.rmsi.android.mast.adapter.SpinnerAdapter;
+import com.rmsi.android.mast.adapter.SummaryAdapater;
 import com.rmsi.android.mast.db.DbController;
 import com.rmsi.android.mast.domain.Attribute;
 import com.rmsi.android.mast.domain.Option;
 import com.rmsi.android.mast.domain.ResourceCustomAttribute;
 import com.rmsi.android.mast.util.CommonFunctions;
+import com.rmsi.android.mast.util.DateUtility;
+import com.rmsi.android.mast.util.KeyboardUtil;
 import com.rmsi.android.mast.util.ResGuiUtility;
 import com.rmsi.android.mast.util.StringUtility;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by Ambar.Srivastava on 1/11/2018.
- */
+// Created by Ambar.Srivastava on 1/11/2018.
+
+
 
 public class CustomAttributeChange extends ActionBarActivity {
 
@@ -64,6 +77,7 @@ public class CustomAttributeChange extends ActionBarActivity {
     private boolean readOnly = false;
     private String classi,subClassi,tenureType,tenureID,subID;
     private LinearLayout linearLayoutSub,linearLayoutRes;
+    private KeyboardUtil keyboardUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +108,9 @@ public class CustomAttributeChange extends ActionBarActivity {
             }
 
             String res="null";
-            attributesres = db.getPropResAttributesByType(featureId, tenureID,res);
-            if (attributesres.size() < 1) {
+//            attributesres = db.getPropResAttributesByType(featureId, tenureID,res);
+            attributesFeatureID = DbController.getInstance(context).getResourceCustomInfoCustom(featureId, "null");
+            if (attributesFeatureID.size() < 1) {
                 // Try to get list of attributes of general type
                 attributesres = db.getResAttributesByAttrbuteIDNull(tenureID,res);
 
@@ -117,8 +132,8 @@ public class CustomAttributeChange extends ActionBarActivity {
 
         listViewres = (ListView) findViewById(R.id.list);
         spinnerRes = (Spinner) findViewById(R.id.resCustomAttribute);
-        TextView emptyText = (TextView) findViewById(R.id.empty);
-        spinnerRes.setEmptyView(emptyText);
+//        TextView emptyText = (TextView) findViewById(R.id.empty);
+//        spinnerRes.setEmptyView(emptyText);
 
         listviewsub = (ListView) findViewById(R.id.list1);
         spinnerSub = (Spinner) findViewById(R.id.subCustomAttribute);
@@ -132,27 +147,60 @@ public class CustomAttributeChange extends ActionBarActivity {
 
         if (toolbar != null)
             setSupportActionBar(toolbar);
-        try {
-//            adapterList = new AttributeResAdapter(context, attributes, readOnly);
-//            adapterListRes = new AttributeResAdapter(context, attributesres, readOnly);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-//        listViewres.setAdapter(adapterListRes);
-//        listviewsub.setAdapter(adapterList);`
 
         //subAttritubute
-        for(ResourceCustomAttribute resourceCustomAttribute : attributes) {
-            createViewFromAttribute(resourceCustomAttribute,  readOnly);
-        }
+//        for(ResourceCustomAttribute resourceCustomAttribute : attributes) {
+//            createViewFromAttribute(resourceCustomAttribute,  readOnly);
+//        }
 
         //ResourceAttribute
-        for(ResourceCustomAttribute resourceCustomAttribute : attributesres) {
-            createViewResAttribute(resourceCustomAttribute,  readOnly);
+        if (attributesres!=null) {
+
+            for (int i = 0; i < attributesres.size(); i++) {
+
+                for (int j = 0; j < attributesres.get(i).getOptionsList().size(); j++) {
+                    if (!attributesres.get(i).getOptionsList().get(j).getName().equalsIgnoreCase("Select custom attribute")) {
+                        ResourceCustomAttribute resourceCustomAttribute = new ResourceCustomAttribute();
+                        resourceCustomAttribute.setName(attributesres.get(i).getOptionsList().get(j).getName().toString());
+                        resourceCustomAttribute.setId(attributesres.get(i).getOptionsList().get(j).getId());
+                        resourceCustomAttribute.setResID(attributesres.get(i).getOptionsList().get(j).getOptionID());
+                        attributeList.add(resourceCustomAttribute);
+                    }
+
+                }
+
+            }
         }
+
+        if (attributeList.size()!=0) {
+            customAttributeAdapterResource = new ResourceCustomChangeAdapter(context, attributeList, readOnly);
+            View footerView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.footerlayout, null, false);
+            listViewres.addFooterView(footerView);
+            listViewres.setAdapter(customAttributeAdapterResource);
+
+            keyboardUtil = new KeyboardUtil(CustomAttributeChange.this, footerView);
+        }
+
+
+        if (attributesFeatureID.size() != 0) {
+            attributeList.addAll(attributesFeatureID);
+            customAttributeAdapterResource = new ResourceCustomChangeAdapter(context, attributeList, readOnly);
+            View footerView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.footerlayout, null, false);
+            listViewres.addFooterView(footerView);
+            listViewres.setAdapter(customAttributeAdapterResource);
+            keyboardUtil = new KeyboardUtil(CustomAttributeChange.this, footerView);
+        }
+
+
+
+
+//        for(ResourceCustomAttribute resourceCustomAttribute : attributesres) {
+//
+//            createViewResAttribute(resourceCustomAttribute,  readOnly);
+//        }
     }
 
-    public void createViewResAttribute(ResourceCustomAttribute attribute, boolean readOnly) {
+    public void createViewResAttribute(ResourceCustomAttribute attribute,  boolean readOnly) {
 
 
         if (attribute.getControlType() == Attribute.CONTROL_TYPE_SPINNER) {
@@ -163,80 +211,6 @@ public class CustomAttributeChange extends ActionBarActivity {
 
     }
 
-//    private void createSpinnerResViewFromArray(final ResourceCustomAttribute attribute, final boolean readOnly) {
-//
-//
-//        spinnerRes.setPrompt(attribute.getName());
-//        spinnerRes.setTag(attribute.getId());
-//
-//        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(
-//                context,
-//                android.R.layout.simple_spinner_item,
-//                attribute.getOptionsList());
-//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinnerRes.setAdapter(spinnerAdapter);
-//
-//        if (readOnly) {
-//            spinnerRes.setEnabled(false);
-//        }
-//
-//        String fieldValue = attribute.getValue();
-//
-//        if (!StringUtility.isEmpty(fieldValue) && !fieldValue.equalsIgnoreCase("Select an option")) {
-////            int currentValue = Integer.parseInt(fieldValue);
-////            spinnerRes.setSelection(spinnerAdapter.getPosition(currentValue));
-//            List<Option> list=attribute.getOptionsList();
-//            for (int i = 0; i < list.size(); i++) {
-//                if (list.get(i).getName().equalsIgnoreCase(StringUtility.empty(fieldValue))) {
-//
-//
-//                    spinnerRes.setSelection(i);
-//                    break;
-//                }
-//            }
-//        }
-//
-//        bindActionOnSpinnerChange(spinnerRes, new Runnable() {
-//            @Override
-//            public void run() {
-//
-////                ResourceCustomAttribute resourceCustomAttribute=new ResourceCustomAttribute();
-////                Option selecteditem = (Option) spinnerRes.getSelectedItem();
-////
-////                resourceCustomAttribute.setName(selecteditem.getName().toString());
-////                resourceCustomAttribute.setId(selecteditem.getId());
-////
-////                attributeList.add(resourceCustomAttribute);
-//
-//                ResourceCustomAttribute resourceCustomAttribute=new ResourceCustomAttribute();
-//                Option selecteditem = (Option) spinnerRes.getSelectedItem();
-//
-//                resourceCustomAttribute.setName(selecteditem.getName().toString());
-//                resourceCustomAttribute.setId(selecteditem.getId());
-//                resourceCustomAttribute.setResID(selecteditem.getOptionID());
-//                attributeList.add(resourceCustomAttribute);
-//                DbController db = DbController.getInstance(context);
-//
-//                String res="null";
-//                attributesresFeatureID=db.getResourceCustomInfoCustom(featureId,res);
-//                if (attributesresFeatureID.size()!=0){
-//                    customAttributeAdapterResource=new ResourceCustomChangeAdapter(context, attributesresFeatureID, readOnly);
-//                    listViewres.setAdapter(customAttributeAdapterResource);
-//
-//                }else{
-//                    customAttributeAdapterResource=new ResourceCustomChangeAdapter(context, attributeList, readOnly);
-//                    listViewres.setAdapter(customAttributeAdapterResource);
-//                }
-//
-////                createLabelRes(selecteditem.getName().toString(),selecteditem.getId().toString());
-////                attribute.setValue(selecteditem.getId().toString());
-//               // createLabelRes(attributeList);
-//
-//
-//            }
-//        });
-//
-//    }
 
     //Ambar
     private void createSpinnerResViewFromArray(final ResourceCustomAttribute attribute, final boolean readOnly) {
@@ -281,11 +255,11 @@ public class CustomAttributeChange extends ActionBarActivity {
                 ResourceCustomAttribute resourceCustomAttribute=new ResourceCustomAttribute();
                 Option selecteditem = (Option) spinnerRes.getSelectedItem();
 
-//                attributesFeatureID = DbController.getInstance(context).getResourceCustomInfoCustom(featureId, "null");
-//                if (attributesFeatureID.size() != 0) {
-//                    customAttributeAdapterResource = new ResourceCustomChangeAdapter(context, attributesFeatureID, readOnly);
-//                    listViewres.setAdapter(customAttributeAdapterResource);
-//                }
+                attributesFeatureID = DbController.getInstance(context).getResourceCustomInfoCustom(featureId, "null");
+                if (attributesFeatureID.size() != 0) {
+                    customAttributeAdapterResource = new ResourceCustomChangeAdapter(context, attributesFeatureID, readOnly);
+                    listViewres.setAdapter(customAttributeAdapterResource);
+                }
 
                 String Subvalue=selecteditem.getName().toString();
 
@@ -435,7 +409,7 @@ public class CustomAttributeChange extends ActionBarActivity {
     }
 
 
-    public void createViewFromAttribute(ResourceCustomAttribute attribute, boolean readOnly) {
+    public void createViewFromAttribute(ResourceCustomAttribute attribute,  boolean readOnly) {
 
 
             if (attribute.getControlType() == Attribute.CONTROL_TYPE_SPINNER) {
@@ -445,84 +419,6 @@ public class CustomAttributeChange extends ActionBarActivity {
 
 
     }
-
-
-//    private void createSpinnerViewFromArray(final ResourceCustomAttribute attribute, final boolean readOnly) {
-//
-//
-//        spinnerSub.setPrompt(attribute.getName());
-//        spinnerSub.setTag(attribute.getId());
-//
-//        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(
-//                context,
-//                android.R.layout.simple_spinner_item,
-//                attribute.getOptionsList());
-//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinnerSub.setAdapter(spinnerAdapter);
-//
-//        if (readOnly) {
-//            spinnerSub.setEnabled(false);
-//        }
-//
-//        String fieldValue = attribute.getValue();
-//
-//        if (!StringUtility.isEmpty(fieldValue) && !fieldValue.equalsIgnoreCase("Select an option")) {
-////            int currentValue = Integer.parseInt(fieldValue);
-////            spinnerSub.setSelection(spinnerAdapter.getPosition(currentValue));
-//            List<Option> list=attribute.getOptionsList();
-//            for (int i = 0; i < list.size(); i++) {
-//                if (list.get(i).getName().equalsIgnoreCase(StringUtility.empty(fieldValue))) {
-//
-//
-//                    spinnerSub.setSelection(i);
-//                    break;
-//                }
-//            }
-//        }
-//
-//        bindActionOnSpinnerChange(spinnerSub, new Runnable() {
-//            @Override
-//            public void run() {
-//
-//
-////                ResourceCustomAttribute resourceCustomAttribute=new ResourceCustomAttribute();
-////                Option selecteditem = (Option) spinnerSub.getSelectedItem();
-////
-////                resourceCustomAttribute.setName(selecteditem.getName().toString());
-////                resourceCustomAttribute.setId(selecteditem.getId());
-////                attributeListSub.add(resourceCustomAttribute);
-//
-//                ResourceCustomAttribute resourceCustomAttribute=new ResourceCustomAttribute();
-//                Option selecteditem = (Option) spinnerSub.getSelectedItem();
-//
-//                resourceCustomAttribute.setName(selecteditem.getName().toString());
-//                resourceCustomAttribute.setId(selecteditem.getId());
-//                resourceCustomAttribute.setResID(selecteditem.getOptionID());
-//                attributeListSub.add(resourceCustomAttribute);
-//
-//
-////                createLabelRes(selecteditem.getName().toString(),selecteditem.getId().toString());
-////                attribute.setValue(selecteditem.getId().toString());
-//                // createLabelRes(attributeList);
-//                DbController db = DbController.getInstance(context);
-//
-//                attributesFeatureID=db.getResourceCustomInfoCustom(featureId,subID);
-//                if(attributesFeatureID.size()!=0){
-//                    customAttributeAdapterSubclassification=new ResourceCustomChangeAdapter(context, attributesFeatureID, readOnly);
-//                    listviewsub.setAdapter(customAttributeAdapterSubclassification);
-//                }else{
-//                    customAttributeAdapterSubclassification=new ResourceCustomChangeAdapter(context, attributeListSub, readOnly);
-//                    listviewsub.setAdapter(customAttributeAdapterSubclassification);
-//                }
-//
-//
-//
-////                attribute.setValue(selecteditem.getId().toString());
-//
-//            }
-//        });
-//
-//    }
 
 
     //Ambar
@@ -683,43 +579,45 @@ public class CustomAttributeChange extends ActionBarActivity {
 
     private void saveData() {
 
-
-//        for (ResourceCustomAttribute resourceCustomAttribute: attributeList ){
-//            if (resourceCustomAttribute.getValue()==null){
-//                Toast.makeText(context,"Please Select the Value of "+resourceCustomAttribute.getName(),Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//
-//            if (resourceCustomAttribute.getValue().equalsIgnoreCase("Select an option") ){
-//                Toast.makeText(context,"Please Select the Value of "+resourceCustomAttribute.getName(),Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//
-//        }
-
-//        if (attributesFeatureID!=null) {
-//            if (attributesFeatureID.size() != 0) {
-//                attributeList.addAll(attributesFeatureID);
-//            }
-//        }
+       // attributeList.clear();
 
 
-//        if (attributeList.size()!=0) {
-//            if (attributeList.size() != 9) {
-//                Toast.makeText(context, "Please select all the value", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//        }
+        for (ResourceCustomAttribute resourceCustomAttribute: attributeList ){
+            if (resourceCustomAttribute.getValue()==null){
+                Toast.makeText(context,"Please Select the Value of "+resourceCustomAttribute.getName(),Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (resourceCustomAttribute.getValue().equalsIgnoreCase("")){
+                Toast.makeText(context,"Please Select the Value of "+resourceCustomAttribute.getName(),Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (resourceCustomAttribute.getValue().equalsIgnoreCase("Select an option") ){
+                Toast.makeText(context,"Please Select the Value of "+resourceCustomAttribute.getName(),Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+        }
+
+
+
+        if (attributeList.size()!=0) {
+            if (attributeList.size() != 9) {
+                Toast.makeText(context, "Please select all the value", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
 
             try {
 
-               // boolean deleteData= DbController.getInstance(context).deleteCustomResource(featureId);
+                boolean deleteData=DbController.getInstance(context).deleteCustomResource(featureId);
                 //boolean saveResult1 = DbController.getInstance(context).saveResPropAttributes(attributesres, featureId);
                 boolean saveResult1 = DbController.getInstance(context).saveResPropAttributes(attributeList, featureId);
-                boolean saveResult = DbController.getInstance(context).saveResPropAttributes(attributeListSub, featureId);
+               // boolean saveResult = DbController.getInstance(context).saveResPropAttributes(attributeListSub, featureId);
 
 
-                if (saveResult && saveResult1) {
+                if ( saveResult1) {
                     cf.showToast(context, R.string.data_saved, Toast.LENGTH_SHORT);
 
                     Intent intent=new Intent(CustomAttributeChange.this,CollectedResourceDataSummary.class);
