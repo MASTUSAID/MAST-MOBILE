@@ -3760,10 +3760,10 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
         {
             commonFunctions.discoverDevice();
         }
-            if (requestCode == 30) //bluetooth enable
-            {
+        if (requestCode == 30) //bluetooth enable
+        {
 
-            }
+        }
     }
 
     private double parseNmeaLatitude(String lat, String orientation) {
