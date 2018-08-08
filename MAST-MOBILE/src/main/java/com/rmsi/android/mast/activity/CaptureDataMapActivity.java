@@ -240,7 +240,7 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
 
 
-            this.registerReceiver(BTReceiver, filter2);
+            this.registerReceiver( BTReceiver, filter2);
         }catch (Exception e){
             cf.appLog("",e);
         }

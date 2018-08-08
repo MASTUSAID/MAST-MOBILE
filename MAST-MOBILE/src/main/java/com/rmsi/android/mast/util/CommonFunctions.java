@@ -206,6 +206,7 @@ public class CommonFunctions {
 
     public void createLogfolder() {
         try {
+
             String extPath = Environment.getExternalStorageDirectory().getAbsolutePath();
             File parentdir = new File(extPath + "/" + parentFolderName);
             File datadir = new File(extPath + "/" + parentFolderName + "/" + dataFolderName);

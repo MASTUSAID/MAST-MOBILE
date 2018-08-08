@@ -310,11 +310,11 @@ public class MediaListActivity extends ActionBarActivity implements ListActivity
                                 file = new File(mediaFolderName + File.separator + "mast_" + timeStamp + ".mp4");
                                 videoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                                 videoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-                                long maxsize = 1 * 1024 * 1024;
+                                long maxsize = 5 * 1024 * 1024;
                                 videoIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, maxsize);  // 3MB
                                 videoIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 if (videoIntent.resolveActivity(getApplicationContext().getPackageManager()) != null) {
-                                    startActivityForResult(videoIntent, 2);
+                                    startActivityForResult( videoIntent, 2);
                                 }
 
                                 dialog.dismiss();
@@ -325,7 +325,7 @@ public class MediaListActivity extends ActionBarActivity implements ListActivity
                                 file = new File(mediaFolderName + File.separator + "mast_" + timeStamp + ".mp4");
                                 videoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                                 videoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-                                long maxsize = 1 * 1024 * 1024;
+                                long maxsize = 5 * 1024 * 1024;
                                 videoIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, maxsize);  // 3MB
                                 videoIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 if (videoIntent.resolveActivity(getApplicationContext().getPackageManager()) != null) {

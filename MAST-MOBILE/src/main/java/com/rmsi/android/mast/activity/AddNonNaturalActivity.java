@@ -48,7 +48,7 @@ import com.rmsi.android.mast.util.GuiUtility;
 import com.rmsi.android.mast.util.KeyboardUtil;
 import com.rmsi.android.mast.util.StringUtility;
 
-public class AddNonNaturalActivity extends ActionBarActivity {
+public class  AddNonNaturalActivity extends ActionBarActivity {
     private List<Media> mediaList;
     private final Context context = this;
     private CommonFunctions cf = CommonFunctions.getInstance();
