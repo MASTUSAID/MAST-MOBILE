@@ -172,6 +172,8 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
     private boolean enableVertexDrawing = true;
     private List<MapFeature> mapFeatures = new ArrayList<>();
     private List<MapFeature> mapFeaturesrES = new ArrayList<>();
+    private List<MapFeature> boundaryFeatures = new ArrayList<>();
+    private boolean boundaryAdded = false;
     private boolean featuresAdded = false;
     private boolean featuresAddedRes = false;
     private float lastZoom = 0;
@@ -316,6 +318,7 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
         mLayerTitles.add("Parcel");
         mLayerTitles.add("Resource");
         mLayerTitles.add("AOI");
+        mLayerTitles.add("Village Boundary");
 
         //mLayerTitles.add("Offline data");
 
@@ -1085,6 +1088,7 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
         public void onCameraIdle() {
             drawFeatures();
             drawFeaturesrES();
+            drawBoundaryFeatures();
         }
     }
 
@@ -1821,63 +1825,6 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
-//    private void toggleLayers_OLD_30JAN() {
-//        String currVisibleLayers = cf.getVisibleLayers();
-//        SparseBooleanArray checkedItems = mDrawerList.getCheckedItemPositions();
-//        StringBuffer visibleLayers = new StringBuffer();
-//        if (checkedItems.indexOfKey(0) > -1) // satellite
-//        {
-//            if (checkedItems.get(0)) {
-//                if (!currVisibleLayers.contains("0"))
-//                    googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-//                visibleLayers.append("0");
-//            } else {
-//                googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-//
-//            }
-//        }
-//
-//        if (checkedItems.indexOfKey(1) > -1) // captured data
-//        {
-//            if (checkedItems.get(1)) {
-//                if (visibleLayers.length() != 0)
-//                    visibleLayers.append(",");
-//                loadAOI();
-//                loadFeaturesFromDB();
-//                drawFeatures();
-//
-//                visibleLayers.append("1");
-//
-//                if (!currVisibleLayers.contains("1") && mapFeatures.size() < 1) {
-//                    loadFeaturesFromDB();
-//                    drawFeatures();
-//                }
-//            } else {
-//                googleMap.clear();
-//                loadAOI();
-//            }
-//        }
-//
-//        for (int i = 0; i < offlineSpatialData.size(); i++) {
-//            if (offlineSpatialData.get(i).getOverlay() != null) {
-//                offlineSpatialData.get(i).getOverlay().remove();
-//                offlineSpatialData.get(i).setOverlay(null);
-//            }
-//            if (checkedItems.indexOfKey(i + 2) > -1) // load offline data
-//            {
-//                if (checkedItems.get(i + 2)) {
-//                    if (visibleLayers.length() != 0)
-//                        visibleLayers.append(",");
-//                    visibleLayers.append(i + 2);
-//                    //if(!currVisibleLayers.contains((i+2)+""))
-//                    loadOfflineData(i);
-//                }
-//            }
-//        }
-//        cf.saveVisibleLayers(visibleLayers.toString());
-//    }
-
-
     private void toggleLayers() {
         googleMap.clear();
         String currVisibleLayers = cf.getVisibleLayers();
@@ -1900,9 +1847,7 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
             if (checkedItems.get(1)) {
                 if (visibleLayers.length() != 0)
                     visibleLayers.append(",");
-                //loadAOI();
                 loadFeaturesFromDB("P");
-//                loadFeaturesFromDB();
                 drawFeatures();
 
                 visibleLayers.append("1");
@@ -1911,9 +1856,6 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
                     loadFeaturesFromDB("P");
                     drawFeatures();
                 }
-            } else {
-                //googleMap.clear();
-                //loadAOI();
             }
         }
 
@@ -1922,9 +1864,7 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
             if (checkedItems.get(2)) {
                 if (visibleLayers.length() != 0)
                     visibleLayers.append(",");
-                //loadAOI();
                 loadFeaturesFromDBrES("R");
-//                loadFeaturesFromDB();
                 drawFeaturesrES();
 
                 visibleLayers.append("2");
@@ -1933,39 +1873,40 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
                     loadFeaturesFromDBrES("R");
                     drawFeaturesrES();
                 }
-            } else {
-                //googleMap.clear();
-                //loadAOI();
             }
         }
 
-//
         if (checkedItems.indexOfKey(3) > -1) // AOI
         {
             if (checkedItems.get(3)) {
                 if (visibleLayers.length() != 0)
                     visibleLayers.append(",");
                 loadAOI();
-//                loadFeaturesFromDB("A");
-                //drawFeatures();
-
                 visibleLayers.append("3");
 
                 if (!currVisibleLayers.contains("3") && mapFeatures.size() < 1) {
-//                    loadFeaturesFromDB("A");
-//                    drawFeatures();
                     loadAOI();
                 }
-            } else {
-                //googleMap.clear();
-                //  loadAOI();
             }
         }
 
-        // loadOfflineData(0);
+        if (checkedItems.indexOfKey(4) > -1) // Village boundary
+        {
+            if (checkedItems.get(4)) {
+                if (visibleLayers.length() != 0)
+                    visibleLayers.append(",");
 
-        //load Mbltiles
-        //loadMbltiles();
+                loadBoundaryFeaturesFromDB();
+                drawBoundaryFeatures();
+
+                visibleLayers.append("4");
+
+                if (!currVisibleLayers.contains("4") && mapFeatures.size() < 1) {
+                    loadBoundaryFeaturesFromDB();
+                    drawBoundaryFeatures();
+                }
+            }
+        }
 
 
         for (int i = 0; i < offlineSpatialData.size(); i++) {
@@ -1973,17 +1914,13 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
                 offlineSpatialData.get(i).getOverlay().remove();
                 offlineSpatialData.get(i).setOverlay(null);
             }
-            //if (checkedItems.indexOfKey(i + 2) > -1) // load offline data
-            if (checkedItems.indexOfKey(i + 4) > -1) // load offline data
+            if (checkedItems.indexOfKey(i + 5) > -1)
             {
-                if (checkedItems.get(i + 4)) {
+                if (checkedItems.get(i + 5)) {
                     if (visibleLayers.length() != 0)
                         visibleLayers.append(",");
-                    visibleLayers.append(i + 4);
-                    //if(!currVisibleLayers.contains((i+2)+""))
+                    visibleLayers.append(i + 5);
                     loadOfflineData(i);
-
-
                 }
             }
         }
@@ -2142,7 +2079,7 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
     }
 
 
-    private void drawFeaturesrES() {
+    private void    drawFeaturesrES() {
 
         snappingFeatures1.clear();
 
@@ -2214,6 +2151,48 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
         }
 
         lastZoom = zoom;
+    }
+
+    private void drawBoundaryFeatures() {
+        // Add features on the map
+        if (boundaryFeatures == null || boundaryFeatures.size() < 1)
+            return;
+
+        if (!boundaryAdded) {
+            boundaryAdded = true;
+            for (MapFeature mapFeature : boundaryFeatures) {
+                mapFeature.setMapBoundaryMarker(googleMap.addMarker(mapFeature.getBoundaryMarker()));
+                mapFeature.setMapLabel(googleMap.addMarker(mapFeature.getBoundaryLabel()));
+            }
+        }
+    }
+
+    private void loadBoundaryFeaturesFromDB() {
+        try {
+            clearBoundaryFeatures();
+            List<Feature> features = DbController.getInstance(context).fetchFeatures("B");
+
+            if (features.size() == 0) {
+                return;
+            }
+
+            for (Feature feature : features) {
+                if (!StringUtility.isEmpty(feature.getCoordinates())) {
+                    boundaryFeatures.add(new MapFeature(feature));
+                }
+            }
+        } catch (Exception e) {
+            cf.appLog("", e);
+            Toast.makeText(context, "unable to load features from db", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void clearBoundaryFeatures() {
+        boundaryAdded = false;
+        for (MapFeature mapFeature : boundaryFeatures) {
+            mapFeature.removeFromMap();
+        }
+        boundaryFeatures.clear();
     }
 
     private void addMapFeature(MapFeature mapFeature) {
@@ -3127,8 +3106,6 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
             if (visibleLayers.contains("1")) {
                 mDrawerList.setItemChecked(1, true);
                 loadFeaturesFromDB("P");
-
-
             }
             if (visibleLayers.contains("2")) {
                 mDrawerList.setItemChecked(2, true);
@@ -3139,16 +3116,17 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
                 mDrawerList.setItemChecked(3, true);
                 loadAOI();
             }
-            //loadOfflineData(0);
-//Ambar To Implement Resource And Parcel Seperately
+
+            if (visibleLayers.contains("4")) {
+                mDrawerList.setItemChecked(4, true);
+                loadBoundaryFeaturesFromDB();
+            }
+
             if (offlineSpatialData != null) {
                 for (int i = 0; i < offlineSpatialData.size(); i++) {
-                    if (visibleLayers.contains((i + 4) + "")) {
-
+                    if (visibleLayers.contains((i + 5) + "")) {
                         loadOfflineData(i);
-
-                        //loadOfflineData(offlineSpatialData.size()-i-1);
-                        mDrawerList.setItemChecked(((i + 4)), true);
+                        mDrawerList.setItemChecked(((i + 5)), true);
                     }
                 }
             }

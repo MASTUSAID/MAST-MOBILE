@@ -10,23 +10,6 @@
         android:id="@+id/toolbar"
         layout="@layout/layout_toolbar" />
 
-    <!--<TextView-->
-        <!--android:id="@+id/appName"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center_horizontal|center"-->
-        <!--android:paddingBottom="30dp"-->
-        <!--android:paddingTop="30dp"-->
-        <!--android:text="@string/appname"-->
-        <!--android:textColor="@color/color_primary"-->
-        <!--android:textSize="@dimen/AppNameSize"-->
-        <!--android:textStyle="bold" />-->
-
-    <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1dp"-->
-        <!--android:background="#CCCCCC" />-->
-
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
@@ -145,6 +128,37 @@
                 android:paddingTop="10dp">
 
                 <ImageView
+                    android:id="@+id/captureBoundaryImg"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:minWidth="100dp"
+                    android:paddingLeft="15dp"
+                    android:src="@drawable/action_gps" />
+
+                <Button
+                    android:id="@+id/captureBoundary"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:gravity="left|center_vertical"
+                    android:text="Capture Boundary"
+
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/linearborder"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp"
+                android:paddingTop="10dp">
+
+                <ImageView
                     android:id="@+id/reviewdataImage"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
@@ -174,6 +188,7 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal"
                 android:paddingBottom="5dp"
+                android:visibility="gone"
                 android:paddingTop="10dp">
 
                 <ImageView

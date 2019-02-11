@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -18,7 +18,7 @@ import com.rmsi.android.mast.db.DbController;
 import com.rmsi.android.mast.tabs.SlidingTabLayout;
 import com.rmsi.android.mast.util.CommonFunctions;
 
-public class ReviewDataActivity extends ActionBarActivity 
+public class ReviewDataActivity extends AppCompatActivity
 {
 
 	CommonFunctions cf = CommonFunctions.getInstance();
@@ -51,13 +51,8 @@ public class ReviewDataActivity extends ActionBarActivity
 		pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
 
 		SlidingTabLayout tabs = (SlidingTabLayout) findViewById(R.id.tabs);
-		//tabs.setBackgroundColor(getResources().getColor(R.color.color_primary));
 		tabs.setViewPager(pager);
 		tabs.setDistributeEvenly(true);
-		
-		//tabs.setIndicatorColorResource(R.color.white);
-		//tabs.setDividerColorResource(R.color.white);
-		//tabs.setTextColorResource(R.color.white);
 	}
 
 
@@ -74,9 +69,7 @@ public class ReviewDataActivity extends ActionBarActivity
 
 	 public class MyPagerAdapter extends FragmentPagerAdapter 
 	 {
-		
 		 private String[] titles = getResources().getStringArray(R.array.reviewDataStatus);
-		
 
 		 public MyPagerAdapter(FragmentManager fm) {
 			 super(fm);
@@ -88,11 +81,12 @@ public class ReviewDataActivity extends ActionBarActivity
 			 DbController db = DbController.getInstance(context);
 			 
 			 if(position==0)
-			 {				
-			  count=db.getCount(STATUS_DRAFT);
+			 {
+			 	count=db.getCount(STATUS_DRAFT);
 			 }
 			 else if(position==1)
-			 { count=db.getCount(STATUS_COMPLETE);
+			 {
+			 	count=db.getCount(STATUS_COMPLETE);
 			 }
 			 else if(position==2)
 			 {
@@ -104,7 +98,6 @@ public class ReviewDataActivity extends ActionBarActivity
 			 }
 			 String strCount= Integer.toString(count);			
 			 return titles[position]+" ("+strCount+") ";
-			 //return titles[position];
 		 }
 
 		 @Override
@@ -131,7 +124,6 @@ public class ReviewDataActivity extends ActionBarActivity
 			 }
 		 }
 	 }
-
 }
 
 

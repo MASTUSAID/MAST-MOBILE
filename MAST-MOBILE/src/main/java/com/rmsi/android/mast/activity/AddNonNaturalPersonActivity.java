@@ -3,7 +3,7 @@ package com.rmsi.android.mast.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +24,7 @@ import com.rmsi.android.mast.util.GuiUtility;
 
 import java.util.List;
 
-public class AddNonNaturalPersonActivity extends ActionBarActivity {
+public class AddNonNaturalPersonActivity extends AppCompatActivity {
 
     private Long featureId = 0L;
     private Long rightId = 0L;

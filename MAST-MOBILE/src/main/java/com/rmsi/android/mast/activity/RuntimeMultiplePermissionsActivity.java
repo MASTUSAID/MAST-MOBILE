@@ -8,8 +8,8 @@ import android.os.Build;
 import android.os.Bundle;
 
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseIntArray;
 
@@ -22,7 +22,7 @@ import java.util.Map;
  * Created by ABC on 09-12-2016.
  */
 
-public abstract class RuntimeMultiplePermissionsActivity extends ActionBarActivity {
+public abstract class RuntimeMultiplePermissionsActivity extends AppCompatActivity {
     private SparseIntArray mErrorString;
     private static final int REQUEST_INTERNET = 200;
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;

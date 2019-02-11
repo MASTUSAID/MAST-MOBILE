@@ -25,7 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -50,7 +50,7 @@ import static pub.devrel.easypermissions.EasyPermissions.hasPermissions;
 /**
  * A login screen that offers login via email/password.
  */
-public   class  LoginActivity extends ActionBarActivity {
+public   class  LoginActivity extends AppCompatActivity {
     Context context = this;
     // UI references.
     private EditText mUsernameView;

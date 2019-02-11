@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.rmsi.android.mast.activity"
@@ -46,18 +46,18 @@ android {
 }
 
 dependencies {
-    compile files('libs/jts-1.8.jar')
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:support-v4:23.4.0'
-    compile 'com.google.android.gms:play-services:9.4.0'
-    compile 'com.google.maps.android:android-maps-utils:0.4.4'
-    compile 'com.android.support:recyclerview-v7:23.4.0'
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.intuit.sdp:sdp-android:1.0.5'
-    compile 'com.android.support:support-annotations:+'
-    compile 'org.jetbrains:annotations:7.0.2'
-    compile 'pub.devrel:easypermissions:1.0.1'
-
-
+    implementation files('libs/jts-1.8.jar')
+    implementation 'com.android.support:appcompat-v7:23.4.0'
+    implementation 'com.android.support:support-v4:23.4.0'
+    implementation 'com.google.android.gms:play-services:9.4.0'
+    implementation 'com.google.maps.android:android-maps-utils:0.4.4'
+    implementation 'com.android.support:recyclerview-v7:23.4.0'
+    implementation 'com.android.support:multidex:1.0.1'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.intuit.sdp:sdp-android:1.0.5'
+    implementation 'com.android.support:support-annotations:+'
+    implementation 'org.jetbrains:annotations:7.0.2'
+    implementation 'pub.devrel:easypermissions:1.0.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.support:design:26.1.0'
 }

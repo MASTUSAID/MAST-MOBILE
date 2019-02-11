@@ -21,7 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuInflater;
@@ -45,7 +45,7 @@ import com.rmsi.android.mast.domain.Media;
 import com.rmsi.android.mast.domain.User;
 import com.rmsi.android.mast.util.CommonFunctions;
 
-public class MediaListActivity extends ActionBarActivity implements ListActivity {
+public class MediaListActivity extends AppCompatActivity implements ListActivity {
     private Button addNew, btnNext;
     private Context context;
     private ListView listView;

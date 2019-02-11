@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -27,7 +27,7 @@ import com.rmsi.android.mast.util.CommonFunctions;
 import com.rmsi.android.mast.util.GuiUtility;
 import com.rmsi.android.mast.util.KeyboardUtil;
 
-public class AddGeneralPropertyActivity extends ActionBarActivity {
+public class AddGeneralPropertyActivity extends AppCompatActivity {
 
     private Long featureId = 0L;
     private boolean isDispute = false;

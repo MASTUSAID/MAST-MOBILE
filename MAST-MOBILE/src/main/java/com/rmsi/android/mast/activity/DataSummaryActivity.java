@@ -4,7 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +25,7 @@ import com.rmsi.android.mast.domain.ShareType;
 import com.rmsi.android.mast.util.CommonFunctions;
 import com.rmsi.android.mast.util.StringUtility;
 
-public class DataSummaryActivity extends ActionBarActivity {
+public class DataSummaryActivity extends AppCompatActivity {
 
     Long featureId = 0L;
     Context context = this;

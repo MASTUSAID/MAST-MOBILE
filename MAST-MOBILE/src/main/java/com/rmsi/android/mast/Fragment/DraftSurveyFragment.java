@@ -20,6 +20,7 @@ import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rmsi.android.mast.activity.BoundaryActivity;
 import com.rmsi.android.mast.activity.CapturePareclData;
 import com.rmsi.android.mast.activity.CollectedResourceDataSummary;
 import com.rmsi.android.mast.activity.R;
@@ -85,12 +86,18 @@ public class DraftSurveyFragment extends Fragment {
                             startActivity(intent);
                             return true;
 
-                        }else if (property2.getFlag().equalsIgnoreCase("P")) {
+                        } else if (property2.getFlag().equalsIgnoreCase("P")) {
                             Intent intent = new Intent(context, CapturePareclData.class);
                             intent.putExtra("featureid", featureId);
                             startActivity(intent);
                             return true;
 
+                        } else if (property2.getFlag().equalsIgnoreCase("B")) {
+                            Intent intent = new Intent(context, CaptureDataMapActivity.class);
+                            intent.putExtra("featureid", featureId);
+                            intent.putExtra("IsBoundary", true);
+                            startActivity(intent);
+                            return true;
                         }
 
                     case R.id.edit_attributes:
@@ -103,18 +110,20 @@ public class DraftSurveyFragment extends Fragment {
                             //myIntent.putExtra("flag",true);
                             startActivity(myIntent);
                             return true;
-                        }else if (property1.getFlag().equalsIgnoreCase("P")) {
+                        } else if (property1.getFlag().equalsIgnoreCase("P")) {
                             Intent myIntent = new Intent(context, DataSummaryActivity.class);
                             myIntent.putExtra("featureid", featureId);
                             myIntent.putExtra("Server_featureid", server_featureId);
                             myIntent.putExtra("className", "draftSurveyFragment");
-                            //myIntent.putExtra("flag",true);
+                            startActivity(myIntent);
+                            return true;
+                        } else if (property1.getFlag().equalsIgnoreCase("B")) {
+                            Intent myIntent = new Intent(context, BoundaryActivity.class);
+                            myIntent.putExtra("featureid", featureId);
+                            myIntent.putExtra("editing", true);
                             startActivity(myIntent);
                             return true;
                         }
-
-                        //Open attributes form to edit --------------
-
                         return true;
                     case R.id.delete_entry:
                         deleteEntry(featureId);
@@ -123,18 +132,19 @@ public class DraftSurveyFragment extends Fragment {
                         int IsNatural=DbController.getInstance(context).getpersonType(featureId);
                         Property property = DbController.getInstance(context).getProperty(featureId);
                         if(property.getFlag().equalsIgnoreCase("R")){
-
                             if (ValiDateAllValues(featureId)){
                                 AllowToComplete(property);
                             }
-
                             return true;
-                        }else if (property.getFlag().equalsIgnoreCase("P")) {
+                        } else if (property.getFlag().equalsIgnoreCase("P")) {
                             if (IsNatural==1|IsNatural==3) {
                                 markFeatureAsComplete(featureId);
                             }else {
                                 AllowToComplete(property);
                             }
+                            return true;
+                        } else if (property.getFlag().equalsIgnoreCase("B")) {
+                            AllowToComplete(property);
                             return true;
                         }
 

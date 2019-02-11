@@ -16,27 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Property extends Feature implements Serializable {
-    private String creationDate;
-    private String completionDate;
-    private String imei;
-    private Long hamletId;
-    private String adjudicator1;
-    private String adjudicator2;
-
-    private String claimTypeCode;
-    private String ukaNumber;
-
-    private Right right;
-    private DeceasedPerson deceasedPerson;
-    private List<PersonOfInterest> personOfInterests = new ArrayList<>();
-    private List<ResourcePersonOfInterest> personOfInterestsRes1 = new ArrayList<>();
-    private List<ResourcePoiSync> personOfInterestsRes = new ArrayList<>();
-    private List<Attribute> attributes = new ArrayList<>();
-
-    private List<ResourceCustomAttribute> customAttributes = new ArrayList<>();
-    private List<Media> media = new ArrayList<>();
-    private Dispute dispute;
-
     public static String COL_CREATION_DATE = "CREATEDTIME";
     public static String COL_COMPLETION_DATE = "COMPLETEDTIME";
     public static String COL_IMEI = "IMEI";
@@ -57,32 +36,37 @@ public class Property extends Feature implements Serializable {
     public static String COL_DOCUMENT_DATE = "DOCUMENT_DATE";
     public static String COL_DOCUMENT_REF_NO = "DOCUMENT_REF_NO";
     public static String COL_IS_NATURAL = "IS_NATURAL";
+    public static String COL_VILLAGE_ID = "VILLAGE_ID";
+    public static String COL_FEATURE_TYPE = "FEATURE_TYPE";
+    public static String COL_FEATURE_DESCRIPTION = "FEATURE_DESCRIPTION";
 
-
-
-    private List<Classification> classification=new ArrayList<>();
-
-
-    private List<ClassificationAttribute> classificationAttributes=new ArrayList<>();
-
-    private List<TenureInformation> tenureInformation=new ArrayList<>();
+    private String creationDate;
+    private String completionDate;
+    private String imei;
+    private Long hamletId;
+    private String adjudicator1;
+    private String adjudicator2;
+    private String claimTypeCode;
+    private String ukaNumber;
+    private Right right;
+    private DeceasedPerson deceasedPerson;
+    private List<PersonOfInterest> personOfInterests = new ArrayList<>();
+    private List<ResourcePersonOfInterest> personOfInterestsRes1 = new ArrayList<>();
+    private List<ResourcePoiSync> personOfInterestsRes = new ArrayList<>();
+    private List<Attribute> attributes = new ArrayList<>();
+    private List<ResourceCustomAttribute> customAttributes = new ArrayList<>();
+    private List<Media> media = new ArrayList<>();
+    private Dispute dispute;
+    private List<Classification> classification = new ArrayList<>();
+    private List<ClassificationAttribute> classificationAttributes = new ArrayList<>();
+    private List<TenureInformation> tenureInformation = new ArrayList<>();
     private String flag;
-
-
-
-    private int ipNumber;
-     private String classificationValue;
-     private String subClassificationValue;
-     private  String tenureTypeValue;
-
-
-
-     private String tenureTypeID;
-
+    private String classificationValue;
+    private String subClassificationValue;
+    private String tenureTypeValue;
+    private String tenureTypeID;
     private String firstName;
     private String middleName;
-
-
     private int mID;
     private String lastName;
     private int lastID;
@@ -101,8 +85,7 @@ public class Property extends Feature implements Serializable {
     private String region;
     private String mob_no;
     private String classificationId;
-     private String subClassificationId;
-
+    private String subClassificationId;
     private String claimRight;
     private String plotNo;
     private String document;
@@ -110,6 +93,33 @@ public class Property extends Feature implements Serializable {
     private String documentDate;
     private String documentRefNo;
     private int isNatural;
+    private Integer villageId;
+    private String featureType;
+    private String featureDescription;
+
+    public Integer getVillageId() {
+        return villageId;
+    }
+
+    public void setVillageId(Integer villageId) {
+        this.villageId = villageId;
+    }
+
+    public String getFeatureType() {
+        return featureType;
+    }
+
+    public void setFeatureType(String featureType) {
+        this.featureType = featureType;
+    }
+
+    public String getFeatureDescription() {
+        return featureDescription;
+    }
+
+    public void setFeatureDescription(String featureDescription) {
+        this.featureDescription = featureDescription;
+    }
 
     public String getClaimRight() {
         return claimRight;
@@ -243,8 +253,6 @@ public class Property extends Feature implements Serializable {
         this.classificationId = classificationId;
     }
 
-
-
     public String getTenureTypeValue() {
         return tenureTypeValue;
     }
@@ -252,7 +260,6 @@ public class Property extends Feature implements Serializable {
     public void setTenureTypeValue(String tenureTypeValue) {
         this.tenureTypeValue = tenureTypeValue;
     }
-
 
     public String getClassificationValue() {
         return classificationValue;
@@ -270,9 +277,6 @@ public class Property extends Feature implements Serializable {
         this.subClassificationValue = subClassificationValue;
     }
 
-
-
-
     public String getFlag() {
         return flag;
     }
@@ -280,15 +284,6 @@ public class Property extends Feature implements Serializable {
     public void setFlag(String flag) {
         this.flag = flag;
     }
-
-    public int getIpNumber() {
-        return ipNumber;
-    }
-
-    public void setIpNumber(int ipNumber) {
-        this.ipNumber = ipNumber;
-    }
-
 
     public List<Classification> getClassification() {
         return classification;
@@ -305,8 +300,6 @@ public class Property extends Feature implements Serializable {
     public void setTenureInformation(List<TenureInformation> tenureInformation) {
         this.tenureInformation = tenureInformation;
     }
-
-
 
     public String getCreationDate() {
         return creationDate;
@@ -363,6 +356,7 @@ public class Property extends Feature implements Serializable {
     public void setClaimTypeCode(String claimTypeCode) {
         this.claimTypeCode = claimTypeCode;
     }
+
     public int getIsNatural() {
         return isNatural;
     }
@@ -370,15 +364,6 @@ public class Property extends Feature implements Serializable {
     public void setIsNatural(int isNatural) {
         this.isNatural = isNatural;
     }
-
-
-//    public String getClaimType() {
-//        return claimType;
-//    }
-//
-//    public void setClaimType(String claimType) {
-//        this.claimType = claimType;
-//    }
 
     public Right getRight() {
         return right;
@@ -427,7 +412,6 @@ public class Property extends Feature implements Serializable {
     public void setPersonOfInterests(List<PersonOfInterest> personOfInterests) {
         this.personOfInterests = personOfInterests;
     }
-
 
 
     public List<ResourcePersonOfInterest> getResPersonOfInterests() {
@@ -493,42 +477,42 @@ public class Property extends Feature implements Serializable {
      * @param showMessage Flag indicating whether to show error message or not
      */
     public boolean validateAll(Context context, boolean showMessage) {
-        if(!validateBasicInfo(context, showMessage))
+        if (!validateBasicInfo(context, showMessage))
             return false;
 
         // Stop validation for unclaimed parcels
-        if(StringUtility.empty(getClaimTypeCode()).equalsIgnoreCase(ClaimType.TYPE_UNCLAIMED))
+        if (StringUtility.empty(getClaimTypeCode()).equalsIgnoreCase(ClaimType.TYPE_UNCLAIMED))
             return true;
 
         // Disputes
-        if(StringUtility.empty(getClaimTypeCode()).equalsIgnoreCase(ClaimType.TYPE_DISPUTE)) {
-            if(getDispute() == null)
+        if (StringUtility.empty(getClaimTypeCode()).equalsIgnoreCase(ClaimType.TYPE_DISPUTE)) {
+            if (getDispute() == null)
                 return handleError(context, R.string.AddDisputeDetails, showMessage);
 
             return getDispute().validate(context, showMessage);
         }
 
         // For all other claims
-        if(!validateGeneralProperties(context, showMessage))
+        if (!validateGeneralProperties(context, showMessage))
             return false;
 
         // Validate right
-        if(getRight() == null)
+        if (getRight() == null)
             return handleError(context, R.string.AddSocialTenureInfo, showMessage);
 
-        if(!getRight().validate(context, getClaimTypeCode(), showMessage))
+        if (!getRight().validate(context, getClaimTypeCode(), showMessage))
             return false;
 
         // Validate persons
-        for(Person person : getRight().getNaturalPersons()){
-            if(!person.validate(context, getRight().getShareTypeId(), false, showMessage))
+        for (Person person : getRight().getNaturalPersons()) {
+            if (!person.validate(context, getRight().getShareTypeId(), false, showMessage))
                 return false;
         }
 
-        if(!validatePersonsList(context, showMessage))
+        if (!validatePersonsList(context, showMessage))
             return false;
 
-        if(!validateCustomProperties(context, showMessage))
+        if (!validateCustomProperties(context, showMessage))
             return true;
 
         return true;
@@ -550,9 +534,8 @@ public class Property extends Feature implements Serializable {
             errorMessage = context.getResources().getString(R.string.EnterClaimNumber);
         } else if (StringUtility.isEmpty(getSurveyDate())) {
             errorMessage = context.getResources().getString(R.string.SelectClaimDate);
-        }
-        else if (getIsNatural()==0) {
-            errorMessage ="Select Person Type";
+        } else if (getIsNatural() == 0) {
+            errorMessage = "Select Person Type";
         }
 //        else if (getHamletId() == 0L) {
 //            errorMessage = context.getResources().getString(R.string.Please_select_Hamlet);
@@ -567,8 +550,7 @@ public class Property extends Feature implements Serializable {
             errorMessage = context.getResources().getString(R.string.ClaimDateInFuture);
         } else if (!DbController.getInstance(context).isClaimNumberUnique(getId(), getPolygonNumber())) {
             errorMessage = context.getResources().getString(R.string.ClaimNumberUnique);
-        }
-        else if (!DbController.getInstance(context).isClaimNumberUnique(getId(), getPolygonNumber())) {
+        } else if (!DbController.getInstance(context).isClaimNumberUnique(getId(), getPolygonNumber())) {
             errorMessage = context.getResources().getString(R.string.ClaimNumberUnique);
         }
 
@@ -655,70 +637,66 @@ public class Property extends Feature implements Serializable {
         if (shareId == ShareType.TYPE_NON_NATURAL) {
             if (getRight().getNonNaturalPerson() == null)
                 return handleError(context, R.string.AddNonNaturalPerson, showMessage);
-            if(getRight().getNaturalPersons().size() < 1)
+            if (getRight().getNaturalPersons().size() < 1)
                 return handleError(context, R.string.add_atlest_one_person, showMessage);
-            if(getRight().getNaturalPersons().size() > 1)
+            if (getRight().getNaturalPersons().size() > 1)
                 return handleError(context, R.string.can_add_only_one_person_with_non_natural_person, showMessage);
         }
 
         // Check single ownership
         if (shareId == ShareType.TYPE_Single_Tenancy) {
-            if(getRight().getNaturalPersons().size() != 1 || !getRight().hasPersonSubType(Person.SUBTYPE_OCCUPANT)){
+            if (getRight().getNaturalPersons().size() != 1 || !getRight().hasPersonSubType(Person.SUBTYPE_OCCUPANT)) {
                 return handleError(context, R.string.SingleShareCheck, showMessage);
             }
         }
 
         // Check multiple occupancy joint ownership
         if (shareId == ShareType.TYPE_Joint_Tenency) {
-            if(getRight().getOwnersCount() != 2 || getRight().getNaturalPersons().size() != getRight().getOwnersCount()){
+            if (getRight().getOwnersCount() != 2 || getRight().getNaturalPersons().size() != getRight().getOwnersCount()) {
                 return handleError(context, R.string.MultiJointShareError, showMessage);
             }
         }
 
         // Check multiple occupancy common ownership
-        if (shareId == ShareType.TYPE_Collective_Tenancy ) {
-            if(getRight().getOwnersCount() < 1  || getRight().getOwnersCount() != getRight().getNaturalPersons().size()){
+        if (shareId == ShareType.TYPE_Collective_Tenancy) {
+            if (getRight().getOwnersCount() < 1 || getRight().getOwnersCount() != getRight().getNaturalPersons().size()) {
                 return handleError(context, R.string.SingleShareCheck, showMessage);
             }
         }
 
         // Check multiple occupancy common Tenancy ownership
-        if ( shareId==ShareType.TYPE_Common_Tenancy) {
-            if(getRight().getOwnersCount() < 2  || getRight().getOwnersCount() != getRight().getNaturalPersons().size()){
+        if (shareId == ShareType.TYPE_Common_Tenancy) {
+            if (getRight().getOwnersCount() < 2 || getRight().getOwnersCount() != getRight().getNaturalPersons().size()) {
                 return handleError(context, R.string.MultiCommonShareError, showMessage);
             }
         }
 
         // Check guardian ownership
         if (shareId == ShareType.TYPE_GUARDIAN) {
-            if(getRight().hasPersonSubType(Person.SUBTYPE_ADMINISTRATOR) || !getRight().hasPersonSubType(Person.SUBTYPE_OWNER)
-                    || !getRight().hasPersonSubType(Person.SUBTYPE_GUARDIAN) || getRight().getGuardianCount() > 2){
+            if (getRight().hasPersonSubType(Person.SUBTYPE_ADMINISTRATOR) || !getRight().hasPersonSubType(Person.SUBTYPE_OWNER)
+                    || !getRight().hasPersonSubType(Person.SUBTYPE_GUARDIAN) || getRight().getGuardianCount() > 2) {
                 return handleError(context, R.string.GuardianShareError, showMessage);
             }
         }
 
         // Check tenancy in probate ownership
         if (shareId == ShareType.TYPE_TENANCY_IN_PROBATE) {
-            if(getRight().hasPersonSubType(Person.SUBTYPE_GUARDIAN) || !getRight().hasPersonSubType(Person.SUBTYPE_ADMINISTRATOR)
-                    || getDeceasedPerson() == null || getRight().getAdministratorCount() > 2){
+            if (getRight().hasPersonSubType(Person.SUBTYPE_GUARDIAN) || !getRight().hasPersonSubType(Person.SUBTYPE_ADMINISTRATOR)
+                    || getDeceasedPerson() == null || getRight().getAdministratorCount() > 2) {
                 return handleError(context, R.string.ProbateShareError, showMessage);
             }
         }
 
 
-        int shareTypeId=DbController.getInstance(context).getShareIdByFeatureID(attributes.get(0).getFeatureId());
+        int shareTypeId = DbController.getInstance(context).getShareIdByFeatureID(attributes.get(0).getFeatureId());
 //db.getPrimaryCount(attributes.get(0).getFeatureId()) > 1
-        if (shareTypeId!=6) {
+        if (shareTypeId != 6) {
             DbController db = DbController.getInstance(context);
-            if ( db.getPrimaryCount(attributes.get(0).getFeatureId())==0) {
+            if (db.getPrimaryCount(attributes.get(0).getFeatureId()) == 0) {
                 return handleError(context, R.string.PrimaryOwner, showMessage);
 
             }
         }
-
-
-
-
 
 
         return true;
@@ -726,7 +704,7 @@ public class Property extends Feature implements Serializable {
 
     //for non-natural peosn
 
-    public boolean validateNonPersonsList(Context context, boolean showMessage,Long featureId) {
+    public boolean validateNonPersonsList(Context context, boolean showMessage, Long featureId) {
         if (getRight() == null || getRight().getShareTypeId() < 1)
             return true;
 
@@ -741,33 +719,33 @@ public class Property extends Feature implements Serializable {
         if (shareId == ShareType.TYPE_NON_NATURAL) {
             if (getRight().getNonNaturalPerson() == null)
                 return handleError(context, R.string.AddNonNaturalPerson, showMessage);
-            if(getRight().getNaturalPersons().size() < 1)
+            if (getRight().getNaturalPersons().size() < 1)
                 return handleError(context, R.string.add_atlest_one_person, showMessage);
-            if(getRight().getNaturalPersons().size() > 1)
+            if (getRight().getNaturalPersons().size() > 1)
                 return handleError(context, R.string.can_add_only_one_person_with_non_natural_person, showMessage);
         }
 
         // Check single ownership
         if (shareId == ShareType.TYPE_Single_Tenancy) {
-            if(getRight().getNaturalPersons().size() != 1 || !getRight().hasPersonSubType(Person.SUBTYPE_OCCUPANT)){
+            if (getRight().getNaturalPersons().size() != 1 || !getRight().hasPersonSubType(Person.SUBTYPE_OCCUPANT)) {
                 return handleError(context, R.string.SingleShareCheck, showMessage);
             }
         }
 
         // Check multiple occupancy joint ownership
         if (shareId == ShareType.TYPE_Joint_Tenency) {
-            if(getRight().getOwnersCount() != 2 || getRight().getNaturalPersons().size() != getRight().getOwnersCount()){
+            if (getRight().getOwnersCount() != 2 || getRight().getNaturalPersons().size() != getRight().getOwnersCount()) {
                 return handleError(context, R.string.MultiJointShareError, showMessage);
             }
         }
 
         // Check multiple occupancy common ownership
-        if (shareId == ShareType.TYPE_Collective_Tenancy ) {
+        if (shareId == ShareType.TYPE_Collective_Tenancy) {
 //            if(getRight().getOwnersCount() < 1 ){
 //                return handleError(context, R.string.SingleShareCheck, showMessage);
 //            }
             DbController db = DbController.getInstance(context);
-            if(db.getNONNaturalPersonsByRight(featureId).size() < 1 ){
+            if (db.getNONNaturalPersonsByRight(featureId).size() < 1) {
                 return handleError(context, R.string.Collective, showMessage);
             }
         }
@@ -780,16 +758,15 @@ public class Property extends Feature implements Serializable {
 //        }
 
 
-        if ( shareId==ShareType.TYPE_Common_Tenancy) {
+        if (shareId == ShareType.TYPE_Common_Tenancy) {
             DbController db = DbController.getInstance(context);
-            int Natural=db.getpersonTypefromFeature(featureId);
-            if (Natural==1) {
+            int Natural = db.getpersonTypefromFeature(featureId);
+            if (Natural == 1) {
                 if (getRight().getOwnersCount() < 2 || getRight().getOwnersCount() != getRight().getNaturalPersons().size()) {
                     return handleError(context, R.string.MultiCommonShareError, showMessage);
                 }
-            }
-            else if (Natural==2){
-                if(db.getNONNaturalPersonsByRight(featureId).size() < 1 ){
+            } else if (Natural == 2) {
+                if (db.getNONNaturalPersonsByRight(featureId).size() < 1) {
                     return handleError(context, R.string.Collective, showMessage);
                 }
             }
@@ -797,16 +774,16 @@ public class Property extends Feature implements Serializable {
 
         // Check guardian ownership
         if (shareId == ShareType.TYPE_GUARDIAN) {
-            if(getRight().hasPersonSubType(Person.SUBTYPE_ADMINISTRATOR) || !getRight().hasPersonSubType(Person.SUBTYPE_OWNER)
-                    || !getRight().hasPersonSubType(Person.SUBTYPE_GUARDIAN) || getRight().getGuardianCount() > 2){
+            if (getRight().hasPersonSubType(Person.SUBTYPE_ADMINISTRATOR) || !getRight().hasPersonSubType(Person.SUBTYPE_OWNER)
+                    || !getRight().hasPersonSubType(Person.SUBTYPE_GUARDIAN) || getRight().getGuardianCount() > 2) {
                 return handleError(context, R.string.GuardianShareError, showMessage);
             }
         }
 
         // Check tenancy in probate ownership
         if (shareId == ShareType.TYPE_TENANCY_IN_PROBATE) {
-            if(getRight().hasPersonSubType(Person.SUBTYPE_GUARDIAN) || !getRight().hasPersonSubType(Person.SUBTYPE_ADMINISTRATOR)
-                    || getDeceasedPerson() == null || getRight().getAdministratorCount() > 2){
+            if (getRight().hasPersonSubType(Person.SUBTYPE_GUARDIAN) || !getRight().hasPersonSubType(Person.SUBTYPE_ADMINISTRATOR)
+                    || getDeceasedPerson() == null || getRight().getAdministratorCount() > 2) {
                 return handleError(context, R.string.ProbateShareError, showMessage);
             }
         }
@@ -836,8 +813,6 @@ public class Property extends Feature implements Serializable {
     }
 
 
-
-
     public String getRegion() {
         return region;
     }
@@ -856,8 +831,6 @@ public class Property extends Feature implements Serializable {
     }
 
 
-
-
     public String getResidential() {
         return residential;
     }
@@ -865,7 +838,6 @@ public class Property extends Feature implements Serializable {
     public void setResidential(String residential) {
         this.residential = residential;
     }
-
 
 
     public String getEthinicity() {
@@ -877,7 +849,6 @@ public class Property extends Feature implements Serializable {
     }
 
 
-
     public String getCityzenship() {
         return cityzenship;
     }
@@ -885,8 +856,6 @@ public class Property extends Feature implements Serializable {
     public void setCityzenship(String cityzenship) {
         this.cityzenship = cityzenship;
     }
-
-
 
 
     public String getMaritalstatus() {
@@ -898,8 +867,6 @@ public class Property extends Feature implements Serializable {
     }
 
 
-
-
     public String getGender() {
         return gender;
     }
@@ -907,8 +874,6 @@ public class Property extends Feature implements Serializable {
     public void setGender(String gender) {
         this.gender = gender;
     }
-
-
 
 
     public String getAddress() {
@@ -920,8 +885,6 @@ public class Property extends Feature implements Serializable {
     }
 
 
-
-
     public String getCountry() {
         return country;
     }
@@ -931,8 +894,6 @@ public class Property extends Feature implements Serializable {
     }
 
 
-
-
     public String getAge() {
         return age;
     }
@@ -940,7 +901,6 @@ public class Property extends Feature implements Serializable {
     public void setAge(String age) {
         this.age = age;
     }
-
 
 
     public String getFirstName() {
@@ -968,7 +928,6 @@ public class Property extends Feature implements Serializable {
     }
 
 
-
     public boolean validateTenureInfo(Context context, boolean b) {
         boolean result = true;
         String errorMessage = "";
@@ -979,46 +938,33 @@ public class Property extends Feature implements Serializable {
             errorMessage = context.getResources().getString(R.string.SelectMiddleName);
         } else if (StringUtility.isEmpty(getLastName())) {
             errorMessage = context.getResources().getString(R.string.SelectLastName);
-        }
-        else if (StringUtility.isEmpty(getGender())) {
+        } else if (StringUtility.isEmpty(getGender())) {
             errorMessage = context.getResources().getString(R.string.SelectGender);
-        }else if (getGender().equalsIgnoreCase(context.getResources().getString(R.string.SelectOption))) {
+        } else if (getGender().equalsIgnoreCase(context.getResources().getString(R.string.SelectOption))) {
             errorMessage = context.getResources().getString(R.string.SelectGender);
-        }
-        else if (StringUtility.isEmpty(getAge())) {
+        } else if (StringUtility.isEmpty(getAge())) {
             errorMessage = context.getResources().getString(R.string.SelectAge);
         } else if (StringUtility.isEmpty(getMaritalstatus())) {
             errorMessage = context.getResources().getString(R.string.SelectMarital);
-        }else if (getMaritalstatus().equalsIgnoreCase(context.getResources().getString(R.string.SelectOption))) {
+        } else if (getMaritalstatus().equalsIgnoreCase(context.getResources().getString(R.string.SelectOption))) {
             errorMessage = context.getResources().getString(R.string.SelectMarital);
-        }
-        else if (StringUtility.isEmpty(getCityzenship())) {
+        } else if (StringUtility.isEmpty(getCityzenship())) {
             errorMessage = context.getResources().getString(R.string.SelectCitizenship);
         } else if (StringUtility.isEmpty(getEthinicity())) {
-            errorMessage =  context.getResources().getString(R.string.SelectEthinicity);
-        }
-        else if (StringUtility.isEmpty(getResidential())) {
+            errorMessage = context.getResources().getString(R.string.SelectEthinicity);
+        } else if (StringUtility.isEmpty(getResidential())) {
             errorMessage = context.getResources().getString(R.string.SelectResidency);
-        }else if (getResidential().equalsIgnoreCase(context.getResources().getString(R.string.SelectOption))) {
+        } else if (getResidential().equalsIgnoreCase(context.getResources().getString(R.string.SelectOption))) {
             errorMessage = context.getResources().getString(R.string.SelectResidency);
-        }
-        else if (StringUtility.isEmpty(getAddress())) {
+        } else if (StringUtility.isEmpty(getAddress())) {
             errorMessage = context.getResources().getString(R.string.SelectAddress);
-        }
-
-        else if (StringUtility.isEmpty(getCommunity())) {
-            errorMessage ="Enter Community";
-        }
-
-        else if (StringUtility.isEmpty(getRegion())) {
+        } else if (StringUtility.isEmpty(getCommunity())) {
+            errorMessage = "Enter Community";
+        } else if (StringUtility.isEmpty(getRegion())) {
             errorMessage = context.getResources().getString(R.string.SelectRegion);
-        }
-
-        else if (StringUtility.isEmpty(getCountry())) {
+        } else if (StringUtility.isEmpty(getCountry())) {
             errorMessage = context.getResources().getString(R.string.SelectCountry);
-        }
-
-        else if (StringUtility.isEmpty(getMob_no())) {
+        } else if (StringUtility.isEmpty(getMob_no())) {
             errorMessage = context.getResources().getString(R.string.SelectMobileNumber);
         }
 

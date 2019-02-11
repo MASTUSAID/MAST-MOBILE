@@ -167,12 +167,14 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
     private boolean enableVertexDrawing = true;
     private List<MapFeature> mapFeatures = new ArrayList<>();
     private List<MapFeature> mapFeaturesrES = new ArrayList<>();
+    private List<MapFeature> mapBoundaryFeatures = new ArrayList<>();
     private boolean featuresAdded = false;
     private boolean featuresAddedRes = false;
+    private boolean boundaryFeaturesAdded = false;
     private float lastZoom = 0;
     String geoType = null;
     String cordinates,CorordinatesDisplay = null;
-//    private ArrayList<LatLng> latLngs=new ArrayList<>();
+    private boolean isBoundary = false;
 
     BluetoothAdapter mBluetoothAdapter;
     boolean isBTActive = false;
@@ -224,7 +226,7 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             CorordinatesDisplay=extras.getString("Corordinates");
             isReview=extras.getBoolean("IsReview");
             drawFeatureByFlagGPS=extras.getString("drawFeatureByFlag");
-
+            isBoundary=extras.getBoolean("IsBoundary");
         }
 
         //The BroadcastReceiver that listens for bluetooth broadcasts
@@ -250,7 +252,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
 
         ImageView buttonbackPress = (ImageView) findViewById(R.id.backPress);
 
-
         toolbarBackpree.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -264,10 +265,7 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-
-//
         CommonFunctions.getInstance().Initialize(getApplicationContext());
-
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
@@ -277,46 +275,26 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         locationListener = new MyLocationListener();
         if (provider != null) {
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return;
             }
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return;
             }
             locationManager.requestLocationUpdates(provider, 30000, 10, locationListener);
         }
 
-//        boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-//        if (!isGPSEnabled) {
-//            cf.showGPSSettingsAlert(context);
-//        }
         // This is commented to stop Tanzania MB tiles data as per Jeff comment on 29 Jan 18
         offlineSpatialData = DbController.getInstance(context).getProjectSpatialData();
 
         mLayerTitles.add("Satellite Map");
-        // mLayerTitles.add("Captured features");
         mLayerTitles.add("Parcel");
         mLayerTitles.add("Resource");
         mLayerTitles.add("AOI");
-        //mLayerTitles.add("Offline data");
+        mLayerTitles.add("Village Boundary");
 
         // This is commented to stop Tanzania MB tiles data as per Jeff comment on 29 Jan 18
         for (int i = 0; i < offlineSpatialData.size(); i++) {
             mLayerTitles.add(offlineSpatialData.get(i).getFile_Name());
-           // mLayerTitles.add("Liberia Mbtiles");
         }
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_layer_manager);
@@ -482,17 +460,10 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             e.printStackTrace();
         }
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
-
-//        // this Constructor is used only for bluetooth
-//        commonFunctions=new CommonFunctions(this);
-//
-//        //Call the bluetooth function
-//        commonFunctions.getConnectToGpsDevice(isReview,drawFeatureByFlagGPS);
-
+        if(isBoundary){
+            setTitle(R.string.titleCaptureBoundary);
+        }
     }
-
-
 
     @Override
     public void onMapReady(GoogleMap map) {
@@ -507,13 +478,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             googleMap.setOnMapClickListener(new mapClickListener());
             googleMap.setOnMarkerClickListener(new markerClickListener());
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            //googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-            //googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-            //googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-            //googleMap.setMapType(GoogleMap.MAP_TYPE_NONE);
-
-            // Showing / hiding your current location
-            //googleMap.setMyLocationEnabled(true);
 
             // Enable / Disable zooming controls
             googleMap.getUiSettings().setZoomControlsEnabled(false);
@@ -531,10 +495,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             if (cf.getMAP_MODE() > 0)
                 googlemapReinitialized = true;
         }
-
-//        if (featureId != 0) {
-//            loadFeatureforEdit();
-//        }
     }
 
     private void loadOfflineData(int pos) {
@@ -565,7 +525,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         } catch (Exception e) {
             cf.appLog("", e);
             String msg = getResources().getString(R.string.unableToLoadOfflineData);
-            //Toast.makeText(context, msg + ": " + offlineSpatialData.get(pos).getAlias(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -610,8 +569,7 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         }catch (Exception e){
             e.getMessage();
         }
-//        handler.removeCallbacks((Runnable) CapturePareclData.this);
-      //  handler.removeCallbacksAndMessages(null);
+
         try {
             handler.removeCallbacksAndMessages(null);
             handler1.removeCallbacksAndMessages(null);
@@ -625,251 +583,11 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         @Override
         public void onMapLoaded() {
             if (featureId != 0) {
-
-               // loadAOISelectFromUserPre();
                 loadFeatureforEdit();
             } else {
-
                 GisUtility.zoomToMapExtent(googleMap);
-               // loadAOISelectFromUserPre();
             }
         }
-    }
-
-    //Load Aoi Form selected from user prefrences
-    private void loadAOISelectFromUserPre() {
-        //Ambar
-        CorordinatesDisplay=cf.getAOICoordinates();
-        List<AOI> aoiList=cf.getAOIList();
-        if(CorordinatesDisplay!=null) {
-            for (int j = 0; j < aoiList.size(); j++) {
-                if (aoiList.get(j).getCoOrdinates().equalsIgnoreCase(CorordinatesDisplay)) {
-                    DisplayAOIUserPre(CorordinatesDisplay, true);
-                }
-            }
-        }
-        else {
-            GisUtility.zoomToMapExtent(googleMap);
-            isValidate=false;
-        }
-
-    }
-
-    //Load Aoi Form selected from user prefrences
-    private void DisplayAOIUserPre(String CorordinatesDisplay,boolean isSelected){
-        if (CorordinatesDisplay!=null){
-            String[] wktpoints = CorordinatesDisplay.split(",");
-
-            PolygonOptions rectOptions = new PolygonOptions();
-            LatLng mapPoint = null;
-            for (int i = 0; i < wktpoints.length - 1; i++) {
-                //  wktpoints.length-1 to remove same first and last points in WKT
-                String point = wktpoints[i].trim();
-
-                String[] tmpPoint = point.split(" ");
-
-                mapPoint = new LatLng(Double.parseDouble(tmpPoint[1]), Double.parseDouble(tmpPoint[0]));
-                //latLngs.add(mapPoint);
-                rectOptions.add(mapPoint);
-
-                //Adding marker for edit
-//                        MarkerOptions marker = new MarkerOptions().position(mapPoint);
-//                        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-//                        marker.draggable(true);
-//                        marker.snippet(mapPoint.latitude + "," + mapPoint.longitude);
-//                        Marker mark = googleMap.addMarker(marker);
-//                        currMarkers.add(mark);
-            }
-            rectOptions.zIndex(5);
-            rectOptions.fillColor(colorTransparent);
-            if(isSelected) {
-                rectOptions.strokeColor(getResources().getColor(R.color.Purple));
-            }
-            else{
-                rectOptions.strokeColor(getResources().getColor(R.color.blue));
-            }
-
-//                    drawnFeature = googleMap.addPolygon(rectOptions);
-            googleMap.addPolygon(rectOptions);
-            if (mapPoint != null) {
-                GisUtility.zoomToPolygon(googleMap, rectOptions);
-            }
-            isValidate=true;
-        }else {
-            GisUtility.zoomToMapExtent(googleMap);
-            isValidate=false;
-        }
-
-
-    }
-
-    ///Load AOI
-    private void loadAOI() {
-        //Ambar
-        CorordinatesDisplay=cf.getAOICoordinates();
-        List<AOI> aoiList=cf.getAOIList();
-        if(aoiList!=null) {
-            for (int j = 0; j < aoiList.size(); j++) {
-                if (aoiList.get(j).getCoOrdinates().equalsIgnoreCase(CorordinatesDisplay)) {
-                    DisplayAOI(CorordinatesDisplay, true);
-                } else {
-                    DisplayAOI(aoiList.get(j).getCoOrdinates(), false);
-                }
-            }
-        }
-        else {
-            GisUtility.zoomToMapExtent(googleMap);
-            isValidate=false;
-        }
-
-    }
-
-    private void DisplayAOI(String CorordinatesDisplay,boolean isSelected){
-        if (CorordinatesDisplay!=null){
-            String[] wktpoints = CorordinatesDisplay.split(",");
-
-            PolygonOptions rectOptions = new PolygonOptions();
-
-            if(isSelected) {
-                //latLngs.clear();
-                LatLng mapPoint = null;
-                for (int i = 0; i < wktpoints.length - 1; i++) {
-                    //  wktpoints.length-1 to remove same first and last points in WKT
-                    String point = wktpoints[i].trim();
-
-                    String[] tmpPoint = point.split(" ");
-
-                    mapPoint = new LatLng(Double.parseDouble(tmpPoint[1]), Double.parseDouble(tmpPoint[0]));
-                    //latLngs.add(mapPoint);
-                    rectOptions.add(mapPoint);
-
-
-                }
-                rectOptions.zIndex(5);
-                rectOptions.fillColor(colorTransparent);
-                rectOptions.strokeColor(getResources().getColor(R.color.Purple));
-            }
-            else{
-                LatLng mapPoint = null;
-                for (int i = 0; i < wktpoints.length - 1; i++) {
-                    //  wktpoints.length-1 to remove same first and last points in WKT
-                    String point = wktpoints[i].trim();
-
-                    String[] tmpPoint = point.split(" ");
-
-                    mapPoint = new LatLng(Double.parseDouble(tmpPoint[1]), Double.parseDouble(tmpPoint[0]));
-                   // latLngs.add(mapPoint);
-                    rectOptions.add(mapPoint);
-
-
-                }
-                rectOptions.zIndex(5);
-                rectOptions.fillColor(colorTransparent);
-                rectOptions.strokeColor(getResources().getColor(R.color.blue));
-            }
-
-//                    drawnFeature = googleMap.addPolygon(rectOptions);
-            googleMap.addPolygon(rectOptions);
-//            if (mapPoint != null) {
-//                //  GisUtility.zoomToPolygon(googleMap, rectOptions);
-//            }
-            isValidate=true;
-        }else {
-            GisUtility.zoomToMapExtent(googleMap);
-            isValidate=false;
-        }
-
-
-    }
-
-
-//    private void DisplayAOI(String CorordinatesDisplay,boolean isSelected){
-//        if (CorordinatesDisplay!=null){
-//            String[] wktpoints = CorordinatesDisplay.split(",");
-//
-//            PolygonOptions rectOptions = new PolygonOptions();
-//            LatLng mapPoint = null;
-//            for (int i = 0; i < wktpoints.length - 1; i++) {
-//                //  wktpoints.length-1 to remove same first and last points in WKT
-//                String point = wktpoints[i].trim();
-//
-//                String[] tmpPoint = point.split(" ");
-//
-//                mapPoint = new LatLng(Double.parseDouble(tmpPoint[1]), Double.parseDouble(tmpPoint[0]));
-//                latLngs.add(mapPoint);
-//                rectOptions.add(mapPoint);
-//
-//                //Adding marker for edit
-////                        MarkerOptions marker = new MarkerOptions().position(mapPoint);
-////                        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-////                        marker.draggable(true);
-////                        marker.snippet(mapPoint.latitude + "," + mapPoint.longitude);
-////                        Marker mark = googleMap.addMarker(marker);
-////                        currMarkers.add(mark);
-//            }
-//            rectOptions.zIndex(5);
-//            rectOptions.fillColor(colorTransparent);
-//            if(isSelected) {
-//                rectOptions.strokeColor(getResources().getColor(R.color.Purple));
-//            }
-//            else{
-//                rectOptions.strokeColor(getResources().getColor(R.color.blue));
-//            }
-//
-////                    drawnFeature = googleMap.addPolygon(rectOptions);
-//            googleMap.addPolygon(rectOptions);
-//            if (mapPoint != null) {
-//              //  GisUtility.zoomToPolygon(googleMap, rectOptions);
-//            }
-//            isValidate=true;
-//        }else {
-//            GisUtility.zoomToMapExtent(googleMap);
-//            isValidate=false;
-//        }
-//
-//
-//    }
-
-    private void loadAOI_BeforeAllAOI() {
-        //Ambar
-        CorordinatesDisplay=cf.getAOICoordinates();
-        if (CorordinatesDisplay!=null){
-            String[] wktpoints = CorordinatesDisplay.split(",");
-
-            PolygonOptions rectOptions = new PolygonOptions();
-            LatLng mapPoint = null;
-            for (int i = 0; i < wktpoints.length - 1; i++) {
-                //  wktpoints.length-1 to remove same first and last points in WKT
-                String point = wktpoints[i].trim();
-
-                String[] tmpPoint = point.split(" ");
-
-                mapPoint = new LatLng(Double.parseDouble(tmpPoint[1]), Double.parseDouble(tmpPoint[0]));
-               // latLngs.add(mapPoint);
-                rectOptions.add(mapPoint);
-
-                //Adding marker for edit
-//                        MarkerOptions marker = new MarkerOptions().position(mapPoint);
-//                        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-//                        marker.draggable(true);
-//                        marker.snippet(mapPoint.latitude + "," + mapPoint.longitude);
-//                        Marker mark = googleMap.addMarker(marker);
-//                        currMarkers.add(mark);
-            }
-            rectOptions.zIndex(5);
-            rectOptions.fillColor(colorTransparent);
-            rectOptions.strokeColor(getResources().getColor(R.color.Purple));
-//                    drawnFeature = googleMap.addPolygon(rectOptions);
-            googleMap.addPolygon(rectOptions);
-            if (mapPoint != null) {
-               // GisUtility.zoomToPolygon(googleMap, rectOptions);
-            }
-            isValidate=true;
-        }else {
-            GisUtility.zoomToMapExtent(googleMap);
-            isValidate=false;
-        }
-
     }
 
     private class mapClickListener implements OnMapClickListener {
@@ -877,37 +595,14 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         public void onMapClick(LatLng pointFromMap) {
             //validate:  point is in given polygon or not
             handleMapClick(pointFromMap);
-
-            //Ambar
-//            if (!isValidate) {
-//                handleMapClick(pointFromMap);
-//            } else {
-//
-//                //isValidInPolygon:  point is in given polygon or not
-//
-//                boolean isValidInPolygon = PolyUtil.containsLocation(pointFromMap, latLngs, true);
-//
-//                if (isValidInPolygon) {
-//                    handleMapClick(pointFromMap);
-//                } else {
-//                    Toast.makeText(context, "Please Draw Point in assigned work allocation unit.", Toast.LENGTH_SHORT).show();
-//                }
-
-//            }
         }
     }
 
-
-
-    //Ambar
     private void handleMapClick(LatLng pointFromMap) {
-
-
         // Condition for DRAW MODE
         if (MAP_MODE == FEATURE_DRAW_MAP_MODE) {
             if (!contextualMenuShown)
                 toolbar.startActionMode(myActionModeCallback);
-
 
             //for point
             points.add(pointFromMap);
@@ -1080,6 +775,7 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         public void onCameraIdle() {
             drawFeatures();
             drawFeaturesrES();
+            drawBoundaryFeatures();
         }
     }
 
@@ -1141,87 +837,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                 }
             }
         }
-//            boolean isValidInPolygon = PolyUtil.containsLocation(lastKnowPosition, latLngs, true);
-//            if (isValidInPolygon) {
-//
-//                for (int i = 0; i < currMarkers.size(); i++) {
-//                    if (marker.getId().equalsIgnoreCase(currMarkers.get(i).getId())) {
-//                        currMarkers.set(i, marker);
-//                        changed = true;
-//                    }
-//                }
-//
-//                if (changed) {
-//                    if (drawnFeature instanceof Polygon) {
-//                        Polygon poly = (Polygon) drawnFeature;
-//                        PolygonOptions rectOptions = new PolygonOptions();
-//                        for (Marker m : currMarkers) {
-//                            LatLng p = m.getPosition();
-//                            rectOptions.add(p);
-//                        }
-//                        rectOptions.fillColor(colorTransparent).strokeColor(getResources().getColor(R.color.yellow));//.strokeWidth(5);
-//                        rectOptions.zIndex(4);
-//                        Polygon newpoly = googleMap.addPolygon(rectOptions);
-//                        poly.remove();
-//                        drawnFeature = newpoly;
-//
-//                    } else if (drawnFeature instanceof Polyline) {
-//                        Polyline line = (Polyline) drawnFeature;
-//                        PolylineOptions rectOptions = new PolylineOptions();
-//                        for (Marker m : currMarkers) {
-//                            LatLng p = m.getPosition();
-//                            rectOptions.add(p);
-//                        }
-//                        rectOptions.color(getResources().getColor(R.color.yellow));
-//                        rectOptions.zIndex(4);
-//                        Polyline newline = googleMap.addPolyline(rectOptions);
-//                        line.remove();
-//                        drawnFeature = newline;
-//                    }
-//                }
-//            }else{
-//                Toast.makeText(context, "Please Draw Point in assigned work allocation unit.", Toast.LENGTH_SHORT).show();
-//               // marker.remove();
-//                if (drawnFeature instanceof Polygon) {
-//                    Polygon poly = (Polygon) drawnFeature;
-//                    PolygonOptions rectOptions = new PolygonOptions();
-//                    for (Marker m : currMarkers) {
-//                        LatLng p = m.getPosition();
-//                        rectOptions.add(p);
-//                    }
-//                    rectOptions.fillColor(colorTransparent).strokeColor(getResources().getColor(R.color.yellow));//.strokeWidth(5);
-//                    rectOptions.zIndex(4);
-//                    Polygon newpoly = googleMap.addPolygon(rectOptions);
-//                    poly.remove();
-//                    newpoly.remove();
-////                    drawnFeature = newpoly;
-//                    marker.remove();
-//                    currMarkers.clear();
-//                    loadFeatureforEdit();
-//
-//
-//                } else if (drawnFeature instanceof Polyline) {
-//                    Polyline line = (Polyline) drawnFeature;
-//                    PolylineOptions rectOptions = new PolylineOptions();
-//                    for (Marker m : currMarkers) {
-//                        LatLng p = m.getPosition();
-//                        rectOptions.add(p);
-//                    }
-//                    rectOptions.color(getResources().getColor(R.color.yellow));
-//                    rectOptions.zIndex(4);
-//                    Polyline newline = googleMap.addPolyline(rectOptions);
-//                    newline.remove();
-//                    line.remove();
-////                    drawnFeature = newline;
-//                    marker.remove();
-//                    currMarkers.clear();
-//                    loadFeatureforEdit();
-//                }
-////                loadFeatureforEdit();
-//            }
-//
-//
-//        }
 
         @Override
         public void onMarkerDragEnd(Marker marker) {
@@ -1292,26 +907,12 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_GPS) {
-            //Location location = googleMap.getMyLocation();
-//            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                // TODO: Consider calling
-//                //    ActivityCompat#requestPermissions
-//                // here to request the missing permissions, and then overriding
-//                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//                //                                          int[] grantResults)
-//                // to handle the case where the user grants the permission. See the documentation
-//                // for ActivityCompat#requestPermissions for more details.
-//
-//            }
-//            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
             Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             if (location != null) {
                 LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 30));
             } else {
                 Toast.makeText(context, R.string.no_location, Toast.LENGTH_SHORT).show();
-                //googleMap.setMyLocationEnabled(true);
             }
 
         } else if (id == R.id.action_show_bookmark) {
@@ -1332,6 +933,11 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             String[] pItems = getResources().getStringArray(R.array.add_options_arrays);
             //parentItems = Arrays.asList(pItems);
             String dct = cf.getDataCollectionTools();
+
+            if(isBoundary){
+                dct = "2";
+            }
+
             if (TextUtils.isEmpty(dct)) {
                 dct = "0,1,2";
             }
@@ -1356,40 +962,18 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
     //Set child items
     public void setChildData() {
         String dct = cf.getDataCollectionTools();
+
+        if(isBoundary){
+            dct = "2";
+        }
+
         if (TextUtils.isEmpty(dct)) {
             dct = "0,1,2";
         }
         List<String> child = new ArrayList<String>();
         childItems.clear();
 
-//        child = new ArrayList<String>();
-//        String[] c3Items = getResources().getStringArray(R.array.add_poly_options_arrays);
-//        child = Arrays.asList(c3Items);
-//        childItems.add(child);
-
-//        if (dct.contains("0")) {
-//            // POINT
-//            String[] c1Items = getResources().getStringArray(R.array.add_point_options_arrays);
-//            child = Arrays.asList(c1Items);
-//            childItems.add(child);
-//        }
-//        if (dct.contains("1")) {
-//            // LINE
-//            child = new ArrayList<String>();
-//            String[] c2Items = getResources().getStringArray(R.array.add_line_options_arrays);
-//            child = Arrays.asList(c2Items);
-//            childItems.add(child);
-//        }
-//        if (dct.contains("2")) {
-//            // POLYGON
-//            child = new ArrayList<String>();
-//            String[] c3Items = getResources().getStringArray(R.array.add_poly_options_arrays);
-//            child = Arrays.asList(c3Items);
-//            childItems.add(child);
-//        }
-
         if (dct.contains("0")) {
-
             // POLYGON
             child = new ArrayList<String>();
             String[] c6Items = getResources().getStringArray(R.array.add_poly_options_arrays);
@@ -1428,10 +1012,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             MenuInflater inflater = mode.getMenuInflater();
 
             inflater.inflate(R.menu.map_create_features_contextual_menu, menu);
-//            MenuItemCompat.setShowAsAction(menu.findItem(R.id.plot_by_gps), MenuItemCompat.SHOW_AS_ACTION_NEVER);
-//            MenuItemCompat.setShowAsAction(menu.findItem(R.id.undo), MenuItemCompat.SHOW_AS_ACTION_NEVER);
-//            MenuItemCompat.setShowAsAction(menu.findItem(R.id.clear_features), MenuItemCompat.SHOW_AS_ACTION_NEVER);
-//            MenuItemCompat.setShowAsAction(menu.findItem(R.id.save_features), MenuItemCompat.SHOW_AS_ACTION_NEVER);
 
             menu.findItem(R.id.plot_by_gps).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             menu.findItem(R.id.undo).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -1518,15 +1098,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                     return true;
                 case R.id.plot_by_gps:
 
-//                    handler.postDelayed(new Runnable(){
-//                        public void run(){
-//                            new  AddTask().execute();
-//                            //getAccuracyfromExternalDevice();
-//                            handler.postDelayed(this, 5000);
-//                        }
-//                    }, 5000);
-//                    drawFeatureByGPS();
-
                     try {
                         handler1.postDelayed(new Runnable() {
                             public void run() {
@@ -1563,26 +1134,15 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             in = commonFunctions.bluetoothSocket.getInputStream();
             isr = new InputStreamReader(in);
             BufferedReader br = new BufferedReader(isr);
-
-
             nmeaMessage = "";
             while (true) {
-
                 nmeaMessage = br.readLine();
-
                 if (nmeaMessage.contains("GPGGA")) {
-
-                    break;                             // parse NMEA messages
+                    break;
                 }
-
             }
-
-            //in.close();
-            //isr.clo se();
         } catch (Exception e) {
-
             e.printStackTrace();
-
         }
 
 
@@ -1611,22 +1171,9 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
 
         if (latitude != 0.0 && longitude != 0.0) {
 
-
-
             //int accuracy = (int) locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getAccuracy();
             double acc = Double.parseDouble(hdop);
-                    /*float accuracy=(float) (Float.parseFloat(hdop)*2.5);*/
-            //	Toast.makeText(getApplicationContext(), "Hdop is "+hdop, Toast.LENGTH_LONG).show();
              accValue=acc * 3.6;
-//            actionMode.setTitle(df.format(accValue) + getResources().getString(R.string.gps_accuracy));
-//            actionMode.setSubtitle(nbsat + " " + getResources().getString(R.string.sats_use_msg));
-
-//            this.runOnUiThread(new Runnable() {
-//                public void run() {
-//                    actionMode.setTitle(df.format(accValue) + getResources().getString(R.string.gps_accuracy));
-//                    actionMode.setSubtitle(nbsat + " " + getResources().getString(R.string.sats_use_msg));
-//                }
-//            });
         }
     }
 
@@ -1680,7 +1227,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         try {
             if (drawnFeature instanceof Polyline) {
                 Polyline tmp = (Polyline) drawnFeature;
-
                 pointslist = tmp.getPoints();
                 geomtype = Feature.GEOM_LINE;
             } else if (drawnFeature instanceof Marker) {
@@ -1697,12 +1243,15 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                 String WKTStr = GisUtility.getWKTfromPoints(geomtype, pointslist);
                 String imei = cf.getAppId();
                 DbController db = DbController.getInstance(context);
+                Long featureId = 0L;
 
-                //----Ambar
-                iIndex=db.getFeatureCount("R");
-                Long featureId = db.createFeature(geomtype, WKTStr, imei,"R",iIndex);
-               // Long featureId = db.createFeature(geomtype, WKTStr, imei,"R",iIndex);
-                //----Ambar
+                if(isBoundary){
+                    featureId = db.createFeature(geomtype, WKTStr, imei,"B", db.getNexBoundaryNumber());
+                } else {
+                    iIndex=db.getFeatureCount("R");
+                    featureId = db.createFeature(geomtype, WKTStr, imei,"R",iIndex);
+                }
+
                 if (featureId != 0) {
                     Toast.makeText(context, R.string.successFeatureSave, Toast.LENGTH_SHORT).show();
 
@@ -1717,11 +1266,18 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                     refreshCapturedFeature(featureId);
 
                     // Open attributes form
-                    Intent myIntent = new Intent(context, CaptureResourceAttributes.class);
-                    myIntent.putExtra("featureid", featureId);
-//                    latLngs.clear();
-                    finish();
-                    startActivity(myIntent);
+                    if(isBoundary) {
+                        Intent myIntent = new Intent(context, BoundaryActivity.class);
+                        myIntent.putExtra("featureid", featureId);
+                        myIntent.putExtra("editing", false);
+                        finish();
+                        startActivity(myIntent);
+                    } else {
+                        Intent myIntent = new Intent(context, CaptureResourceAttributes.class);
+                        myIntent.putExtra("featureid", featureId);
+                        finish();
+                        startActivity(myIntent);
+                    }
                 } else {
                     Toast.makeText(context, R.string.unableSaveFeatureMsg, Toast.LENGTH_SHORT).show();
                 }
@@ -1786,14 +1342,26 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
 
     private void refreshCapturedFeature(long featureId) {
         Feature updatedFeature = DbController.getInstance(context).fetchFeaturebyID(featureId);
-        if (mapFeaturesrES != null && featureId > 0 && updatedFeature != null) {
-            for (MapFeature mapFeature : mapFeaturesrES) {
-                if (mapFeature.getFeature().getId() == featureId) {
-                    mapFeature.removeFromMap();
-                    mapFeature.setFeature(updatedFeature);
-//                    addMapFeature(mapFeature);
-                    addResMapFeature(mapFeature);
-                    break;
+        if(isBoundary){
+            if (mapBoundaryFeatures != null && featureId > 0 && updatedFeature != null) {
+                for (MapFeature mapFeature : mapBoundaryFeatures) {
+                    if (mapFeature.getFeature().getId() == featureId) {
+                        mapFeature.removeFromMap();
+                        mapFeature.setFeature(updatedFeature);
+                        addBoundaryMapFeature(mapFeature);
+                        break;
+                    }
+                }
+            }
+        } else {
+            if (mapFeaturesrES != null && featureId > 0 && updatedFeature != null) {
+                for (MapFeature mapFeature : mapFeaturesrES) {
+                    if (mapFeature.getFeature().getId() == featureId) {
+                        mapFeature.removeFromMap();
+                        mapFeature.setFeature(updatedFeature);
+                        addResMapFeature(mapFeature);
+                        break;
+                    }
                 }
             }
         }
@@ -1869,9 +1437,7 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             if (checkedItems.get(1)) {
                 if (visibleLayers.length() != 0)
                     visibleLayers.append(",");
-                //loadAOI();
                 loadFeaturesFromDB("P");
-//                loadFeaturesFromDB();
                 drawFeatures();
 
                 visibleLayers.append("1");
@@ -1880,9 +1446,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                     loadFeaturesFromDB("P");
                     drawFeatures();
                 }
-            } else {
-                //googleMap.clear();
-                //loadAOI();
             }
         }
 
@@ -1891,9 +1454,7 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             if (checkedItems.get(2)) {
                 if (visibleLayers.length() != 0)
                     visibleLayers.append(",");
-                //loadAOI();
                 loadFeaturesFromDBrES("R");
-//                loadFeaturesFromDB();
                 drawFeaturesrES();
 
                 visibleLayers.append("2");
@@ -1902,87 +1463,32 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                     loadFeaturesFromDBrES("R");
                     drawFeaturesrES();
                 }
-            } else {
-                //googleMap.clear();
-                //loadAOI();
             }
         }
 
-//
         if (checkedItems.indexOfKey(3) > -1) // AOI
         {
             if (checkedItems.get(3)) {
                 if (visibleLayers.length() != 0)
                     visibleLayers.append(",");
-               // loadAOI();
-//                loadFeaturesFromDB("A");
-                //drawFeatures();
-
                 visibleLayers.append("3");
-
-                if (!currVisibleLayers.contains("3") && mapFeatures.size() < 1) {
-//                    loadFeaturesFromDB("A");
-//                    drawFeatures();
-                   // loadAOI();
-                }
-            } else {
-                //googleMap.clear();
-                //  loadAOI();
             }
         }
 
-        for (int i = 0; i < offlineSpatialData.size(); i++) {
-            if (offlineSpatialData.get(i).getOverlay() != null) {
-                offlineSpatialData.get(i).getOverlay().remove();
-                offlineSpatialData.get(i).setOverlay(null);
-            }
-            if (checkedItems.indexOfKey(i + 4) > -1) // load offline data
-            {
-                if (checkedItems.get(i + 4)) {
-                    if (visibleLayers.length() != 0)
-                        visibleLayers.append(",");
-                    visibleLayers.append(i + 4);
-                    //if(!currVisibleLayers.contains((i+2)+""))
-                    loadOfflineData(i);
-                }
-            }
-        }
-        cf.saveVisibleLayers(visibleLayers.toString());
-    }
-
-    private void toggleLayers_old() {
-        String currVisibleLayers = cf.getVisibleLayers();
-        SparseBooleanArray checkedItems = mDrawerList.getCheckedItemPositions();
-        StringBuffer visibleLayers = new StringBuffer();
-        if (checkedItems.indexOfKey(0) > -1) // satellite
+        if (checkedItems.indexOfKey(4) > -1) // Boundary
         {
-            if (checkedItems.get(0)) {
-                if (!currVisibleLayers.contains("0"))
-                    googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                visibleLayers.append("0");
-            } else {
-                googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            }
-        }
-
-        if (checkedItems.indexOfKey(1) > -1) // captured data
-        {
-            if (checkedItems.get(1)) {
+            if (checkedItems.get(4)) {
                 if (visibleLayers.length() != 0)
                     visibleLayers.append(",");
-               // loadAOI();
-                loadFeaturesFromDB();
-                drawFeatures();
+                loadBoundaryFeaturesFromDB();
+                drawBoundaryFeatures();
 
-                visibleLayers.append("1");
+                visibleLayers.append("4");
 
-                if (!currVisibleLayers.contains("1") && mapFeatures.size() < 1) {
-                    loadFeaturesFromDB();
-                    drawFeatures();
+                if (!currVisibleLayers.contains("4") && mapFeaturesrES.size() < 1) {
+                    loadBoundaryFeaturesFromDB();
+                    drawBoundaryFeatures();
                 }
-            } else {
-                googleMap.clear();
-              //  loadAOI();
             }
         }
 
@@ -1991,13 +1497,12 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                 offlineSpatialData.get(i).getOverlay().remove();
                 offlineSpatialData.get(i).setOverlay(null);
             }
-            if (checkedItems.indexOfKey(i + 4) > -1) // load offline data
+            if (checkedItems.indexOfKey(i + 5) > -1) // load offline data
             {
-                if (checkedItems.get(i + 4)) {
+                if (checkedItems.get(i + 5)) {
                     if (visibleLayers.length() != 0)
                         visibleLayers.append(",");
-                    visibleLayers.append(i + 4);
-                    //if(!currVisibleLayers.contains((i+2)+""))
+                    visibleLayers.append(i + 5);
                     loadOfflineData(i);
                 }
             }
@@ -2012,7 +1517,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             List<Feature> features = DbController.getInstance(context).fetchFeatures(strFeatureType);
 
             if (features.size() == 0) {
-                //Toast.makeText(context, R.string.noFeaturesToLoad, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -2031,19 +1535,16 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         Feature featureCurrentEdit=null;
         try {
             if (featureId!=0){
-
                 featureCurrentEdit = DbController.getInstance(context).fetchFeaturebyID(featureId);
             }
             clearMapFeaturesRes();
             List<Feature> features = DbController.getInstance(context).fetchFeatures(strFeatureType);
 
             if (features.size() == 0) {
-                //Toast.makeText(context, R.string.noFeaturesToLoad, Toast.LENGTH_SHORT).show();
                 return;
             }
 
             for (Feature feature : features) {
-
                 if (featureCurrentEdit!=null){
                     if (featureCurrentEdit.getCoordinates().equalsIgnoreCase(feature.getCoordinates())){
 
@@ -2053,11 +1554,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                 }else {
                     mapFeaturesrES.add(new MapFeature(feature));
                 }
-
-
-//                if (!StringUtility.isEmpty(feature.getCoordinates())) {
-//                    mapFeaturesrES.add(new MapFeature(feature));
-//                }
             }
         } catch (Exception e) {
             cf.appLog("", e);
@@ -2065,19 +1561,28 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         }
     }
 
-    private void loadFeaturesFromDB() {
+    private void loadBoundaryFeaturesFromDB() {
+        Feature featureCurrentEdit=null;
         try {
-            clearMapFeatures();
-            List<Feature> features = DbController.getInstance(context).fetchFeatures();
+            if (featureId!=0){
+                featureCurrentEdit = DbController.getInstance(context).fetchFeaturebyID(featureId);
+            }
+            clearMapBoundaryFeatures();
+            List<Feature> features = DbController.getInstance(context).fetchFeatures("B");
 
             if (features.size() == 0) {
-                Toast.makeText(context, R.string.noFeaturesToLoad, Toast.LENGTH_SHORT).show();
                 return;
             }
 
             for (Feature feature : features) {
-                if (!StringUtility.isEmpty(feature.getCoordinates())) {
-                    mapFeatures.add(new MapFeature(feature));
+                if (featureCurrentEdit!=null){
+                    if (featureCurrentEdit.getCoordinates().equalsIgnoreCase(feature.getCoordinates())){
+
+                    }else {
+                        mapBoundaryFeatures.add(new MapFeature(feature));
+                    }
+                }else {
+                    mapBoundaryFeatures.add(new MapFeature(feature));
                 }
             }
         } catch (Exception e) {
@@ -2086,6 +1591,41 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         }
     }
 
+    private void drawBoundaryFeatures() {
+        // Add features on the map
+        if (mapBoundaryFeatures == null || mapBoundaryFeatures.size() < 1)
+            return;
+
+        LatLngBounds bounds = googleMap.getProjection().getVisibleRegion().latLngBounds;
+        float zoom = googleMap.getCameraPosition().zoom;
+
+        //if (zoom >= 10 && !featuresAddedRes) {
+        if (zoom >= 5 && !boundaryFeaturesAdded) {
+            boundaryFeaturesAdded = true;
+            for (MapFeature mapFeature : mapBoundaryFeatures) {
+                addBoundaryMapFeature(mapFeature);
+            }
+        }
+
+        float labelZoom = CommonFunctions.labelZoom;
+        float vertexZoom = CommonFunctions.vertexZoom;
+
+        if (boundaryFeaturesAdded) {
+            // Draw labels
+            for (MapFeature mapFeature : mapBoundaryFeatures) {
+                if (mapFeature.getFeatureType() == MapFeature.TYPE.POINT) {
+                    // Check feature is in the visible bounds
+                    if (mapFeature.containsInBoundary(bounds)) {
+                        if (mapFeature.getMapLabel() == null) {
+                            mapFeature.setMapLabel(googleMap.addMarker(mapFeature.getBoundaryLabel()));
+                        }
+                    }
+                }
+            }
+        }
+
+        lastZoom = zoom;
+    }
 
     private void drawFeaturesrES() {
 
@@ -2112,10 +1652,10 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         if (featuresAddedRes) {
             // Draw labels and vertices if enabled
             if ((lastZoom >= labelZoom || zoom >= labelZoom) || (lastZoom >= vertexZoom || zoom >= vertexZoom)) {
-                if (enableLabeling || enableVertexDrawing || snappingEnabled) {
+                if ((enableLabeling || enableVertexDrawing || snappingEnabled) && !isBoundary) {
 
                     for (MapFeature mapFeature : mapFeaturesrES) {
-                        if (mapFeature.getFeatureType() == MapFeature.TYPE.POLYGON) {
+                        if (mapFeature.getFeatureType() == MapFeature.TYPE.POLYGON || isBoundary) {
                             if (zoom >= labelZoom || zoom >= vertexZoom) {
 
                                 // Check feature is in the visible bounds
@@ -2127,8 +1667,13 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
 
                                     // For label
                                     if (enableLabeling && zoom >= labelZoom) {
-                                        if (mapFeature.getMapLabel() == null)
-                                            mapFeature.setMapLabel(googleMap.addMarker(mapFeature.getLabel()));
+                                        if (mapFeature.getMapLabel() == null) {
+                                            if(isBoundary){
+                                                mapFeature.setMapLabel(googleMap.addMarker(mapFeature.getBoundaryLabel()));
+                                            } else {
+                                                mapFeature.setMapLabel(googleMap.addMarker(mapFeature.getLabel()));
+                                            }
+                                        }
                                     } else if (enableLabeling)
                                         mapFeature.removeMapLabel();
 
@@ -2160,8 +1705,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
 
         lastZoom = zoom;
     }
-
-
 
     private void calculatePointsForSnappingRes() {
         if (snappingFeatures1.size() > 0
@@ -2271,6 +1814,10 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         }
     }
 
+    private void addBoundaryMapFeature(MapFeature mapFeature) {
+        mapFeature.setMapBoundaryMarker(googleMap.addMarker(mapFeature.getBoundaryMarker()));
+    }
+
     private void calculatePointsForSnapping() {
         if (snappingFeatures.size() > 0
                 && (MAP_MODE == FEATURE_DRAW_MAP_MODE
@@ -2294,7 +1841,14 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         mapFeatures.clear();
     }
 
-    //Ambar:For Resource Case
+    private void clearMapBoundaryFeatures(){
+        boundaryFeaturesAdded = false;
+        for (MapFeature mapFeature : mapBoundaryFeatures) {
+            mapFeature.removeFromMap();
+        }
+        mapBoundaryFeatures.clear();
+    }
+
     private void clearMapFeaturesRes() {
         featuresAddedRes = false;
         for (MapFeature mapFeature : mapFeaturesrES) {
@@ -2337,13 +1891,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                     || MAP_MODE == FEATURE_DRAW_POINT_GPS_MODE) {
                 int satellitesInFix = 0;
                 if (ActivityCompat.checkSelfPermission(CaptureDataMapActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
                 for (GpsSatellite sat : locationManager.getGpsStatus(null).getSatellites()) {
@@ -2460,9 +2007,10 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                     marker.snippet(mapPoint.latitude + "," + mapPoint.longitude);
                     Marker mark = googleMap.addMarker(marker);
                     currMarkers.add(mark);
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(mapPoint));
                     drawnFeature = mark;
                     isEditspatial=true;
+
+                    GisUtility.zoomToPoint(googleMap, mapPoint);
                 }
             }
         }
@@ -2471,16 +2019,10 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
 
     private void drawFeatureByGPS()
     {
-        //Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-		/*if (location != null)
-		{*/
-
         double latitude=0.0;
         double longitude=0.0;
         String hdop="";
         String nbsat="";
-
 
         String nmeaMessage="";
         try {
@@ -2499,9 +2041,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                 }
 
             }
-
-            //in.close();
-            //isr.close();
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -2553,15 +2092,8 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             mark = googleMap.addMarker(marker);
             currMarkers.add(mark);
 
-
-            //int accuracy = (int) locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getAccuracy();
             double acc = Double.parseDouble(hdop);
-					/*float accuracy=(float) (Float.parseFloat(hdop)*2.5);*/
-            //	Toast.makeText(getApplicationContext(), "Hdop is "+hdop, Toast.LENGTH_LONG).show();
-//            actionMode.setTitle(acc*3.5+getResources().getString(R.string.gps_accuracy));
             final double accValue=acc * 3.6;
-//            actionMode.setTitle(df.format(accValue) + getResources().getString(R.string.gps_accuracy));
-//            actionMode.setSubtitle(nbsat+" "+getResources().getString(R.string.sats_use_msg));
             final String finalNbsat = nbsat;
             this.runOnUiThread(new Runnable() {
                 public void run() {
@@ -2604,14 +2136,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             else {
                 Toast.makeText(context, R.string.noLocationFound, Toast.LENGTH_SHORT).show();
             }
-
-
-
-			/*		int accuracy = (int) locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getAccuracy();
-							//double acc = Double.parseDouble(hdop);
-					float accuracy=(float) (Float.parseFloat(hdop)*2.5);
-				    	actionMode.setTitle(accuracy+getResources().getString(R.string.gps_accuracy));
-				    	actionMode.setSubtitle(nbsat+" "+getResources().getString(R.string.sats_use_msg));*/
         }
 
         else{
@@ -2668,13 +2192,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                 {
                     Polygon polygon = (Polygon) drawnFeature;
                     polygon.setPoints(points);
-
-						/*//TESTING
-						if(points.size()==5)
-						{
-							Toast.makeText(context,"RECREATING >>> GPS", Toast.LENGTH_SHORT).show();
-							recreate();
-						}*/
                 }
                 else
                 {
@@ -2692,96 +2209,7 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                 }
             }
         }
-		/*}
-		else
-		{
-			Toast.makeText(context,R.string.noLocationFound, Toast.LENGTH_SHORT).show();
-		}*/
     }
-
-
-//    private void drawFeatureByGPS() {
-//        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            // TODO: Consider calling
-//            //    ActivityCompat#requestPermissions
-//            // here to request the missing permissions, and then overriding
-//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//            //                                          int[] grantResults)
-//            // to handle the case where the user grants the permission. See the documentation
-//            // for ActivityCompat#requestPermissions for more details.
-//            return;
-//        }
-//        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//
-//        if (location != null) {
-//            LatLng pointFromGps = new LatLng(location.getLatitude(), location.getLongitude());
-//            float currzoom = googleMap.getCameraPosition().zoom;
-//            float zoom = 19;
-//            if (currzoom > zoom) {
-//                zoom = currzoom;
-//            }
-//            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pointFromGps, zoom));
-//
-//            points.add(pointFromGps);
-//            MarkerOptions marker = new MarkerOptions().position(pointFromGps);
-//            marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-//            marker.draggable(true);
-//            marker.snippet(pointFromGps.latitude + "," + pointFromGps.longitude);
-//            Marker mark = googleMap.addMarker(marker);
-//            currMarkers.add(mark);
-//
-//            if (MAP_MODE == FEATURE_DRAW_POINT_GPS_MODE) {
-//                if (points.size() > 1) {
-//                    points.clear();
-//                    currMarkers.clear();
-//
-//                    points.add(pointFromGps);
-//                    currMarkers.add(mark);
-//
-//                    Marker tmp = (Marker) drawnFeature;
-//                    tmp.remove();
-//                }
-//                drawnFeature = mark;
-//            } else if (MAP_MODE == FEATURE_DRAW_LINE_GPS_MODE) {
-//                if (points.size() > 1) {
-//                    if (points.size() > 2) {
-//                        Polyline polyline = (Polyline) drawnFeature;
-//                        polyline.setPoints(points);
-//                    } else {
-//                        //for polyline
-//                        PolylineOptions rectOptions = new PolylineOptions();
-//
-//                        for (LatLng p : points) {
-//                            rectOptions.add(p);
-//                        }
-//                        rectOptions.zIndex(4);
-//                        Polyline polyline = googleMap.addPolyline(rectOptions);
-//                        drawnFeature = polyline;
-//                    }
-//                }
-//            } else if (MAP_MODE == FEATURE_DRAW_POLYGON_GPS_MODE) {
-//                //for polygon
-//                if (points.size() > 2) {
-//                    if (points.size() > 3) {
-//                        Polygon polygon = (Polygon) drawnFeature;
-//                        polygon.setPoints(points);
-//
-//                    } else {
-//                        PolygonOptions rectOptions = new PolygonOptions();
-//                        for (LatLng p : points) {
-//                            rectOptions.add(p);
-//                        }
-//                        //rectOptions.fillColor(Color.argb(100, 0, 0, 255));
-//                        rectOptions.zIndex(4);
-//                        Polygon polygon = googleMap.addPolygon(rectOptions);
-//                        drawnFeature = polygon;
-//                    }
-//                }
-//            }
-//        } else {
-//            Toast.makeText(context, R.string.noLocationFound, Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
     private void showXYDialog() {
         final Dialog xyInputDialog = new Dialog(context, R.style.DialogTheme);
@@ -2948,51 +2376,25 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             if (visibleLayers.contains("1")) {
                 mDrawerList.setItemChecked(1, true);
                 loadFeaturesFromDB("P");
-
-
             }
             if (visibleLayers.contains("2")) {
                 mDrawerList.setItemChecked(2, true);
                 loadFeaturesFromDBrES("R");
-
             }
             if (visibleLayers.contains("3")) {
                 mDrawerList.setItemChecked(3, true);
-               // loadAOI();
             }
-//Ambar To Implement Resource And Parcel Seperately
+            if (visibleLayers.contains("4")) {
+                mDrawerList.setItemChecked(4, true);
+                loadBoundaryFeaturesFromDB();
+            }
+
             if(offlineSpatialData!=null) {
                 for (int i = 0; i < offlineSpatialData.size(); i++) {
-                    if (visibleLayers.contains((i + 4) + "")) {
+                    if (visibleLayers.contains((i + 5) + "")) {
                         loadOfflineData(i);
-                        //loadOfflineData(offlineSpatialData.size()-i-1);
-                        mDrawerList.setItemChecked(((i + 4)), true);
+                        mDrawerList.setItemChecked(((i + 5)), true);
                     }
-                }
-            }
-        }
-    }
-
-    private void loadUserSelectedLayers_old() {
-        googleMap.clear();
-        String visibleLayers = cf.getVisibleLayers();
-
-        if (!visibleLayers.isEmpty()) {
-            //Toast.makeText(context, "Loading user selected Layers...", Toast.LENGTH_SHORT).show();
-            if (visibleLayers.contains("0")) {
-                googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                mDrawerList.setItemChecked(0, true);
-            }
-            if (visibleLayers.contains("1")) {
-                mDrawerList.setItemChecked(1, true);
-                loadFeaturesFromDB();
-            }
-
-            for (int i = 0; i < offlineSpatialData.size(); i++) {
-                if (visibleLayers.contains((i + 2) + "")) {
-                    loadOfflineData(i);
-                    //loadOfflineData(offlineSpatialData.size()-i-1);
-                    mDrawerList.setItemChecked(((i + 2)), true);
                 }
             }
         }
@@ -3272,13 +2674,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                         showToast(getResources().getString(R.string.gps_fix_success_msg), Toast.LENGTH_LONG, Gravity.CENTER);
                         int satellitesInFix = 0;
                         if (ActivityCompat.checkSelfPermission(CaptureDataMapActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            // TODO: Consider calling
-                            //    ActivityCompat#requestPermissions
-                            // here to request the missing permissions, and then overriding
-                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                            //                                          int[] grantResults)
-                            // to handle the case where the user grants the permission. See the documentation
-                            // for ActivityCompat#requestPermissions for more details.
                             return;
                         }
                         for (GpsSatellite sat : locationManager.getGpsStatus(null).getSatellites()) {
@@ -3308,20 +2703,10 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         locationManager.removeUpdates(locationListener);
         locationListener = new MyLocationListener();
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_TIME, GPS_DISTANCE, locationListener);
-//        boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-//        if (!isGPSEnabled) {
-//            cf.showGPSSettingsAlert(context);
-//        }
+
         if (actionMode != null) {
             actionMode.setTitle(R.string.no_fix_msg);
             actionMode.setSubtitle("");
@@ -3616,17 +3001,11 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
     private void loadFeaureAfterBackPress() {
         if (featureId != 0) {
 
-
             DbController db = DbController.getInstance(context);
             Feature feature = db.fetchFeaturebyID(featureId);
 
             if (featureId != null) {
-                //googleMap.clear();
                 MAP_MODE = FEATURE_EDIT_MODE;
-
-               // calculatePointsForSnapping();
-
-
 
                 if (feature.getGeomType().equalsIgnoreCase(Feature.GEOM_POLYGON)) {
                     String coordinates = feature.getCoordinates();
@@ -3643,13 +3022,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                         mapPoint = new LatLng(Double.parseDouble(tmpPoint[1]), Double.parseDouble(tmpPoint[0]));
                         rectOptions.add(mapPoint);
 
-                        //Adding marker for edit
-//                        MarkerOptions marker = new MarkerOptions().position(mapPoint);
-//                        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-//                        marker.draggable(true);
-//                        marker.snippet(mapPoint.latitude + "," + mapPoint.longitude);
-//                        Marker mark = googleMap.addMarker(marker);
-//                        currMarkers.add(mark);
                     }
                     rectOptions.zIndex(5);
                     rectOptions.fillColor(colorTransparent);
@@ -3717,42 +3089,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                 //Do something if connected
                 // Get the BluetoothDevice object from the Intent
                 new ConnectingDevice(intent).execute();
-
-
-//                final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-//                CommonFunctions.bluetoothSocket = null;
-//                if (CommonFunctions.bluetoothSocket == null) {
-//                    handler.postDelayed(new Runnable() {
-//                        public void run() {
-//                            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-//                            boolean isEnabled = mBluetoothAdapter.isEnabled();
-//                            if (!isEnabled) {
-//                                Intent enableBtIntent = new Intent(
-//                                        BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//                                startActivityForResult(enableBtIntent, 30);
-//                                handler.postDelayed(this, 5000);
-//                            } else {
-//                                //   getAccuracyfromExternalDevice();
-//                                CommonFunctions.connectBluetoothDevice(device.getName());
-//                                if (CommonFunctions.bluetoothSocket.isConnected()) {
-//                                    isBTActive = true;
-//
-//
-//                                } else {
-//                                    CommonFunctions.bluetoothSocket = null;
-//                                }
-//
-//                                if (isBTActive == true) {
-//                                    handler.removeCallbacks(this);
-//                                    isBTActive = false;
-//                                } else {
-//                                    handler.postDelayed(this, 5000);
-//                                }
-//                            }
-//                        }
-//                    }, 5000);
-//
-//                }
             }
         }
             };
@@ -3793,7 +3129,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             }catch (Exception e){
                 cf.appLog("",e);
             }
-
         }
     }
 
@@ -3879,12 +3214,6 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub
             super.onPostExecute(result);
-//            runOnUiThread(new Runnable() {
-//                public void run() {
-//                    actionMode.setTitle(df.format(accValue) + getResources().getString(R.string.gps_accuracy));
-//                    actionMode.setSubtitle(nbsat + " " + getResources().getString(R.string.sats_use_msg));
-//                }
-//            });
         }
     }
 }

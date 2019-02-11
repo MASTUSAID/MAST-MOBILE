@@ -3,7 +3,6 @@ package com.rmsi.android.mast.domain;
 import android.graphics.Color;
 import android.graphics.Point;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
@@ -35,6 +34,8 @@ public class MapFeature {
     private PolygonOptions polygon;
     private CircleOptions point;
     private MarkerOptions label;
+    private MarkerOptions marker;
+    private Marker mapBoundaryMarker;
     private Marker mapLabel;
     private List<MarkerOptions> vertices;
     private List<Marker> mapVertices;
@@ -155,10 +156,24 @@ public class MapFeature {
         this.mapPolygon = mapPolygon;
     }
 
+    public MarkerOptions getBoundaryMarker() {
+        if(marker == null && points != null && points.size() > 0){
+            marker = new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.red_marker))
+                    .position(points.get(0)).anchor(0.5f, 0.5f);
+        }
+        return marker;
+    }
+
+    public void setMapBoundaryMarker(Marker redMarker) {
+        this.mapBoundaryMarker = redMarker;
+    }
+
+    public Marker getMapBoundaryMarker(){
+        return mapBoundaryMarker;
+    }
 
     public CircleOptions getPoint() {
-
-
         if(point == null && points != null && points.size() > 0){
             point = new CircleOptions().center(points.get(0));
             point.radius(500); // In meters
@@ -174,9 +189,6 @@ public class MapFeature {
             point.zIndex(4);
         }
         return point;
-
-
-
     }
 
 
@@ -219,6 +231,13 @@ public class MapFeature {
         return label;
     }
 
+    public MarkerOptions getBoundaryLabel() {
+        if(label == null){
+            label = GisUtility.makeLabel(feature, Integer.toString(feature.getIpNumber()));
+        }
+        return label;
+    }
+
     public List<MarkerOptions> getVertices() {
         if(vertices == null)
             vertices = new ArrayList<>();
@@ -250,6 +269,7 @@ public class MapFeature {
         line = null;
         wktLine = null;
         vertices = null;
+        mapBoundaryMarker = null;
 
         removeFromMap();
 
@@ -292,6 +312,10 @@ public class MapFeature {
         if(mapPoint != null){
             mapPoint.remove();
             mapPoint = null;
+        }
+        if(mapBoundaryMarker != null){
+            mapBoundaryMarker.remove();
+            mapBoundaryMarker = null;
         }
         removeMapLabel();
         removeMapVertices();

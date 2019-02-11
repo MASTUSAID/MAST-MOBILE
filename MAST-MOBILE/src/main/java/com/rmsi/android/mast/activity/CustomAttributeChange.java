@@ -4,7 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -48,7 +48,7 @@ import java.util.List;
 
 
 
-public class CustomAttributeChange extends ActionBarActivity {
+public class CustomAttributeChange extends AppCompatActivity {
 
     private Long featureId = 0L;
     private boolean isDispute = false;

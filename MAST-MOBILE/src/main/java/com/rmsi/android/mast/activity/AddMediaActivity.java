@@ -2,7 +2,7 @@ package com.rmsi.android.mast.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +19,7 @@ import com.rmsi.android.mast.domain.User;
 import com.rmsi.android.mast.util.CommonFunctions;
 import com.rmsi.android.mast.util.GuiUtility;
 
-public class AddMediaActivity extends ActionBarActivity {
+public class AddMediaActivity extends AppCompatActivity {
     private ListView listView;
     private final Context context = this;
     private CommonFunctions cf = CommonFunctions.getInstance();

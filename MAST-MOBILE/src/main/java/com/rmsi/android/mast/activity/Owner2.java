@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,7 +30,7 @@ import java.util.List;
  * Created by Ambar.Srivastava on 1/9/2018.
  */
 
-public class Owner2 extends ActionBarActivity {
+public class Owner2 extends AppCompatActivity {
     private Long featureId = 0L;
     private Long grpID=0L;
     private boolean isDispute = false;

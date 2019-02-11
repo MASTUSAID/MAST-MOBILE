@@ -2,7 +2,7 @@ package com.rmsi.android.mast.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,7 +29,7 @@ import java.util.List;
  * Created by Ambar.Srivastava on 1/22/2018.
  */
 
-public class Owner extends ActionBarActivity {
+public class Owner extends AppCompatActivity {
     private Long featureId = 0L;
     private List<Attribute> attributes;
     private ListView listView;

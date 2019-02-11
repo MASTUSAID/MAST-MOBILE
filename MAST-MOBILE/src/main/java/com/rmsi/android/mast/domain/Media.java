@@ -30,6 +30,7 @@ public class Media implements Serializable {
     public static String COL_TYPE = "TYPE";
     public static String COL_PATH = "PATH";
     public static String COL_SYNCED = "SYNCED";
+    public static String COL_FLAG = "FLAG";
     public static String COL_DISPUTE_ID = "DISPUTE_ID";
 
     public static int TYPE_PHOTO_CODE = 1;

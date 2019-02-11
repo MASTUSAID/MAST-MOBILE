@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -16,7 +16,7 @@ import com.rmsi.android.mast.Fragment.VerifyDataFragment;
 import com.rmsi.android.mast.tabs.SlidingTabLayout;
 import com.rmsi.android.mast.util.CommonFunctions;
 
-public class VerifyDataActivity extends ActionBarActivity 
+public class VerifyDataActivity extends AppCompatActivity
 {
 	CommonFunctions cf = CommonFunctions.getInstance();
 	

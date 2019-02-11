@@ -4,7 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -39,7 +39,7 @@ import java.util.List;
  * Created by Ambar.Srivastava on 1/13/2018.
  */
 
-public class ResourcePOI extends ActionBarActivity {
+public class ResourcePOI extends AppCompatActivity {
 
     Button addnewPerson, btnNext, addPOI;
     Context context;

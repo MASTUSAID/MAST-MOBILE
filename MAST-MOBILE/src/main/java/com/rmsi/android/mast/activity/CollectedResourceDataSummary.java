@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -38,7 +38,7 @@ import java.util.List;
  * Created by Ambar.Srivastava on 12/22/2017.
  */
 
-public class CollectedResourceDataSummary  extends ActionBarActivity {
+public class CollectedResourceDataSummary  extends AppCompatActivity {
     private final Context context = this;
     private DbController db = DbController.getInstance(context);
     Long featureId = 0L;

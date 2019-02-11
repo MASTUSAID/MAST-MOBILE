@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseBooleanArray;
 import android.view.MenuItem;
@@ -30,7 +30,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 
-public class UserPreferences extends ActionBarActivity {
+public class UserPreferences extends AppCompatActivity {
     ListView listView;
     Context context = this;
     CommonFunctions cf = CommonFunctions.getInstance();

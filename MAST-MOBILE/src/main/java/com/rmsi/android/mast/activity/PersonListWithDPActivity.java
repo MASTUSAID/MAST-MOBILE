@@ -7,7 +7,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuInflater;
@@ -45,7 +45,7 @@ import com.rmsi.android.mast.util.CommonFunctions;
 import com.rmsi.android.mast.util.GuiUtility;
 import com.rmsi.android.mast.util.StringUtility;
 
-public class PersonListWithDPActivity extends ActionBarActivity {
+public class PersonListWithDPActivity extends AppCompatActivity {
     Button addnewPerson, btnNext, addPOI, addDeceased;
     Context context;
     ListView listOfDeceasedPerson;

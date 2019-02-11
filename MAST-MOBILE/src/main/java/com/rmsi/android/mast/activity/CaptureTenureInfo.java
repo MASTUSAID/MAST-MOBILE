@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,7 +39,7 @@ import java.util.List;
  * Created by ambar.srivastava on 12/22/2017.
  */
 
-public class CaptureTenureInfo extends ActionBarActivity {
+public class CaptureTenureInfo extends AppCompatActivity {
     private Long featureId = 0L;
     private boolean isDispute = false;
     private List<Attribute> attributes;

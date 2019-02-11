@@ -1,8 +1,16 @@
 package com.rmsi.android.mast.util;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.Drawable;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.Projection;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -27,6 +35,7 @@ import java.util.List;
 public class GisUtility {
     private static WKTReader wktReader;
     private static IconGenerator iconFactory;
+    private static IconGenerator boundaryIconFactory;
 
     /**
      * Returns distance between two points represented by Point coordinates
@@ -368,6 +377,20 @@ public class GisUtility {
     }
 
     /**
+     * Zooms to list of points representing polygon or polyline. Muat be at least 2 points
+     * @param googleMap Google map component to zoom on
+     * @param point Point to zoom to
+     */
+    public static void zoomToPoint(GoogleMap googleMap, LatLng point){
+        if(googleMap == null || point == null){
+            return;
+        }
+        com.google.android.gms.maps.CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(point, 18);
+        googleMap.moveCamera(cu);
+        googleMap.animateCamera(cu);
+    }
+
+    /**
      * Creates vertex marker from provided point
      * @param point Point to be used as vertex location
      * @param vertexType Type of the vertex
@@ -392,6 +415,20 @@ public class GisUtility {
      * @param feature Feature object to be used to create a label for
      */
     public static MarkerOptions makeLabel(Feature feature){
+        String label = "";
+        if(!StringUtility.isEmpty(feature.getPolygonNumber())){
+            label = feature.getPolygonNumber();
+        } else {
+            label = "Polygon " + feature.getId();
+        }
+        return makeLabel(feature, label);
+    }
+
+    /**
+     * Makes feature label
+     * @param feature Feature object to be used to create a label for
+     */
+    public static MarkerOptions makeLabel(Feature feature, String label){
         if(wktReader == null){
             wktReader = new WKTReader();
         }
@@ -403,20 +440,21 @@ public class GisUtility {
         }
 
         try {
-            Polygon poly = (Polygon) wktReader.read("POLYGON ((" + feature.getCoordinates() + "))");
-            Point center = poly.getCentroid();
+            Point center = null;
+            float ancX = 0.5f;
+            float ancY = 0.5f;
 
-            String label = "";
-            if(!StringUtility.isEmpty(feature.getPolygonNumber())){
-                label = feature.getPolygonNumber();
-            } else {
-                label = "Polygon " + feature.getId();
+            if(feature.getGeomType().equalsIgnoreCase(Feature.GEOM_POLYGON)) {
+                Polygon poly = (Polygon) wktReader.read("POLYGON ((" + feature.getCoordinates() + "))");
+                center = poly.getCentroid();
+            } else if(feature.getGeomType().equalsIgnoreCase(Feature.GEOM_POINT)) {
+                center = (Point) wktReader.read("POINT (" + feature.getCoordinates() + ")");
             }
 
             return new MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromBitmap(iconFactory.makeIcon(label)))
                     .position(new LatLng(center.getY(), center.getX()))
-                    .anchor(0.5f, 0.5f).draggable(false);
+                    .anchor(ancX, ancY).draggable(false);
         } catch (ParseException e) {
             e.printStackTrace();
             CommonFunctions.getInstance().appLog("", e);
@@ -481,3 +519,5 @@ public class GisUtility {
         return result;
     }
 }
+
+

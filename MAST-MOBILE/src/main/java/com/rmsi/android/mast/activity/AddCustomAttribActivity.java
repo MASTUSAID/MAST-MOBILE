@@ -5,7 +5,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -26,7 +26,7 @@ import com.rmsi.android.mast.domain.User;
 import com.rmsi.android.mast.util.CommonFunctions;
 import com.rmsi.android.mast.util.GuiUtility;
 
-public class AddCustomAttribActivity extends ActionBarActivity {
+public class AddCustomAttribActivity extends AppCompatActivity {
 
     Long featureId = 0L;
     List<Attribute> attributes;

@@ -3,7 +3,7 @@ package com.rmsi.android.mast.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +27,7 @@ import java.util.List;
  * Created by Ambar.Srivastava on 12/22/2017.
  */
 
-public class CoustomAttribute extends ActionBarActivity {
+public class CoustomAttribute extends AppCompatActivity {
 
     private Long featureId = 0L;
     private boolean isDispute = false;

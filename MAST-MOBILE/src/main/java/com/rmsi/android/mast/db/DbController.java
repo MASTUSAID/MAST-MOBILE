@@ -46,6 +46,7 @@ import com.rmsi.android.mast.domain.Summary;
 import com.rmsi.android.mast.domain.TenureInformation;
 import com.rmsi.android.mast.domain.TenureType;
 import com.rmsi.android.mast.domain.User;
+import com.rmsi.android.mast.domain.Village;
 import com.rmsi.android.mast.util.CommonFunctions;
 import com.rmsi.android.mast.util.StringUtility;
 
@@ -86,11 +87,8 @@ public class DbController extends SQLiteOpenHelper {
         super(applicationcontext, DB_FULL_PATH, null, DB_VERSION);
 //        contxt.openOrCreateDatabase(DB_FULL_PATH, contxt.MODE_PRIVATE, null);
         this.contxt = applicationcontext;
-        if (android.os.Build.VERSION.SDK_INT >= 4.2) {
-            DB_FULL_PATH = "/" + CommonFunctions.parentFolderName + "/" + CommonFunctions.dbFolderName + "/mast_mobile.db";
-        } else {
-            DB_FULL_PATH = "/" + CommonFunctions.parentFolderName + "/" + CommonFunctions.dbFolderName + "/mast_mobile.db";
-        }
+        DB_FULL_PATH = "/" + CommonFunctions.parentFolderName + "/" + CommonFunctions.dbFolderName + "/mast_mobile.db";
+
         cf = CommonFunctions.getInstance();
         try {
             cf.Initialize(applicationcontext.getApplicationContext());
@@ -104,24 +102,6 @@ public class DbController extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Main tables
-//        String query_table1 = "CREATE TABLE SPATIAL_FEATURES (" +
-//                "FEATURE_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-//                "SERVER_FEATURE_ID TEXT," +
-//                "COORDINATES TEXT," +
-//                "GEOMTYPE TEXT," +
-//                "CREATEDTIME TEXT," +
-//                "STATUS TEXT," +
-//                "COMPLETEDTIME TEXT," +
-//                "IMEI TEXT," +
-//                "HAMLET_ID INTEGER," +
-//                "WITNESS_1 TEXT," +
-//                "WITNESS_2 TEXT," +
-//                "CLAIM_TYPE INTEGER," +
-//                "POLYGON_NUMBER TEXT," +
-//                "SURVEY_DATE TEXT," +
-//                "UKA_NUMBER TEXT," +
-//                "FLAG TEXT" +
-//                ")";
 
         String query_table1 = "CREATE TABLE SPATIAL_FEATURES (" +
                 "FEATURE_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -150,7 +130,10 @@ public class DbController extends SQLiteOpenHelper {
                 "DOCUMENT_TYPE TEXT," +
                 "DOCUMENT_DATE TEXT," +
                 "DOCUMENT_REF_NO TEXT," +
-                "IS_NATURAL INTEGER" +
+                "IS_NATURAL INTEGER," +
+                "VILLAGE_ID INTEGER," +
+                "FEATURE_TYPE TEXT," +
+                "FEATURE_DESCRIPTION TEXT" +
                 ")";
 
         String query_table10 = "CREATE TABLE SOCIAL_TENURE(" +
@@ -382,7 +365,7 @@ public class DbController extends SQLiteOpenHelper {
                 "LABEL_NAME TEXT" +
                 ")";
 
-
+        String queryVillages = "CREATE TABLE VILLAGE(ID INTEGER, NAME TEXT, NAME_EN TEXT)";
 
         try {
             dropTable(db, "SPATIAL_FEATURES");
@@ -435,6 +418,7 @@ public class DbController extends SQLiteOpenHelper {
             db.execSQL(query_res_poi_value_sync);
             db.execSQL(query_AOI);
             db.execSQL(query_Non);
+            db.execSQL(queryVillages);
             //query_AOI
         } catch (Exception e) {
             cf.appLog("", e);
@@ -505,6 +489,7 @@ public class DbController extends SQLiteOpenHelper {
                 int indxStatus = cursor.getColumnIndex(Feature.COL_STATUS);
                 int indxPolygonNumber = cursor.getColumnIndex(Feature.COL_POLYGON_NUMBER);
                 int indxSurveyDate = cursor.getColumnIndex(Feature.COL_SURVEY_DATE);
+                int indxIpNumber = cursor.getColumnIndex(Property.COL_IP_NUMBER);
 
                 do {
                     Feature feature = new Feature();
@@ -515,6 +500,7 @@ public class DbController extends SQLiteOpenHelper {
                     feature.setStatus(cursor.getString(indxStatus));
                     feature.setPolygonNumber(cursor.getString(indxPolygonNumber));
                     feature.setSurveyDate(cursor.getString(indxSurveyDate));
+                    feature.setIpNumber(cursor.getInt(indxIpNumber));
                     features.add(feature);
                 }
                 while (cursor.moveToNext());
@@ -565,6 +551,25 @@ public class DbController extends SQLiteOpenHelper {
             return featureId;
         }
         return featureId;
+    }
+
+    public boolean updateBoundaryPoint(Property prop) {
+        try {
+            ContentValues values = new ContentValues();
+            values.put(Property.COL_FEATURE_TYPE, prop.getFeatureType());
+            values.put(Property.COL_FEATURE_DESCRIPTION, prop.getFeatureDescription());
+            if(prop.getVillageId() != null && prop.getVillageId() > 0) {
+                values.put(Property.COL_VILLAGE_ID, prop.getVillageId());
+            } else {
+                values.put(Property.COL_VILLAGE_ID, (Integer)null);
+            }
+
+            return getDb().update(Feature.TABLE_NAME, values, "FEATURE_ID = " + prop.getId(), null) > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            cf.appLog("", e);
+            return false;
+        }
     }
 
     public Long createFeatureResource(String geomtype, String wKTStr, String imei) {
@@ -755,6 +760,9 @@ public class DbController extends SQLiteOpenHelper {
                 int documentDate = cur.getColumnIndex(Property.COL_DOCUMENT_DATE);
                 int documentRefNo = cur.getColumnIndex(Property.COL_DOCUMENT_REF_NO);
                 int IS_NATURAL = cur.getColumnIndex(Property.COL_IS_NATURAL);
+                int villageId = cur.getColumnIndex(Property.COL_VILLAGE_ID);
+                int featureType = cur.getColumnIndex(Property.COL_FEATURE_TYPE);
+                int featureDescription = cur.getColumnIndex(Property.COL_FEATURE_DESCRIPTION);
 
                 do {
 
@@ -780,6 +788,10 @@ public class DbController extends SQLiteOpenHelper {
                     property.setTenureTypeID(cur.getString(ukaTenure));
                     property.setFlag(cur.getString(flag));
                     property.setIpNumber(cur.getInt(ipNUMBER));
+                    if (!cur.isNull(villageId))
+                        property.setVillageId(cur.getInt(villageId));
+                    property.setFeatureType(cur.getString(featureType));
+                    property.setFeatureDescription(cur.getString(featureDescription));
 
                     //Ambar
 
@@ -1736,6 +1748,15 @@ public class DbController extends SQLiteOpenHelper {
                 "  OR " + Media.COL_PERSON_ID + " = 0)" +
                 " AND (" + Media.COL_DISPUTE_ID + " IS NULL" +
                 "  OR " + Media.COL_DISPUTE_ID + " = 0)";
+        return createMediaList(sql);
+    }
+
+    /**
+     * Returns media list by boundary id.
+     */
+    public List<Media> getMediaByBoundary(Long propId) {
+        String sql = "SELECT * FROM " + Media.TABLE_NAME +
+                " WHERE " + Media.COL_FEATURE_ID + " = " + propId.toString();
         return createMediaList(sql);
     }
 
@@ -4593,6 +4614,7 @@ public class DbController extends SQLiteOpenHelper {
             getDb().delete(ResourceCustomAttribute.TABLE_NAME, null, null);
             getDb().delete(TenureType.TABLE_NAME, null, null);
             getDb().delete(AOI.TABLE_NAME, null, null);
+            getDb().delete(Village.TABLE_NAME, null, null);
 
             if (projectdata.has("Extent")) {
                 String mapExtent = projectdata.getString("Extent");
@@ -4600,45 +4622,6 @@ public class DbController extends SQLiteOpenHelper {
                     cf.saveMapExtent(mapExtent);
                 }
             }
-
-
-//            if (projectdata.has("SpatialData")) {
-//                ContentValues projectValues = new ContentValues();
-//                JSONArray project_info = projectdata.getJSONArray("SpatialData");
-//                if (project_info.length() > 0) {
-//                    for (int i = 0; i < project_info.length(); i++) {
-//                        String str="Liberia-Mbtile.mbtiles";
-////                        if (i==0){
-////                            str="Barpa.mbtiles";
-////
-////                        }
-////                        if (i==1){
-////                            str="blei.mbtiles";
-////
-////                        }
-//
-//                        JSONObject project_detail = new JSONObject(project_info.get(i).toString());
-//                        projectValues.put("SERVER_PK", project_detail.getInt("id"));
-//                        projectValues.put("PROJECT_NAME_ID", project_detail.getInt("projectnameid"));
-//                        projectValues.put("FILE_NAME", str);
-//                        projectValues.put("FILE_LOCATION", project_detail.getString("fileLocation"));
-//                        projectValues.put("DESCRIPTION", project_detail.getString("description"));
-//                        projectValues.put("CREATED_BY", project_detail.getInt("createdby"));
-//                        projectValues.put("MODIFIED_BY", project_detail.getInt("modifiedby"));
-//                        projectValues.put("CRAETED_DATE", project_detail.getInt("createddate"));
-//                        projectValues.put("MODIFIED_DATE", project_detail.getInt("modifieddate"));
-//                        projectValues.put("SIZE", project_detail.getInt("size"));
-//                        projectValues.put("DOCUMENT_FORMAT_ID", project_detail.getInt("documentformatid"));
-//                        projectValues.put("ISACTIVE", project_detail.getBoolean("isactive"));
-////                        projectValues.put("ALIAS", project_detail.getString("alias"));
-//                        if (projectdata.has("Village")) {
-//                            projectValues.put("VILLAGE_NAME", projectdata.getString("Village"));
-//                        }
-//
-//                        getDb().insert("PROJECT_SPATIAL_DATA", null, projectValues);
-//                    }
-//                }
-//            }
 
             if (projectdata.has("SpatialData")) {
                 ContentValues projectValues = new ContentValues();
@@ -4669,20 +4652,6 @@ public class DbController extends SQLiteOpenHelper {
                 }
             }
 
-//            if (projectdata.has("Hamlet")) {
-//                ContentValues hamlets = new ContentValues();
-//                JSONArray hamletsArray = projectdata.getJSONArray("Hamlet");
-//                if (hamletsArray.length() > 0) {
-//                    for (int i = 0; i < hamletsArray.length(); i++) {
-//                        JSONObject hamlet = new JSONObject(hamletsArray.get(i).toString());
-//                        hamlets.put("ID", hamlet.getInt("id"));
-//                        hamlets.put("HAMLET_NAME", hamlet.getString("hamletName"));
-//                        hamlets.put("HAMLET_LEADER", hamlet.getString("hamletLeaderName"));
-//                        getDb().insert("HAMLET_DETAILS", null, hamlets);
-//                    }
-//                }
-//            }
-
             if (projectdata.has("ClaimType")) {
                 ContentValues claimTypes = new ContentValues();
                 JSONArray claimTypesArray = projectdata.getJSONArray("ClaimType");
@@ -4698,7 +4667,19 @@ public class DbController extends SQLiteOpenHelper {
                 }
             }
 
-
+            if (projectdata.has("Villages")) {
+                ContentValues villages = new ContentValues();
+                JSONArray villagesArray = projectdata.getJSONArray("Villages");
+                if (villagesArray.length() > 0) {
+                    for (int i = 0; i < villagesArray.length(); i++) {
+                        JSONObject village = new JSONObject(villagesArray.get(i).toString());
+                        villages.put(Village.COL_ID, village.getString("hierarchyid"));
+                        villages.put(Village.COL_NAME, village.getString("name"));
+                        villages.put(Village.COL_NAME_EN, village.getString("nameEn"));
+                        getDb().insert(Village.TABLE_NAME, null, villages);
+                    }
+                }
+            }
 
             if (projectdata.has("AOI")) {
                 ContentValues aoiTypes = new ContentValues();
@@ -5242,18 +5223,6 @@ public class DbController extends SQLiteOpenHelper {
         }
     }
 
-//    public String getProjectname() {
-//        String projectName = "";
-//        String q = "select project_name from PROJECT_SPATIAL_DATA LIMIT 1";
-//        Cursor cursor = getDb().rawQuery(q, null);
-//
-//        if (cursor.moveToFirst()) {
-//            projectName = cursor.getString(0);
-//            cursor.close();
-//        }
-//        return projectName;
-//    }
-
     public String getProjectname() {
         String projectName = "";
         String q = "select project_name_id from PROJECT_SPATIAL_DATA LIMIT 1";
@@ -5267,9 +5236,8 @@ public class DbController extends SQLiteOpenHelper {
     }
 
     //Check there is any status  completed or not
-    public boolean isStatusComplete(){
+    public boolean hasCompletedClaims(){
         boolean isStatus=false;
-
 
         String spatialFeatureSql ="SELECT * FROM " + Property.TABLE_NAME +
                     " WHERE " + Property.COL_STATUS + " = '" + Property.CLIENT_STATUS_COMPLETE + "' AND (" +
@@ -5293,9 +5261,6 @@ public class DbController extends SQLiteOpenHelper {
                         Property.COL_SERVER_ID + " IS NULL OR " + Property.COL_SERVER_ID + " = '')" + " AND (" +
                         " FLAG " + " = '" + ParamType + "')");
             }
-//            List<Property> properties = createPropertyList("SELECT * FROM " + Property.TABLE_NAME +
-//                    " WHERE " + Property.COL_STATUS + " = '" + Property.CLIENT_STATUS_COMPLETE + "' AND (" +
-//                    Property.COL_SERVER_ID + " IS NULL OR " + Property.COL_SERVER_ID + " = '')");
 
             if (properties == null || properties.size() < 1)
                 return "";
@@ -5354,65 +5319,26 @@ public class DbController extends SQLiteOpenHelper {
                 } catch (Exception e) {
                     System.out.println("" + key + " : " + jsonObj.optString(key));
                     e.printStackTrace();
-//                    return false;
                 }
             }
-//            return true;
-        } else {
-//            return false;
         }
     }
 
-//    public boolean updateServerFeatureId(String data) throws JSONException {
-//        if (data != null) {
-//            JSONObject jsonObj = new JSONObject(data);
-//            Iterator<String> iterator = jsonObj.keys();
-//            while (iterator.hasNext()) {
-//                String key = (String) iterator.next();
-//                String featureId = key;
-//                String whereClause = "FEATURE_ID = " + featureId;
-//                try {
-//                    if (jsonObj.get(key) instanceof JSONArray) {
-//                        JSONArray arry = jsonObj.getJSONArray(key);
-//                        int size = arry.length();
-//                        for (int i = 0; i < size; i++) {
-//                            arry.getJSONObject(i);
-//                            String server_featureId = arry.getJSONObject(i).toString();
-//                            // updating  Features
-//                            ContentValues value = new ContentValues();
-//                            value.put("SERVER_FEATURE_ID", server_featureId);
-//                            getDb().update("SPATIAL_FEATURES", value, whereClause, null);
-//                        }
-//                    } else if (jsonObj.get(key) instanceof JSONObject) {
-//                        jsonObj.getJSONObject(key);
-//                        String server_featureId = jsonObj.getJSONObject(key).toString();
-//                        // updating  Featureso
-//                        ContentValues value = new ContentValues();
-//                        value.put("SERVER_FEATURE_ID", server_featureId);
-//                        getDb().update("SPATIAL_FEATURES", value, whereClause, null);
-//
-//                    } else {
-//                        System.out.println("" + key + " : " + jsonObj.optString(key));
-//                        String server_featureId = jsonObj.optString(key);
-//                        // updating  Features
-//                        ContentValues value = new ContentValues();
-//                        value.put("SERVER_FEATURE_ID", server_featureId);
-//                        int row = getDb().update("SPATIAL_FEATURES", value, whereClause, null);
-//                        if (row < 1) {
-//                            Toast.makeText(contxt, "0 rows updated", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                } catch (Exception e) {
-//                    System.out.println("" + key + " : " + jsonObj.optString(key));
-//                    e.printStackTrace();
-//                    return false;
-//                }
-//            }
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
+    public boolean hasMediaToUpload(){
+        boolean hasMedia=false;
+
+        String sql = "SELECT " +
+                "MV.MEDIA_ID " +
+                "FROM MEDIA AS MV INNER JOIN SPATIAL_FEATURES AS SF ON MV.FEATURE_ID =  SF.FEATURE_ID " +
+                "WHERE SF.STATUS = '" + Property.CLIENT_STATUS_COMPLETE + "' and MV.SYNCED=0 Limit 1";
+
+        Cursor cursor = getDb().rawQuery(sql, null);
+        if (cursor.moveToFirst()) {
+            hasMedia = true;
+        }
+        cursor.close();
+        return hasMedia;
+    }
 
     public JSONArray getMultimediaforUpload() {
         JSONArray mediaAttribsObj = new JSONArray();
@@ -5431,10 +5357,9 @@ public class DbController extends SQLiteOpenHelper {
                     "MV.DISPUTE_ID, " +
                     "MV.PATH," +
                     "SF.SERVER_FEATURE_ID," +
-                    "MV.TYPE "
+                    "MV.TYPE, SF.FLAG "
                     + "FROM MEDIA AS MV INNER JOIN SPATIAL_FEATURES AS SF ON MV.FEATURE_ID =  SF.FEATURE_ID "
                     + "WHERE SF.STATUS = '" + Property.CLIENT_STATUS_COMPLETE + "' and MV.SYNCED=0 Limit 1";
-
 
             String userId = getLoggedUser().getUserId().toString();
 
@@ -5463,6 +5388,7 @@ public class DbController extends SQLiteOpenHelper {
                     medias.put(5, cursor.getLong(3));//dispute id
                 }
                 medias.put(6, userId);
+                medias.put(7, cursor.getString(7));
             }
             cursor.close();
 
@@ -5597,6 +5523,9 @@ public class DbController extends SQLiteOpenHelper {
         values.put(Property.COL_CREATION_DATE, prop.getCreationDate());
         values.put(Property.COL_IMEI, prop.getImei());
         values.put(Property.COL_UKA_NUMBER, prop.getUkaNumber());
+        values.put(Property.COL_VILLAGE_ID, prop.getVillageId());
+        values.put(Property.COL_FEATURE_TYPE, prop.getFeatureType());
+        values.put(Property.COL_FEATURE_DESCRIPTION, prop.getFeatureDescription());
 
         getDb().insert(Feature.TABLE_NAME, null, values);
         long featureId = getGeneratedId(Feature.TABLE_NAME);
@@ -5843,6 +5772,10 @@ public class DbController extends SQLiteOpenHelper {
             values.put(Property.COL_DOCUMENT_DATE, prop.getDocumentDate());
             values.put(Property.COL_DOCUMENT_REF_NO, prop.getDocumentRefNo());
             values.put(Property.COL_IS_NATURAL, prop.getIsNatural());
+            values.put(Property.COL_VILLAGE_ID, prop.getVillageId());
+            values.put(Property.COL_FEATURE_TYPE, prop.getFeatureType());
+            values.put(Property.COL_FEATURE_DESCRIPTION, prop.getFeatureDescription());
+
             getDb().update(Feature.TABLE_NAME, values, Property.COL_ID + " = " + prop.getId(), null);
             return true;
         } catch (Exception e) {
@@ -6496,6 +6429,49 @@ public class DbController extends SQLiteOpenHelper {
     }
 
     /**
+     * Returns list of villages.
+     */
+    public List<Village> getVillages(boolean addDummy) {
+        Cursor cursor = null;
+        List<Village> villages = new ArrayList<Village>();
+
+        try {
+            cursor = getDb().rawQuery("SELECT * FROM " + Village.TABLE_NAME, null);
+            if (cursor.moveToFirst()) {
+                int indxId = cursor.getColumnIndex(Village.COL_ID);
+                int indxName = cursor.getColumnIndex(Village.COL_NAME);
+                int indxNameEn = cursor.getColumnIndex(Village.COL_NAME_EN);
+
+                do {
+                    Village village = new Village();
+                    village.setId(cursor.getInt(indxId));
+                    village.setName(cursor.getString(indxName));
+                    village.setNameEn(cursor.getString(indxNameEn));
+                    villages.add(village);
+                } while (cursor.moveToNext());
+
+                if (addDummy) {
+                    Village village = new Village();
+                    village.setId(0);
+                    village.setName(contxt.getResources().getString(R.string.SelectOption));
+                    village.setNameEn(contxt.getResources().getString(R.string.SelectOption));
+                    villages.add(0, village);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return villages;
+        } finally {
+            try {
+                cursor.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return villages;
+    }
+
+    /**
      * Returns gender type by code
      */
     public Gender getGender(int code) {
@@ -6968,31 +6944,6 @@ public class DbController extends SQLiteOpenHelper {
         return classificationList;
     }
 
-    public List<TenureInformation> getTenureInfo(Long featid) {
-        List<TenureInformation> tenureInformations = new ArrayList<TenureInformation>();
-        String selectQueryQues = "SELECT ATTRIB_VALUE from FORM_VALUES where FEATURE_ID =" + featid;
-        Cursor cursor = getDb().rawQuery(selectQueryQues, null);
-        if (cursor.moveToFirst()) {
-            try {
-                do {
-                    TenureInformation tenureInformation = new TenureInformation();
-                    tenureInformation.setFirstName(cursor.getString(0));
-//                    tenureInformation.setMiddleName(cursor.getString(2));
-//                    tenureInformation.setLastName(cursor.getString(3));
-//                    tenureInformation.setCommunity(cursor.getString(11));
-//                    tenureInformation.setRegion(cursor.getString(12));
-//                    tenureInformation.setCountry(cursor.getString(13));
-//
-                    tenureInformations.add(tenureInformation);
-                } while (cursor.moveToNext());
-            } catch (Exception e) {
-                cf.appLog("", e);
-                e.printStackTrace();
-            }
-        }
-        cursor.close();
-        return tenureInformations;
-    }
 
     public String getGeoTypeFromSpatial(Long featureId) {
         String geoType = null;
@@ -7061,248 +7012,6 @@ public class DbController extends SQLiteOpenHelper {
         return geoType;
 
     }
-
-//    public boolean insertResourceSubClassAtrr(Property subClassificationList, Long featureId) {
-//
-//        try {
-//
-//
-//                if (subClassificationList.getSubClassificationValue().equalsIgnoreCase(contxt.getResources().getString(R.string.SelectOption))) {
-//                }else {
-//
-//                    ContentValues values = new ContentValues();
-//                    values.put("FEATURE_ID", featureId);
-//                    values.put("VALUE", attribute.getSubClassificationValue());
-//                    values.put("ID", attribute.getSubClassificationId());
-//                    getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
-//                }
-//
-//
-//
-////            for (int i=0;i<classification.size();i++) {
-////
-////
-//////            values.put("FIRST_NAME", classification.getfirstName());
-//////            values.put("MIDDLE_NAME", classification.getMiddelName());
-//////            values.put("LAST_NAME", classification.getLastName());
-////
-////                getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
-//
-//            return true;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
-
-    public boolean insertResourceTenureAtrr(List<Property> tenureList, Long featureId) {
-        try {
-
-
-            for (Property attribute : tenureList) {
-                if (attribute.getTenureTypeValue().equalsIgnoreCase(contxt.getResources().getString(R.string.SelectOption))) {
-                } else {
-                    ContentValues values = new ContentValues();
-                    values.put("FEATURE_ID", featureId);
-                    values.put("VALUE", attribute.getTenureTypeValue());
-                    values.put("ID", attribute.getTenureTypeID());
-                    getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
-                }
-
-            }
-
-//            for (int i=0;i<classification.size();i++) {
-//
-//
-////            values.put("FIRST_NAME", classification.getfirstName());
-////            values.put("MIDDLE_NAME", classification.getMiddelName());
-////            values.put("LAST_NAME", classification.getLastName());
-//
-//                getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
-
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean insertTenureFirstName(Property attributesfname, Long featureId) {
-
-        try {
-
-//            for (Property attribute : attributesfname) {
-//
-//
-//                    ContentValues values = new ContentValues();
-//                    values.put("FEATURE_ID", featureId);
-//                    values.put("VALUE", attribute.getFirstName());
-//                    values.put("ID", attribute.getResID());
-//                    getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
-//                }
-
-
-            ContentValues values = new ContentValues();
-            values.put("FEATURE_ID", featureId);
-            values.put("VALUE", attributesfname.getFirstName());
-            values.put("ID", attributesfname.getResID());
-            getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
-
-
-//            for (int i=0;i<classification.size();i++) {
-//
-//
-////            values.put("FIRST_NAME", classification.getfirstName());
-////            values.put("MIDDLE_NAME", classification.getMiddelName());
-////            values.put("LAST_NAME", classification.getLastName());
-//
-//                getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
-
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean insertTenureMidName(Property attributesMidname, Long featureId) {
-        try {
-
-
-            ContentValues values = new ContentValues();
-            values.put("FEATURE_ID", featureId);
-            values.put("VALUE", attributesMidname.getMiddelName());
-            values.put("ID", attributesMidname.getmID());
-            getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
-
-
-//            for (int i=0;i<classification.size();i++) {
-//
-//
-////            values.put("FIRST_NAME", classification.getfirstName());
-////            values.put("MIDDLE_NAME", classification.getMiddelName());
-////            values.put("LAST_NAME", classification.getLastName());
-//
-//                getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
-
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean insertTenureLastName(Property attributeslastname, Long featureId) {
-
-        try {
-
-
-            ContentValues values = new ContentValues();
-            values.put("FEATURE_ID", featureId);
-            values.put("VALUE", attributeslastname.getLastName());
-            values.put("ID", attributeslastname.getLastID());
-            getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
-
-
-//            for (int i=0;i<classification.size();i++) {
-//
-//
-////            values.put("FIRST_NAME", classification.getfirstName());
-////            values.put("MIDDLE_NAME", classification.getMiddelName());
-////            values.put("LAST_NAME", classification.getLastName());
-//
-//                getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
-
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean insertTenureAddressName(Property attradress, Long featureId) {
-        try {
-
-
-            ContentValues values = new ContentValues();
-            values.put("FEATURE_ID", featureId);
-            values.put("VALUE", attradress.getAddress());
-            values.put("ID", attradress.getAddressID());
-            getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
-
-
-//            for (int i=0;i<classification.size();i++) {
-//
-//
-////            values.put("FIRST_NAME", classification.getfirstName());
-////            values.put("MIDDLE_NAME", classification.getMiddelName());
-////            values.put("LAST_NAME", classification.getLastName());
-//
-//                getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
-
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-
-    }
-
-    public boolean insertTenureRegionName(Property attrresgion, Long featureId) {
-
-        try {
-
-
-            ContentValues values = new ContentValues();
-            values.put("FEATURE_ID", featureId);
-            values.put("VALUE", attrresgion.getResidential());
-            values.put("ID", attrresgion.getResID());
-            getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
-
-
-//            for (int i=0;i<classification.size();i++) {
-//
-//
-////            values.put("FIRST_NAME", classification.getfirstName());
-////            values.put("MIDDLE_NAME", classification.getMiddelName());
-////            values.put("LAST_NAME", classification.getLastName());
-//
-//                getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
-
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean insertTenureCountryName(Property attrcountry, Long featureId) {
-        try {
-
-
-            ContentValues values = new ContentValues();
-            values.put("FEATURE_ID", featureId);
-            values.put("VALUE", attrcountry.getCountry());
-            values.put("ID", attrcountry.getCountryID());
-            getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
-
-
-//            for (int i=0;i<classification.size();i++) {
-//
-//
-////            values.put("FIRST_NAME", classification.getfirstName());
-////            values.put("MIDDLE_NAME", classification.getMiddelName());
-////            values.put("LAST_NAME", classification.getLastName());
-//
-//                getDb().insert("RESOURCE_BASISC_ATTRIBUTES", null, values);
-
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
 
     public boolean updatePropertyBasic(Property prop) {
         try {
@@ -8071,10 +7780,24 @@ public class DbController extends SQLiteOpenHelper {
         return AOIList;
     }
 
+    public int getNexBoundaryNumber() {
+        int nextNumber=0;
+        String sql = "SELECT MAX(IP_NUMBER) FROM SPATIAL_FEATURES"  + " WHERE FLAG='B'";
+        Cursor cur = getDb().rawQuery(sql, null);
+        if (cur.moveToFirst()) {
+            try {
+                nextNumber = cur.getInt(0);
+            } catch (Exception e) {
+                cf.appLog("", e);
+                e.printStackTrace();
+            }
+        }
+        cur.close();
+        return nextNumber+1;
+    }
+
     public int getFeatureCount(String strType) {
         int iGID=0;
-
-        //String selectGID = "SELECT COUNT(*) FROM SPATIAL_FEATURES"  + " WHERE STATUS ='draft' AND FLAG='" +strType +"' ORDER BY FEATURE_ID";
         String selectGID = "SELECT COUNT(*) FROM SPATIAL_FEATURES"  + " WHERE (STATUS ='draft' OR STATUS ='complete') AND FLAG='" +strType +"' ORDER BY FEATURE_ID";
         Cursor cursorgid = getDb().rawQuery(selectGID, null);
         if (cursorgid.moveToFirst()) {
@@ -8090,8 +7813,6 @@ public class DbController extends SQLiteOpenHelper {
         cursorgid.close();
 
         iGID=iGID+1;
-
-
         return iGID;
     }
 

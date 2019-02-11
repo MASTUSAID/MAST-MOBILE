@@ -1,38 +1,24 @@
 package com.rmsi.android.mast.activity;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rmsi.android.mast.activity.R.string;
 import com.rmsi.android.mast.db.DbController;
 import com.rmsi.android.mast.domain.AOI;
-import com.rmsi.android.mast.domain.Attribute;
-import com.rmsi.android.mast.domain.Person;
-import com.rmsi.android.mast.domain.ShareType;
 import com.rmsi.android.mast.domain.User;
 import com.rmsi.android.mast.service.DownloadService;
 import com.rmsi.android.mast.service.UploadService;
@@ -40,7 +26,13 @@ import com.rmsi.android.mast.util.CommonFunctions;
 import com.rmsi.android.mast.util.ServiceResultReceiver;
 import com.rmsi.android.mast.util.ServiceResultReceiver.Receiver;
 
-public class LandingPageActivity extends ActionBarActivity implements Receiver {
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+public class LandingPageActivity extends AppCompatActivity implements Receiver {
     Context context = this;
     CommonFunctions cf = CommonFunctions.getInstance();
     int roleId = 0;
@@ -67,7 +59,6 @@ public class LandingPageActivity extends ActionBarActivity implements Receiver {
         setContentView(R.layout.activity_landing_page);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        toolbar.setTitle("Dashboard");
         TextView textViewTitle= (TextView) findViewById(R.id.title);
         textViewTitle.setVisibility(View.VISIBLE);
         textViewTitle.setText("Dashboard");
@@ -75,25 +66,9 @@ public class LandingPageActivity extends ActionBarActivity implements Receiver {
         if (toolbar != null)
             setSupportActionBar(toolbar);
 
-//
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         roleId = CommonFunctions.getRoleID();
         mReceiver = new ServiceResultReceiver(new Handler());
         mReceiver.setReceiver(this);
-
-//        if (roleId == User.ROLE_TRUSTED_INTERMEDIARY) {
-//            findViewById(R.id.ad_menu1).setVisibility(View.GONE);
-////            findViewById(R.id.ad_view1).setVisibility(View.GONE);
-//        } else if (roleId == User.ROLE_ADJUDICATOR) {
-//            findViewById(R.id.ti_menu1).setVisibility(View.GONE);
-//            findViewById(R.id.ti_menu2).setVisibility(View.GONE);
-////            findViewById(R.id.ti_view1).setVisibility(View.GONE);
-////            findViewById(R.id.ti_view2).setVisibility(View.GONE);
-//        } else {
-//            findViewById(R.id.ad_menu1).setVisibility(View.GONE);
-////            findViewById(R.id.ad_view1).setVisibility(View.GONE);
-//        }
 
         Button btn_mapviewer = (Button) findViewById(R.id.mapviewer);
         btn_mapviewer.setOnClickListener(new OnClickListener() {
@@ -115,26 +90,17 @@ public class LandingPageActivity extends ActionBarActivity implements Receiver {
                     if (aoiList.size()==0){
                         Intent intent = new Intent(LandingPageActivity.this, CapturePareclData.class);
                         intent.putExtra("Corordinates",corrdinates);
-//                        intent.putExtra("drawFeatureByFlag","P");
-//                        intent.putExtra("IsReview",false);
                         startActivity(intent);
                     }else {
                         corrdinates = cf.getAOICoordinates();
                         if (corrdinates != null) {
                             Intent intent = new Intent(LandingPageActivity.this, CapturePareclData.class);
-//                            intent.putExtra("IsReview",false);
-//                            intent.putExtra("drawFeatureByFlag","P");
                             startActivity(intent);
                         }
                         else {
                             Intent intent = new Intent(LandingPageActivity.this, CapturePareclData.class);
                             intent.putExtra("Corordinates",corrdinates);
-//                            intent.putExtra("drawFeatureByFlag","P");
-//                            intent.putExtra("IsReview",false);
                             startActivity(intent);
-//                            String info = getResources().getString(string.info);
-//                            String msg = "Please Select the AOI From User Prefrences.";
-//                            cf.showMessage(context, info, msg);
                         }
                     }
 
@@ -152,37 +118,25 @@ public class LandingPageActivity extends ActionBarActivity implements Receiver {
             public void onClick(View arg0) {
                 DbController sqllite = DbController.getInstance(context);
                 if (sqllite.getClaimTypes(false).size() > 0) {
-                    List<AOI> aoiList=cf.getAOIList();
-                    if (aoiList.size()==0){
-                        Intent intent = new Intent(LandingPageActivity.this, CaptureDataMapActivity.class);
-                        intent.putExtra("Corordinates",corrdinates);
-//                        intent.putExtra("drawFeatureByFlag","R");
-//                        intent.putExtra("IsReview",false);
-                        startActivity(intent);
-                    }else {
-                        corrdinates = cf.getAOICoordinates();
-                        if (corrdinates != null) {
-                            Intent intent = new Intent(LandingPageActivity.this, CaptureDataMapActivity.class);
-//                            intent.putExtra("drawFeatureByFlag","R");
-//                            intent.putExtra("IsReview",false);
-//                    intent.putExtra("Corordinates",corrdinates);
-                            startActivity(intent);
-                        }
-                        else {
+                    Intent intent = new Intent(LandingPageActivity.this, CaptureDataMapActivity.class);
+                    startActivity(intent);
+                } else {
+                    String info = getResources().getString(string.info);
+                    String msg = getResources().getString(string.download_data_first);
+                    cf.showMessage(context, info, msg);
+                }
+            }
+        });
 
-                            Intent intent = new Intent(LandingPageActivity.this, CaptureDataMapActivity.class);
-                            intent.putExtra("Corordinates",corrdinates);
-//                            intent.putExtra("drawFeatureByFlag","R");
-//                            intent.putExtra("IsReview",false);
-                            startActivity(intent);
-//                            String info = getResources().getString(string.info);
-//                            String msg = "Please Select the AOI From User Prefrences.";
-//                            cf.showMessage(context, info, msg);
-                        }
-                    }
-
-
-
+        Button btnCaptureBoundary = (Button) findViewById(R.id.captureBoundary);
+        btnCaptureBoundary.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                DbController sqllite = DbController.getInstance(context);
+                if (sqllite.getClaimTypes(false).size() > 0) {
+                    Intent intent = new Intent(LandingPageActivity.this, CaptureDataMapActivity.class);
+                    intent.putExtra("IsBoundary",true);
+                    startActivity(intent);
                 } else {
                     String info = getResources().getString(string.info);
                     String msg = getResources().getString(string.download_data_first);

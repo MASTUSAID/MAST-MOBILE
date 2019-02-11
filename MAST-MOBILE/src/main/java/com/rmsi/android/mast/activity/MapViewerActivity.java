@@ -16,8 +16,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -80,7 +80,7 @@ import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.io.WKTReader;
 
-public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCallback {
+public class MapViewerActivity extends AppCompatActivity implements OnMapReadyCallback {
     // Google Map
     private GoogleMap googleMap;
     List<Marker> currMarkers = new ArrayList<Marker>();
@@ -117,8 +117,10 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
     private List<MapFeature> snappingFeatures = new ArrayList<>();
     private List<MapFeature> snappingFeatures1 = new ArrayList<>();
     private List<MapFeature> mapFeaturesrES = new ArrayList<>();
+    private List<MapFeature> boundaryFeatures = new ArrayList<>();
     private boolean featuresAdded = false;
     private boolean featuresAddedRes = false;
+    private boolean boundaryAdded = false;
     private ArrayList<LatLng> latLngs=new ArrayList<>();
     private String CorordinatesDisplay = null;
     private static int FEATURE_DRAW_MAP_MODE = 1;
@@ -176,12 +178,6 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
         int width = displaymetrics.widthPixels;
         int newWidth = (width / 3) * 2;
 
-//        toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        toolbar.setTitle(R.string.mapviewer);
-//        if (toolbar != null)
-//            setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.mapviewer);
 
@@ -205,11 +201,10 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
         offlineSpatialData = DbController.getInstance(context).getProjectSpatialData();
 
         mLayerTitles.add("Satellite Map");
-        // mLayerTitles.add("Captured features");
         mLayerTitles.add("Parcel");
         mLayerTitles.add("Resource");
         mLayerTitles.add("AOI");
-        //mLayerTitles.add("Offline data");
+        mLayerTitles.add("Village Boundary");
 
         // This is commented to stop Tanzania MB tiles data as per Jeff comment on 29 Jan 18
         for (int i = 0; i < offlineSpatialData.size(); i++) {
@@ -288,7 +283,6 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
 
                         listViewForSync.setAdapter(adapter);
 
-
                         btn_ok.setOnClickListener(new OnClickListener() {
                             //Run when button is clicked
                             @Override
@@ -354,8 +348,6 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
                                             }
                                         }
 
-
-
                                     } else {
                                         String info = getResources().getString(string.info);
                                         String msg = getResources().getString(string.download_data_first);
@@ -386,27 +378,6 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
                 }
             }
         });
-
-
-//        btn_captureNewData.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (role == User.ROLE_TRUSTED_INTERMEDIARY) {
-//                    DbController sqllite = DbController.getInstance(context);
-//                    if (sqllite.getClaimTypes(false).size() > 0) {
-//                        Intent intent = new Intent(MapViewerActivity.this, CaptureDataMapActivity.class);
-//                        startActivity(intent);
-//                    } else {
-//                        String info = getResources().getString(string.info);
-//                        String msg = getResources().getString(string.download_data_first);
-//                        cf.showMessage(context, info, msg);
-//                    }
-//                    sqllite.close();
-//                } else {
-//                    Toast.makeText(context, R.string.feature_not_allowed_msg, Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        });
 
         Button btn_reviewData = (Button) findViewById(R.id.btn_review_data);
         btn_reviewData.setOnClickListener(new OnClickListener() {
@@ -485,6 +456,7 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
         public void onCameraIdle() {
             drawFeatures();
             drawFeaturesrES();
+            drawBoundaryFeatures();
         }
     }
 
@@ -613,9 +585,7 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
         if (id == R.id.action_xy) {
             MAP_MODE = FETCH_XY_MODE;//showXYDialog();
@@ -819,7 +789,6 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
                 visibleLayers.append("0");
             } else {
                 googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
             }
         }
 
@@ -828,9 +797,7 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
             if (checkedItems.get(1)) {
                 if (visibleLayers.length() != 0)
                     visibleLayers.append(",");
-                //loadAOI();
                 loadFeaturesFromDB("P");
-//                loadFeaturesFromDB();
                 drawFeatures();
 
                 visibleLayers.append("1");
@@ -839,9 +806,6 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
                     loadFeaturesFromDB("P");
                     drawFeatures();
                 }
-            } else {
-                //googleMap.clear();
-                //loadAOI();
             }
         }
 
@@ -850,9 +814,7 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
             if (checkedItems.get(2)) {
                 if (visibleLayers.length() != 0)
                     visibleLayers.append(",");
-                //loadAOI();
                 loadFeaturesFromDBrES("R");
-//                loadFeaturesFromDB();
                 drawFeaturesrES();
 
                 visibleLayers.append("2");
@@ -861,85 +823,56 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
                     loadFeaturesFromDBrES("R");
                     drawFeaturesrES();
                 }
-            } else {
-                //googleMap.clear();
-                //loadAOI();
             }
         }
 
-//
+
         if (checkedItems.indexOfKey(3) > -1) // AOI
         {
             if (checkedItems.get(3)) {
                 if (visibleLayers.length() != 0)
                     visibleLayers.append(",");
                 loadAOI();
-//                loadFeaturesFromDB("A");
-                //drawFeatures();
-
                 visibleLayers.append("3");
-
                 if (!currVisibleLayers.contains("3") && mapFeatures.size() < 1) {
-//                    loadFeaturesFromDB("A");
-//                    drawFeatures();
                     loadAOI();
                 }
-            } else {
-                //googleMap.clear();
-                //  loadAOI();
             }
         }
 
-        // loadOfflineData(0);
+        if (checkedItems.indexOfKey(4) > -1) // Boundary
+        {
+            if (checkedItems.get(4)) {
+                if (visibleLayers.length() != 0)
+                    visibleLayers.append(",");
+                loadBoundaryFeaturesFromDB();
+                drawBoundaryFeatures();
 
-        //load Mbltiles
-        //loadMbltiles();
+                visibleLayers.append("4");
 
-
-
+                if (!currVisibleLayers.contains("4") && mapFeaturesrES.size() < 1) {
+                    loadBoundaryFeaturesFromDB();
+                    drawBoundaryFeatures();
+                }
+            }
+        }
 
         for (int i = 0; i < offlineSpatialData.size(); i++) {
             if (offlineSpatialData.get(i).getOverlay() != null) {
                 offlineSpatialData.get(i).getOverlay().remove();
                 offlineSpatialData.get(i).setOverlay(null);
             }
-            //if (checkedItems.indexOfKey(i + 2) > -1) // load offline data
-            if (checkedItems.indexOfKey(i + 4) > -1) // load offline data
+            if (checkedItems.indexOfKey(i + 5) > -1) // load offline data
             {
-                if (checkedItems.get(i + 4)) {
+                if (checkedItems.get(i + 5)) {
                     if (visibleLayers.length() != 0)
                         visibleLayers.append(",");
-                    visibleLayers.append(i + 4);
-                    //if(!currVisibleLayers.contains((i+2)+""))
+                    visibleLayers.append(i + 5);
                     loadOfflineData(i);
-
-
-
                 }
             }
         }
         cf.saveVisibleLayers(visibleLayers.toString());
-    }
-
-    private void loadFeaturesFromDB() {
-        try {
-            clearMapFeatures();
-            List<Feature> features = DbController.getInstance(context).fetchFeatures();
-
-            if (features.size() == 0) {
-                Toast.makeText(context, R.string.noFeaturesToLoad, Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            for (Feature feature : features) {
-                if (!StringUtility.isEmpty(feature.getCoordinates())) {
-                    mapFeatures.add(new MapFeature(feature));
-                }
-            }
-        } catch (Exception e) {
-            cf.appLog("", e);
-            Toast.makeText(context, "unable to load features from db", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void loadFeaturesFromDB(String strFeatureType) {
@@ -948,7 +881,6 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
             List<Feature> features = DbController.getInstance(context).fetchFeatures(strFeatureType);
 
             if (features.size() == 0) {
-                // Toast.makeText(context, R.string.noFeaturesToLoad, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -999,13 +931,6 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
                 latLngs.add(mapPoint);
                 rectOptions.add(mapPoint);
 
-                //Adding marker for edit
-//                        MarkerOptions marker = new MarkerOptions().position(mapPoint);
-//                        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-//                        marker.draggable(true);
-//                        marker.snippet(mapPoint.latitude + "," + mapPoint.longitude);
-//                        Marker mark = googleMap.addMarker(marker);
-//                        currMarkers.add(mark);
             }
             rectOptions.zIndex(5);
             rectOptions.fillColor(colorTransparent);
@@ -1024,7 +949,6 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
 
         }else {
             GisUtility.zoomToMapExtent(googleMap);
-
         }
 
 
@@ -1105,7 +1029,19 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
         lastZoom = zoom;
     }
 
-    //Ambar
+    private void drawBoundaryFeatures() {
+        // Add features on the map
+        if (boundaryFeatures == null || boundaryFeatures.size() < 1)
+            return;
+
+        if (!boundaryAdded) {
+            boundaryAdded = true;
+            for (MapFeature mapFeature : boundaryFeatures) {
+                mapFeature.setMapBoundaryMarker(googleMap.addMarker(mapFeature.getBoundaryMarker()));
+                mapFeature.setMapLabel(googleMap.addMarker(mapFeature.getBoundaryLabel()));
+            }
+        }
+    }
 
     private void calculatePointsForSnappingRes() {
         if (snappingFeatures1.size() > 0
@@ -1119,6 +1055,26 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
             for (MapFeature mapFeature : snappingFeatures1) {
                 mapFeature.calculateScreenPoints(proj);
             }
+        }
+    }
+
+    private void loadBoundaryFeaturesFromDB() {
+        try {
+            clearBoundaryFeatures();
+            List<Feature> features = DbController.getInstance(context).fetchFeatures("B");
+
+            if (features.size() == 0) {
+                return;
+            }
+
+            for (Feature feature : features) {
+                if (!StringUtility.isEmpty(feature.getCoordinates())) {
+                    boundaryFeatures.add(new MapFeature(feature));
+                }
+            }
+        } catch (Exception e) {
+            cf.appLog("", e);
+            Toast.makeText(context, "unable to load features from db", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1143,7 +1099,14 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
         }
     }
 
-    //Ambar:For Resource Case
+    private void clearBoundaryFeatures() {
+        boundaryAdded = false;
+        for (MapFeature mapFeature : boundaryFeatures) {
+            mapFeature.removeFromMap();
+        }
+        boundaryFeatures.clear();
+    }
+
     private void clearMapFeaturesRes() {
         featuresAddedRes = false;
         for (MapFeature mapFeature : mapFeaturesrES) {
@@ -1151,6 +1114,7 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
         }
         mapFeaturesrES.clear();
     }
+
     private void addResMapFeature(MapFeature mapFeature) {
         if (mapFeature.getFeatureType() == MapFeature.TYPE.POLYGON) {
             mapFeature.setMapPolygon(googleMap.addPolygon(mapFeature.getResPolygon()));
@@ -1158,10 +1122,8 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
             mapFeature.setMapLine(googleMap.addPolyline(mapFeature.getLine()));
         } else if (mapFeature.getFeatureType() == MapFeature.TYPE.POINT) {
             mapFeature.setMapPoint(googleMap.addCircle(mapFeature.getPoint()));
-
         }
     }
-
 
     private void drawFeatures() {
         // Add features on the map
@@ -1293,28 +1255,25 @@ public class MapViewerActivity extends ActionBarActivity implements OnMapReadyCa
             if (visibleLayers.contains("1")) {
                 mDrawerList.setItemChecked(1, true);
                 loadFeaturesFromDB("P");
-
-
             }
             if (visibleLayers.contains("2")) {
                 mDrawerList.setItemChecked(2, true);
                 loadFeaturesFromDBrES("R");
-
             }
             if (visibleLayers.contains("3")) {
                 mDrawerList.setItemChecked(3, true);
                 loadAOI();
             }
-            //loadOfflineData(0);
-//Ambar To Implement Resource And Parcel Seperately
+            if (visibleLayers.contains("4")) {
+                mDrawerList.setItemChecked(4, true);
+                loadBoundaryFeaturesFromDB();
+            }
+
             if(offlineSpatialData!=null) {
                 for (int i = 0; i < offlineSpatialData.size(); i++) {
-                    if (visibleLayers.contains((i + 4) + "")) {
-
+                    if (visibleLayers.contains((i + 5) + "")) {
                         loadOfflineData(i);
-
-                        //loadOfflineData(offlineSpatialData.size()-i-1);
-                        mDrawerList.setItemChecked(((i + 4)), true);
+                        mDrawerList.setItemChecked(((i + 5)), true);
                     }
                 }
             }

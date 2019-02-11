@@ -6,7 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
@@ -42,7 +42,7 @@ import com.rmsi.android.mast.util.DateUtility;
 import com.rmsi.android.mast.util.GuiUtility;
 import com.rmsi.android.mast.util.StringUtility;
 
-public class CaptureAttributesActivity extends ActionBarActivity {
+public class CaptureAttributesActivity extends AppCompatActivity {
     private ImageView personInfo, tenureInfo, multimedia, custom, propertyInfo, disputeImg;
     private final Context context = this;
     private CommonFunctions cf = CommonFunctions.getInstance();

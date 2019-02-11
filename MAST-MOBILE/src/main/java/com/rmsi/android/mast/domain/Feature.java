@@ -11,17 +11,7 @@ public class Feature implements Serializable {
     private String polygonNumber;
     private String surveyDate;
     private int userId;
-
-
-    public int getResID() {
-        return resID;
-    }
-
-    public void setResID(int resID) {
-        this.resID = resID;
-    }
-
-    private int resID;
+    private int ipNumber;
 
     public static String TABLE_NAME = "SPATIAL_FEATURES";
     public static String TABLE_NAME_RESO = "SPATIAL_RESORCE_FEATURES";
@@ -32,9 +22,6 @@ public class Feature implements Serializable {
     public static String COL_STATUS = "STATUS";
     public static String COL_POLYGON_NUMBER = "POLYGON_NUMBER";
     public static String COL_SURVEY_DATE = "SURVEY_DATE";
-
-
-
 
     public static String GEOM_POINT = "Point";
     public static String GEOM_LINE = "Line";
@@ -117,6 +104,14 @@ public class Feature implements Serializable {
 
     public void setSurveyDate(String surveyDate) {
         this.surveyDate = surveyDate;
+    }
+
+    public int getIpNumber() {
+        return ipNumber;
+    }
+
+    public void setIpNumber(int ipNumber) {
+        this.ipNumber = ipNumber;
     }
 }
 

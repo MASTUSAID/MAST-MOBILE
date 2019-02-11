@@ -5,7 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -44,18 +44,16 @@ import java.util.List;
  * Created by ambar.srivastava on 12/21/2017.
  */
 
-public class CaptureResourceAttributes extends ActionBarActivity {
+public class CaptureResourceAttributes extends AppCompatActivity {
     private final Context context = this;
     private DbController db = DbController.getInstance(context);
     Classification classification=null;
     private List<TenureType> optionsList=new ArrayList<>();
-//    Property property=null;
 
     private Property propertyValidate=null;
     Long featureId = 0L;
     CommonFunctions cf = CommonFunctions.getInstance();
 
-    //List<ClassificationAttribute> classificationsList=new ArrayList<>();
     List<SubClassificationAttribute> SubclassificationsList=new ArrayList<>();
     String polytype;
     private Spinner spinnerClass,spinnerSubClass,spinnertenureType;
@@ -269,18 +267,7 @@ public class CaptureResourceAttributes extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void
-
-
-
-
-
-    saveData() {
-
-//        if (!validateBasicInfo(context, true)) {
-//            return false;
-//        }
-        //.add(property);
+    private void saveData() {
         if (validateBasicInfo(context, true)) {
 
 
@@ -443,25 +430,6 @@ public class CaptureResourceAttributes extends ActionBarActivity {
                     }
 
                 }
-
-
-
-//          dialog.show();
-//        } else if (shareTypeId == ShareType.TYPE_NON_NATURAL) {
-//            Intent nextScreen = new Intent(context, AddNonNaturalPersonActivity.class);
-//            nextScreen.putExtra("featureid", featureId);
-//            nextScreen.putExtra("rightId", right.getId());
-//            startActivity(nextScreen);
-
-//            Toast.makeText(context,"DATA SAVE Successfully",Toast.LENGTH_SHORT).show();
-//            Intent intent=new Intent(getApplicationContext(),CaptureTenureInfo.class);
-//            intent.putExtra("featureid", featureId);
-//            intent.putExtra("classi", classi);
-//            intent.putExtra("subclassi", subClassi);
-//            intent.putExtra("tenure", tenureType);
-//            intent.putExtra("tID",tenureID);
-//            intent.putExtra("sID",subID);
-//            startActivity(intent);
             } else {
                 Toast.makeText(context, "Unable to Save Data", Toast.LENGTH_SHORT).show();
             }
