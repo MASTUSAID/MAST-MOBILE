@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MAST-MOBILE/MAST-MOBILE.iml" filepath="$PROJECT_DIR$/MAST-MOBILE/MAST-MOBILE.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Mobile.iml" filepath="$PROJECT_DIR$/Mobile.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MAST-MOBILE.iml" filepath="$PROJECT_DIR$/MAST-MOBILE.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MAST-MOBILE/MAST-MOBILE-MAST-MOBILE.iml" filepath="$PROJECT_DIR$/MAST-MOBILE/MAST-MOBILE-MAST-MOBILE.iml" />
     </modules>
   </component>
 </project>
