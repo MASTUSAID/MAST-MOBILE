@@ -19,10 +19,12 @@ import com.rmsi.android.mast.domain.Bookmark;
 import com.rmsi.android.mast.domain.ClaimType;
 import com.rmsi.android.mast.domain.Classification;
 import com.rmsi.android.mast.domain.ClassificationAttribute;
+import com.rmsi.android.mast.domain.ConfidenceLevel;
 import com.rmsi.android.mast.domain.DeceasedPerson;
 import com.rmsi.android.mast.domain.Dispute;
 import com.rmsi.android.mast.domain.DisputeType;
 import com.rmsi.android.mast.domain.Feature;
+import com.rmsi.android.mast.domain.FeatureType;
 import com.rmsi.android.mast.domain.Gender;
 import com.rmsi.android.mast.domain.Media;
 import com.rmsi.android.mast.domain.NonNatural;
@@ -132,8 +134,10 @@ public class DbController extends SQLiteOpenHelper {
                 "DOCUMENT_REF_NO TEXT," +
                 "IS_NATURAL INTEGER," +
                 "VILLAGE_ID INTEGER," +
-                "FEATURE_TYPE TEXT," +
-                "FEATURE_DESCRIPTION TEXT" +
+                "FEATURE_TYPE INTEGER," +
+                "FEATURE_DESCRIPTION TEXT," +
+                "CONFIDENCE_LEVEL INTEGER," +
+                "CONFIDENCE_DESCRIPTION TEXT" +
                 ")";
 
         String query_table10 = "CREATE TABLE SOCIAL_TENURE(" +
@@ -282,6 +286,20 @@ public class DbController extends SQLiteOpenHelper {
                 "ACTIVE BOOLEAN DEFAULT true" +
                 ")";
 
+        String tableConfidenceLevel = "CREATE TABLE CONFIDENCE_LEVEL(" +
+                "CODE INTEGER PRIMARY KEY," +
+                "NAME TEXT," +
+                "NAME_OTHER_LANG TEXT," +
+                "ACTIVE BOOLEAN DEFAULT true" +
+                ")";
+
+        String tableFeatureType = "CREATE TABLE FEATURE_TYPE(" +
+                "CODE INTEGER PRIMARY KEY," +
+                "NAME TEXT," +
+                "NAME_OTHER_LANG TEXT," +
+                "ACTIVE BOOLEAN DEFAULT true" +
+                ")";
+
         // System
         String query_table5 = "CREATE TABLE USER(USER_ID TEXT,USER_NAME TEXT,PASSWORD TEXT,ROLE_ID TEXT,ROLE_NAME TEXT)";
         String query_table6 = "CREATE TABLE BOOKMARKS(ID INTEGER PRIMARY KEY AUTOINCREMENT,NAME TEXT,LATITUDE TEXT,LONGITUDE TEXT,ZOOMLEVEL TEXT)";
@@ -404,6 +422,8 @@ public class DbController extends SQLiteOpenHelper {
             db.execSQL(query_table21);
             db.execSQL(query_table22);
             db.execSQL(tableAcquisitionType);
+            db.execSQL(tableConfidenceLevel);
+            db.execSQL(tableFeatureType);
             db.execSQL(tableDisputeType);
             db.execSQL(tableDispute);
             db.execSQL(query_subclassifi_table);
@@ -558,6 +578,8 @@ public class DbController extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             values.put(Property.COL_FEATURE_TYPE, prop.getFeatureType());
             values.put(Property.COL_FEATURE_DESCRIPTION, prop.getFeatureDescription());
+            values.put(Property.COL_CONFIDENCE_LEVEL, prop.getConfidenceLevel());
+
             if(prop.getVillageId() != null && prop.getVillageId() > 0) {
                 values.put(Property.COL_VILLAGE_ID, prop.getVillageId());
             } else {
@@ -763,6 +785,8 @@ public class DbController extends SQLiteOpenHelper {
                 int villageId = cur.getColumnIndex(Property.COL_VILLAGE_ID);
                 int featureType = cur.getColumnIndex(Property.COL_FEATURE_TYPE);
                 int featureDescription = cur.getColumnIndex(Property.COL_FEATURE_DESCRIPTION);
+                int indxConfidenceLevel = cur.getColumnIndex(Property.COL_CONFIDENCE_LEVEL);
+                int indxConfidenceDescription = cur.getColumnIndex(Property.COL_CONFIDENCE_DESCRIPTION);
 
                 do {
 
@@ -790,10 +814,12 @@ public class DbController extends SQLiteOpenHelper {
                     property.setIpNumber(cur.getInt(ipNUMBER));
                     if (!cur.isNull(villageId))
                         property.setVillageId(cur.getInt(villageId));
-                    property.setFeatureType(cur.getString(featureType));
+                    if (!cur.isNull(featureType))
+                        property.setFeatureType(cur.getInt(featureType));
                     property.setFeatureDescription(cur.getString(featureDescription));
-
-                    //Ambar
+                    if (!cur.isNull(indxConfidenceLevel))
+                        property.setConfidenceLevel(cur.getInt(indxConfidenceLevel));
+                    property.setConfidenceDescription(cur.getString(indxConfidenceDescription));
 
                     property.setClaimRight(cur.getString(claimRight));
                     property.setPlotNo(cur.getString(plotNo));
@@ -802,7 +828,6 @@ public class DbController extends SQLiteOpenHelper {
                     property.setDocumentDate(cur.getString(documentDate));
                     property.setDocumentRefNo(cur.getString(documentRefNo));
                     property.setIsNatural(cur.getInt(IS_NATURAL));
-                    //Ambar
 
                     if (!cur.isNull(ukaNumber))
                         property.setUkaNumber(cur.getString(ukaNumber));
@@ -818,18 +843,13 @@ public class DbController extends SQLiteOpenHelper {
 
                     property.setDispute(getDisputeByProp(property.getId()));
                     property.setResPersonOfInterests(getResPersonOfInterestsByProp(property.getId()));
-                    // ClassificationAttribute classification=new ClassificationAttribute();
-                    //String a=fetchcateid(property.getId());
                     property.setResPOI(getRESPOIAttriSYnData(property.getId()));
 
                     List<Attribute> attributes = getPropAttributes(property.getId());
                     property.setAttributes(attributes);
 
-                    //comment :- to add option ids in table
-//                    List<ResourceCustomAttribute> attributesRes = getResPropAttributes(property.getId());
                     List<ResourceCustomAttribute> attributesRes = getResSyncPropAttributes(property.getId());
                     property.setAttributesres(attributesRes);
-                    // property.setAttributes(getAttributesRes(property.getId()));
 
                     properties.add(property);
                 }
@@ -4613,6 +4633,8 @@ public class DbController extends SQLiteOpenHelper {
             getDb().delete(SubClassificationAttribute.TABLE_NAME, null, null);
             getDb().delete(ResourceCustomAttribute.TABLE_NAME, null, null);
             getDb().delete(TenureType.TABLE_NAME, null, null);
+            getDb().delete(ConfidenceLevel.TABLE_NAME, null, null);
+            getDb().delete(FeatureType.TABLE_NAME, null, null);
             getDb().delete(AOI.TABLE_NAME, null, null);
             getDb().delete(Village.TABLE_NAME, null, null);
 
@@ -4663,6 +4685,36 @@ public class DbController extends SQLiteOpenHelper {
                         claimTypes.put("NAME_OTHER_LANG", claimType.getString("nameOtherLang"));
                         claimTypes.put("ACTIVE", claimType.getBoolean("active"));
                          getDb().insert(ClaimType.TABLE_NAME, null, claimTypes);
+                    }
+                }
+            }
+
+            if (projectdata.has("ConfidenceLevel")) {
+                ContentValues confidenceLevels = new ContentValues();
+                JSONArray jsonArray = projectdata.getJSONArray("ConfidenceLevel");
+                if (jsonArray.length() > 0) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject confidenceLevel = new JSONObject(jsonArray.get(i).toString());
+                        confidenceLevels.put("CODE", confidenceLevel.getString("id"));
+                        confidenceLevels.put("NAME", confidenceLevel.getString("nameEn"));
+                        confidenceLevels.put("NAME_OTHER_LANG", confidenceLevel.getString("name"));
+                        confidenceLevels.put("ACTIVE", confidenceLevel.getBoolean("active"));
+                        getDb().insert(ConfidenceLevel.TABLE_NAME, null, confidenceLevels);
+                    }
+                }
+            }
+
+            if (projectdata.has("FeatureType")) {
+                ContentValues featureTypes = new ContentValues();
+                JSONArray jsonArray = projectdata.getJSONArray("FeatureType");
+                if (jsonArray.length() > 0) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject featureType = new JSONObject(jsonArray.get(i).toString());
+                        featureTypes.put("CODE", featureType.getString("id"));
+                        featureTypes.put("NAME", featureType.getString("nameEn"));
+                        featureTypes.put("NAME_OTHER_LANG", featureType.getString("name"));
+                        featureTypes.put("ACTIVE", featureType.getBoolean("active"));
+                        getDb().insert(FeatureType.TABLE_NAME, null, featureTypes);
                     }
                 }
             }
@@ -5526,6 +5578,8 @@ public class DbController extends SQLiteOpenHelper {
         values.put(Property.COL_VILLAGE_ID, prop.getVillageId());
         values.put(Property.COL_FEATURE_TYPE, prop.getFeatureType());
         values.put(Property.COL_FEATURE_DESCRIPTION, prop.getFeatureDescription());
+        values.put(Property.COL_CONFIDENCE_LEVEL, prop.getConfidenceLevel());
+        values.put(Property.COL_CONFIDENCE_DESCRIPTION, prop.getConfidenceDescription());
 
         getDb().insert(Feature.TABLE_NAME, null, values);
         long featureId = getGeneratedId(Feature.TABLE_NAME);
@@ -5775,6 +5829,8 @@ public class DbController extends SQLiteOpenHelper {
             values.put(Property.COL_VILLAGE_ID, prop.getVillageId());
             values.put(Property.COL_FEATURE_TYPE, prop.getFeatureType());
             values.put(Property.COL_FEATURE_DESCRIPTION, prop.getFeatureDescription());
+            values.put(Property.COL_CONFIDENCE_LEVEL, prop.getConfidenceLevel());
+            values.put(Property.COL_CONFIDENCE_DESCRIPTION, prop.getConfidenceDescription());
 
             getDb().update(Feature.TABLE_NAME, values, Property.COL_ID + " = " + prop.getId(), null);
             return true;
@@ -6242,6 +6298,43 @@ public class DbController extends SQLiteOpenHelper {
                 " WHERE CODE='" + code + "'", false);
         if (claimTypes != null && claimTypes.size() > 0)
             return claimTypes.get(0);
+        else
+            return null;
+    }
+
+    /**
+     * Returns confidence level by code.
+     */
+    public ConfidenceLevel getConfidenceLevel(String code) {
+        List<ConfidenceLevel> confidenceLevels = getRefDataTypes(ConfidenceLevel.class, false);
+        if (confidenceLevels != null && confidenceLevels.size() > 0)
+            return confidenceLevels.get(0);
+        else
+            return null;
+    }
+
+
+    /**
+     * Returns confidence levels.
+     */
+    public List<ConfidenceLevel> getConfidenceLevels(boolean addDummy) {
+        return getRefDataTypes(ConfidenceLevel.class, addDummy);
+    }
+
+    /**
+     * Returns feature types.
+     */
+    public List<FeatureType> getFeatureTypes(boolean addDummy) {
+        return getRefDataTypes(FeatureType.class, addDummy);
+    }
+
+    /**
+     * Returns feature type by code.
+     */
+    public FeatureType getFeatureType(String code) {
+        List<FeatureType> featureTypes = getRefDataTypes(FeatureType.class, false);
+        if (featureTypes != null && featureTypes.size() > 0)
+            return featureTypes.get(0);
         else
             return null;
     }

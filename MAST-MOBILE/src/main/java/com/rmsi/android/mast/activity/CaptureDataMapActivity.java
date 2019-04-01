@@ -137,6 +137,7 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
     MyLocationListener locationListener;
     List<ProjectSpatialDataDto> offlineSpatialData;
     DecimalFormat df = new DecimalFormat("#.##");
+    DecimalFormat df2 = new DecimalFormat("#.#");
     Long featureId = 0L;
     Long featureIdCoordinates = 0L;
     public static int MAP_MODE = 0;
@@ -480,6 +481,8 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
             // Enable / Disable zooming controls
+            googleMap.setMyLocationEnabled(true);
+
             googleMap.getUiSettings().setZoomControlsEnabled(false);
             // Enable / Disable my location button
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -515,7 +518,7 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
             opts.tileProvider(provider);
             // Add the tile overlay to the map.
             TileOverlay overlay = googleMap.addTileOverlay(opts);
-            overlay.setTransparency(0.75f);
+            //overlay.setTransparency(0.75f);
 
             offlineSpatialData.get(pos).setOverlay(overlay);
 
@@ -907,14 +910,14 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_GPS) {
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            Location location = googleMap.getMyLocation();
+
             if (location != null) {
                 LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 30));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 19));
             } else {
                 Toast.makeText(context, R.string.no_location, Toast.LENGTH_SHORT).show();
             }
-
         } else if (id == R.id.action_show_bookmark) {
             showBookmarks();
         } else if (id == R.id.action_add_bookmark) {
@@ -1899,8 +1902,8 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                     }
                 }
                 if (actionMode != null) {
-                    int accuracy = (int) locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getAccuracy();
-                    actionMode.setTitle(accuracy + getResources().getString(R.string.gps_accuracy));
+                    float accuracy = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getAccuracy();
+                    actionMode.setTitle(df2.format(accuracy) + getResources().getString(R.string.gps_accuracy));
                     actionMode.setSubtitle(satellitesInFix + " " + getResources().getString(R.string.sats_use_msg));
                 }
             }
@@ -2367,6 +2370,10 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
         googleMap.clear();
         String visibleLayers = cf.getVisibleLayers();
 
+        if(isBoundary && !visibleLayers.contains("4")){
+            visibleLayers += (",4");
+        }
+
         if (!visibleLayers.isEmpty()) {
             //Toast.makeText(context, "Loading user selected Layers...", Toast.LENGTH_SHORT).show();
             if (visibleLayers.contains("0")) {
@@ -2682,8 +2689,8 @@ public class CaptureDataMapActivity extends AppCompatActivity implements OnMapRe
                             }
                         }
                         if (actionMode != null) {
-                            int accuracy = (int) locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getAccuracy();
-                            actionMode.setTitle(accuracy + getResources().getString(R.string.gps_accuracy));
+                            float accuracy = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getAccuracy();
+                            actionMode.setTitle(df2.format(accuracy) + getResources().getString(R.string.gps_accuracy));
                             actionMode.setSubtitle(satellitesInFix + " " + getResources().getString(R.string.sats_use_msg));
                         }
                     } catch (Exception e) {

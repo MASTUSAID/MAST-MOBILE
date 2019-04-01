@@ -143,6 +143,7 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
     MyLocationListener locationListener;
     List<ProjectSpatialDataDto> offlineSpatialData;
     DecimalFormat df = new DecimalFormat("#.##");
+    DecimalFormat df2 = new DecimalFormat("#.#");
     Long featureId = 0L;
     public static int MAP_MODE = 0;
     private static int CLEAR_MODE = 0;
@@ -529,7 +530,7 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
             //googleMap.setMapType(GoogleMap.MAP_TYPE_NONE);
 
             // Showing / hiding your current location
-            //googleMap.setMyLocationEnabled(true);
+            googleMap.setMyLocationEnabled(true);
 
             // Enable / Disable zooming controls
             googleMap.getUiSettings().setZoomControlsEnabled(false);
@@ -570,7 +571,7 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
             opts.tileProvider(provider);
             // Add the tile overlay to the map.
             TileOverlay overlay = googleMap.addTileOverlay(opts);
-            overlay.setTransparency(0.75f);
+            //overlay.setTransparency(0.75f);
 
 
             offlineSpatialData.get(pos).setOverlay(overlay);
@@ -1316,25 +1317,14 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_GPS) {
-//            //Location location = googleMap.getMyLocation();
-//            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                // TODO: Consider calling
-//                //    ActivityCompat#requestPermissions
-//                // here to request the missing permissions, and then overriding
-//                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//                //                                          int[] grantResults)
-//                // to handle the case where the user grants the permission. See the documentation
-//                // for ActivityCompat#requestPermissions for more details.
-//
-//            }
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            Location location = googleMap.getMyLocation();
+
             if (location != null) {
                 LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 30));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 19));
             } else {
                 Toast.makeText(context, R.string.no_location, Toast.LENGTH_SHORT).show();
             }
-
         } else if (id == R.id.action_show_bookmark) {
             showBookmarks();
         } else if (id == R.id.action_add_bookmark) {
@@ -2314,8 +2304,8 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
                     }
                 }
                 if (actionMode != null) {
-                    int accuracy = (int) locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getAccuracy();
-                    actionMode.setTitle(accuracy + getResources().getString(R.string.gps_accuracy));
+                    float accuracy = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getAccuracy();
+                    actionMode.setTitle(df2.format(accuracy) + getResources().getString(R.string.gps_accuracy));
                     actionMode.setSubtitle(satellitesInFix + " " + getResources().getString(R.string.sats_use_msg));
                 }
             }
@@ -3448,8 +3438,8 @@ public class CapturePareclData extends AppCompatActivity implements OnMapReadyCa
                             }
                         }
                         if (actionMode != null) {
-                            int accuracy = (int) locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getAccuracy();
-                            actionMode.setTitle(accuracy + getResources().getString(R.string.gps_accuracy));
+                            float accuracy = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getAccuracy();
+                            actionMode.setTitle(df2.format(accuracy) + getResources().getString(R.string.gps_accuracy));
                             actionMode.setSubtitle(satellitesInFix + " " + getResources().getString(R.string.sats_use_msg));
                         }
                     } catch (Exception e) {

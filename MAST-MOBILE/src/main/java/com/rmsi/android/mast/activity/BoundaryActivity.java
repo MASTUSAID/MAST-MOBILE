@@ -1,16 +1,20 @@
 package com.rmsi.android.mast.activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -30,6 +34,8 @@ import android.widget.Toast;
 
 import com.rmsi.android.mast.adapter.MediaListAdapter;
 import com.rmsi.android.mast.db.DbController;
+import com.rmsi.android.mast.domain.ConfidenceLevel;
+import com.rmsi.android.mast.domain.FeatureType;
 import com.rmsi.android.mast.domain.Media;
 import com.rmsi.android.mast.domain.Property;
 import com.rmsi.android.mast.domain.Village;
@@ -43,6 +49,8 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import static com.rmsi.android.mast.util.CommonFunctions.getApplicationContext;
 
 public class BoundaryActivity extends AppCompatActivity implements ListActivity {
 
@@ -63,6 +71,11 @@ public class BoundaryActivity extends AppCompatActivity implements ListActivity 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_boundary);
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA},1024);
+        }
 
         CommonFunctions.getInstance().Initialize(getApplicationContext());
         cf.loadLocale(getApplicationContext());
@@ -85,9 +98,10 @@ public class BoundaryActivity extends AppCompatActivity implements ListActivity 
         }
 
         // Find fields
-        final EditText txtFeatureType = (EditText) findViewById(R.id.txtFeatureType);
         final EditText txtFeatureDescription = (EditText) findViewById(R.id.txtFeatureDescription);
         Spinner cbxVillages = (Spinner) findViewById(R.id.cbxNeighborVillage);
+        Spinner cbxConfidenceLevels = (Spinner) findViewById(R.id.cbxConfidenceLevel);
+        Spinner cbxFeatureTypes = (Spinner) findViewById(R.id.cbxFeatureType);
         Button btnAddPhoto = (Button) findViewById(R.id.btnAddPhoto);
         lstPhotos = (ListView) findViewById(R.id.lstPhotos);
         ImageButton btnSave = (ImageButton) findViewById(R.id.btnSave);
@@ -96,6 +110,17 @@ public class BoundaryActivity extends AppCompatActivity implements ListActivity 
         List<Village> villages = db.getVillages(true);
         cbxVillages.setAdapter(new ArrayAdapter(ctx, android.R.layout.simple_spinner_item, villages));
         ((ArrayAdapter) cbxVillages.getAdapter()).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Confidence levels list
+        List<ConfidenceLevel> confLevels = db.getConfidenceLevels(true);
+        cbxConfidenceLevels.setAdapter(new ArrayAdapter(ctx, android.R.layout.simple_spinner_item, confLevels));
+        ((ArrayAdapter) cbxConfidenceLevels.getAdapter()).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Feature types list
+        List<FeatureType> featureTypes = db.getFeatureTypes(false);
+        cbxFeatureTypes.setAdapter(new ArrayAdapter(ctx, android.R.layout.simple_spinner_item, featureTypes));
+        ((ArrayAdapter) cbxFeatureTypes.getAdapter()).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
 
         // Bind fields
         cbxVillages.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -114,10 +139,31 @@ public class BoundaryActivity extends AppCompatActivity implements ListActivity 
             }
         });
 
-        GuiUtility.bindActionOnFieldChange(txtFeatureType, new Runnable() {
+        cbxConfidenceLevels.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void run() {
-                prop.setFeatureType(txtFeatureType.getText().toString());
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position > 0) {
+                    prop.setConfidenceLevel(((ConfidenceLevel) parent.getItemAtPosition(position)).getCode());
+                } else {
+                    prop.setConfidenceLevel(null);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        cbxFeatureTypes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                prop.setFeatureType(((FeatureType) parent.getItemAtPosition(position)).getCode());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
@@ -152,7 +198,24 @@ public class BoundaryActivity extends AppCompatActivity implements ListActivity 
             }
         }
 
-        txtFeatureType.setText(prop.getFeatureType());
+        if (prop.getConfidenceLevel() != null && confLevels != null) {
+            for (int i = 0; i < confLevels.size(); i++) {
+                if (confLevels.get(i).getCode() == prop.getConfidenceLevel()) {
+                    cbxConfidenceLevels.setSelection(i);
+                    break;
+                }
+            }
+        }
+
+        if (prop.getFeatureType() != null && featureTypes != null) {
+            for (int i = 0; i < featureTypes.size(); i++) {
+                if (featureTypes.get(i).getCode() == prop.getFeatureType()) {
+                    cbxFeatureTypes.setSelection(i);
+                    break;
+                }
+            }
+        }
+
         txtFeatureDescription.setText(prop.getFeatureDescription());
 
         mediaList = DbController.getInstance(ctx).getMediaByBoundary(prop.getId());

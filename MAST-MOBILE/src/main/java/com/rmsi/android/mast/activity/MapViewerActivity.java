@@ -101,8 +101,6 @@ public class MapViewerActivity extends AppCompatActivity implements OnMapReadyCa
     TileOverlay overlay;
     private static int MAP_MODE = 0;
     private static int CLEAR_MODE = 0;
-
-    private static int FETCH_XY_MODE = 6;
     private int colorTransparent = Color.argb(0, 255, 0, 0);
     DecimalFormat df = new DecimalFormat("#.##");
     CommonFunctions cf = CommonFunctions.getInstance();
@@ -134,6 +132,7 @@ public class MapViewerActivity extends AppCompatActivity implements OnMapReadyCa
     private static int FEATURE_DRAW_POLYGON_GPS_MODE = 9;
     private static int MEASURE_FEATURE_AREA_MODE = 10;
     private static int MEASURE_FEATURE_LENGTH_MODE = 11;
+    private static int FETCH_XY_MODE = 12;
 
     private String corrdinates=null;
 
@@ -289,72 +288,58 @@ public class MapViewerActivity extends AppCompatActivity implements OnMapReadyCa
                             public void onClick(View v) {
                                 dialog.dismiss();
 
+                                DbController sqllite = DbController.getInstance(context);
+                                if (sqllite.getClaimTypes(false).size() < 1) {
+                                    String info = getResources().getString(string.info);
+                                    String msg = getResources().getString(string.download_data_first);
+                                    cf.showMessage(context, info, msg);
+                                    return;
+                                }
+
                                 SparseBooleanArray checkedPos = listViewForSync.getCheckedItemPositions();
 
                                 if (checkedPos.get(0)) {
-                                    DbController sqllite = DbController.getInstance(context);
-                                    if (sqllite.getClaimTypes(false).size() > 0) {
-                                        List<AOI> aoiList=cf.getAOIList();
-                                        if (aoiList.size()==0){
+                                    List<AOI> aoiList=cf.getAOIList();
+                                    if (aoiList.size()==0){
+                                        Intent intent = new Intent(MapViewerActivity.this, CapturePareclData.class);
+                                        intent.putExtra("Corordinates",corrdinates);
+                                        startActivity(intent);
+                                    } else {
+                                        corrdinates = cf.getAOICoordinates();
+                                        if (corrdinates != null) {
+                                            Intent intent = new Intent(MapViewerActivity.this, CapturePareclData.class);
+                                            startActivity(intent);
+                                        }
+                                        else {
                                             Intent intent = new Intent(MapViewerActivity.this, CapturePareclData.class);
                                             intent.putExtra("Corordinates",corrdinates);
-//
                                             startActivity(intent);
-                                        }else {
-                                            corrdinates = cf.getAOICoordinates();
-                                            if (corrdinates != null) {
-                                                Intent intent = new Intent(MapViewerActivity.this, CapturePareclData.class);
-//
-                                                startActivity(intent);
-                                            }
-                                            else {
-                                                Intent intent = new Intent(MapViewerActivity.this, CapturePareclData.class);
-                                                intent.putExtra("Corordinates",corrdinates);
-//
-                                                startActivity(intent);
-//
-                                            }
                                         }
-
-                                    } else {
-                                        String info = getResources().getString(string.info);
-                                        String msg = getResources().getString(string.download_data_first);
-                                        cf.showMessage(context, info, msg);
                                     }
+                                } else if (checkedPos.get(1)){
+                                    List<AOI> aoiList=cf.getAOIList();
+                                    if (aoiList.size()==0){
+                                        Intent intent = new Intent(MapViewerActivity.this, CaptureDataMapActivity.class);
+                                        intent.putExtra("Corordinates",corrdinates);
+                                        startActivity(intent);
+                                    } else {
+                                        corrdinates = cf.getAOICoordinates();
+                                        if (corrdinates != null) {
+                                            Intent intent = new Intent(MapViewerActivity.this, CaptureDataMapActivity.class);
+                                            startActivity(intent);
+                                        }
+                                        else {
 
-                                }else if(checkedPos.get(1)){
-                                    DbController sqllite = DbController.getInstance(context);
-                                    if (sqllite.getClaimTypes(false).size() > 0) {
-                                        List<AOI> aoiList=cf.getAOIList();
-                                        if (aoiList.size()==0){
                                             Intent intent = new Intent(MapViewerActivity.this, CaptureDataMapActivity.class);
                                             intent.putExtra("Corordinates",corrdinates);
-//
                                             startActivity(intent);
-                                        }else {
-                                            corrdinates = cf.getAOICoordinates();
-                                            if (corrdinates != null) {
-                                                Intent intent = new Intent(MapViewerActivity.this, CaptureDataMapActivity.class);
-//
-                                                startActivity(intent);
-                                            }
-                                            else {
-
-                                                Intent intent = new Intent(MapViewerActivity.this, CaptureDataMapActivity.class);
-                                                intent.putExtra("Corordinates",corrdinates);
-//
-                                                startActivity(intent);
-//
-                                            }
                                         }
-
-                                    } else {
-                                        String info = getResources().getString(string.info);
-                                        String msg = getResources().getString(string.download_data_first);
-                                        cf.showMessage(context, info, msg);
                                     }
+                                } else if (checkedPos.get(2)){
+                                    Intent intent = new Intent(MapViewerActivity.this, CaptureDataMapActivity.class);
+                                    intent.putExtra("IsBoundary", true);
+                                    startActivity(intent);
                                 }
-
                             }
                         });
 
@@ -1211,7 +1196,7 @@ public class MapViewerActivity extends AppCompatActivity implements OnMapReadyCa
             opts.tileProvider(provider);
             // Add the tile overlay to the map.
             TileOverlay overlay = googleMap.addTileOverlay(opts);
-            overlay.setTransparency(0.75f);
+            //overlay.setTransparency(0.75f);
             offlineSpatialData.get(pos).setOverlay(overlay);
 
             // Sometime later when the map view is destroyed, close the provider.

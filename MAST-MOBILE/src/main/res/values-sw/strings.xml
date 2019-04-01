@@ -27,6 +27,7 @@
         <!--item>Pangilia zana za ukusanyaji taarifa</item-->
         <item>Pangilia kusawazisha moja kwa moja</item>
         <item>Pangilia muonekano wa ramani</item>
+        <item>Choose AOI</item>
     </string-array>
     <string-array name="Language_arrays">
         <item>English</item>

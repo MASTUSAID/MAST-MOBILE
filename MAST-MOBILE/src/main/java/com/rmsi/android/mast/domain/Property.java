@@ -39,6 +39,8 @@ public class Property extends Feature implements Serializable {
     public static String COL_VILLAGE_ID = "VILLAGE_ID";
     public static String COL_FEATURE_TYPE = "FEATURE_TYPE";
     public static String COL_FEATURE_DESCRIPTION = "FEATURE_DESCRIPTION";
+    public static String COL_CONFIDENCE_LEVEL = "CONFIDENCE_LEVEL";
+    public static String COL_CONFIDENCE_DESCRIPTION = "CONFIDENCE_DESCRIPTION";
 
     private String creationDate;
     private String completionDate;
@@ -94,8 +96,10 @@ public class Property extends Feature implements Serializable {
     private String documentRefNo;
     private int isNatural;
     private Integer villageId;
-    private String featureType;
+    private Integer featureType;
     private String featureDescription;
+    private Integer confidenceLevel;
+    private String confidenceDescription;
 
     public Integer getVillageId() {
         return villageId;
@@ -105,11 +109,11 @@ public class Property extends Feature implements Serializable {
         this.villageId = villageId;
     }
 
-    public String getFeatureType() {
+    public Integer getFeatureType() {
         return featureType;
     }
 
-    public void setFeatureType(String featureType) {
+    public void setFeatureType(Integer featureType) {
         this.featureType = featureType;
     }
 
@@ -436,6 +440,22 @@ public class Property extends Feature implements Serializable {
 
     public void setDispute(Dispute dispute) {
         this.dispute = dispute;
+    }
+
+    public Integer getConfidenceLevel() {
+        return confidenceLevel;
+    }
+
+    public void setConfidenceLevel(Integer confidenceLevel) {
+        this.confidenceLevel = confidenceLevel;
+    }
+
+    public String getConfidenceDescription() {
+        return confidenceDescription;
+    }
+
+    public void setConfidenceDescription(String confidenceDescription) {
+        this.confidenceDescription = confidenceDescription;
     }
 
     /**

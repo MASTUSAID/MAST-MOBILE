@@ -34,7 +34,6 @@
         <item>Configure Auto Sync </item>
         <item>Configure Map Settings</item>
         <item>Choose AOI</item>
-        <item>BlueTooth Device</item>
     </string-array>
     <string-array name="Language_arrays">
         <item>English</item>
@@ -52,6 +51,7 @@
     <string-array name="Capture_Data">
         <item>Capture Parcel</item>
         <item>Capture Resource</item>
+        <item>Capture Boundary</item>
     </string-array>
     <!-- ADDED KEYS TO FETCH SELECTED ITEM IN ENGLISH -->
     <string-array name="add_point_options_arrays">
